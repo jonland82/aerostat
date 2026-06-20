@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050a12">
+  <title>Aerostat | OpenSky Globe</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="/vendor/globe.gl.min.js"></script>
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <main class="app-shell">
+    <div id="globe" aria-label="Interactive globe showing aircraft positions"></div>
+    <div class="ambient-grid" aria-hidden="true"></div>
+
+    <header class="topbar panel">
+      <a class="brand" href="/" aria-label="Aerostat home">
+        <span class="brand-mark"><i></i><i></i></span>
+        <span><strong>AEROSTAT</strong><small>OPEN AIRSPACE INTELLIGENCE</small></span>
+      </a>
+      <div class="topbar-meta">
+        <button id="mobile-filter-button" class="mobile-filter-button" type="button">FILTERS</button>
+        <span class="status-pill"><i id="status-dot"></i><span id="status-label">NO SNAPSHOT</span></span>
+        <span class="utc-clock" id="utc-clock">--:--:-- UTC</span>
+      </div>
+    </header>
+
+    <aside class="left-rail">
+      <section class="panel control-panel">
+        <p class="eyebrow">LIVE NETWORK</p>
+        <h1>Global flight<br><span>telemetry.</span></h1>
+        <p class="lede">A manually sampled view of aircraft currently observed by the OpenSky Network.</p>
+        <button id="refresh-button" class="refresh-button" type="button">
+          <span class="button-icon">↻</span>
+          <span><strong>Refresh aircraft</strong><small>Manual request · 4 credits</small></span>
+        </button>
+        <p class="manual-note"><i></i> Automatic polling is disabled</p>
+      </section>
+
+      <section class="panel filter-panel">
+        <div class="section-heading">
+          <span>DISPLAY FILTERS</span>
+          <span class="filter-actions"><button id="reset-filters" type="button">RESET</button><button id="close-filters" class="mobile-close" type="button">DONE</button></span>
+        </div>
+        <label class="search-box">
+          <span>⌕</span>
+          <input id="search-input" type="search" placeholder="Callsign, ICAO, country" autocomplete="off">
+        </label>
+        <div class="filter-row">
+          <button class="filter-chip active" data-filter="all" type="button">ALL</button>
+          <button class="filter-chip" data-filter="airborne" type="button">AIRBORNE</button>
+          <button class="filter-chip" data-filter="ground" type="button">GROUND</button>
+        </div>
+        <label class="range-label" for="altitude-range">
+          <span>MAX ALTITUDE</span><strong id="altitude-label">60,000 ft</strong>
+        </label>
+        <input id="altitude-range" type="range" min="5000" max="60000" step="5000" value="60000">
+      </section>
+    </aside>
+
+    <aside class="right-rail">
+      <section class="panel metrics-panel">
+        <p class="eyebrow">NETWORK SNAPSHOT</p>
+        <div class="metric-primary">
+          <strong id="metric-visible">—</strong><span>VISIBLE AIRCRAFT</span>
+        </div>
+        <div class="metric-grid">
+          <div><strong id="metric-airborne">—</strong><span>AIRBORNE</span></div>
+          <div><strong id="metric-ground">—</strong><span>ON GROUND</span></div>
+          <div><strong id="metric-altitude">—</strong><span>AVG ALT · FT</span></div>
+          <div><strong id="metric-speed">—</strong><span>AVG SPEED · KT</span></div>
+        </div>
+      </section>
+
+      <section id="aircraft-card" class="panel aircraft-card empty">
+        <div class="section-heading"><span>AIRCRAFT DETAIL</span><span><span class="signal-bars">▂▄▆</span><button id="detail-toggle" class="mobile-detail-toggle" type="button" aria-expanded="false" aria-label="Expand aircraft details">&#8593;</button></span></div>
+        <div id="aircraft-empty" class="empty-detail">Select an aircraft point on the globe.</div>
+        <div id="aircraft-detail" hidden>
+          <div class="aircraft-title"><strong id="detail-callsign">—</strong><span id="detail-country">—</span></div>
+          <dl>
+            <div><dt>ICAO24</dt><dd id="detail-icao">—</dd></div>
+            <div><dt>ALTITUDE</dt><dd id="detail-altitude">—</dd></div>
+            <div><dt>GROUND SPEED</dt><dd id="detail-speed">—</dd></div>
+            <div><dt>TRACK</dt><dd id="detail-track">—</dd></div>
+            <div><dt>VERTICAL RATE</dt><dd id="detail-vertical">—</dd></div>
+            <div><dt>SQUAWK</dt><dd id="detail-squawk">—</dd></div>
+          </dl>
+        </div>
+      </section>
+    </aside>
+
+    <footer class="bottom-bar panel">
+      <div><span>LAST SAMPLE</span><strong id="last-refresh">Never</strong></div>
+      <div><span>LOCAL CREDIT GUARD</span><strong id="quota-value">0 / 3,000</strong></div>
+      <div class="quota-track"><i id="quota-bar"></i></div>
+      <div class="legend">
+        <span><i class="low"></i>LOW</span><span><i class="mid"></i>MID</span><span><i class="high"></i>HIGH ALT</span>
+      </div>
+      <div class="attribution">DATA · OPENSKY NETWORK</div>
+    </footer>
+
+    <div id="welcome" class="welcome panel">
+      <span class="welcome-orbit" aria-hidden="true"></span>
+      <p class="eyebrow">READY FOR MANUAL ACQUISITION</p>
+      <h2>The airspace is waiting.</h2>
+      <p>No API request has been made. Refresh once to load a global OpenSky snapshot.</p>
+      <button id="welcome-refresh" type="button">LOAD AIRCRAFT</button>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </main>
+</body>
+</html>

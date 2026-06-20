@@ -1,0 +1,28 @@
+# Local secrets and deployment state
+credentials.json
+deploy.local.json
+.env
+.env.*
+!.env.example
+
+# Generated runtime and deployment artifacts
+.aws-build/
+data/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
