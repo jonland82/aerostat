@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#03070d">
+  <title>Aerostat | Global Altitude Distribution</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #03070d;
+      --panel: rgba(8, 18, 29, .84);
+      --line: rgba(116, 210, 237, .18);
+      --cyan: #6de7ff;
+      --cyan-soft: rgba(109, 231, 255, .2);
+      --text: #e8f8fc;
+      --muted: #7895a1;
+    }
+    * { box-sizing: border-box; }
+    html, body { min-width: 320px; min-height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: Inter, "Segoe UI", sans-serif; }
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 70% 12%, rgba(21, 103, 130, .2), transparent 34rem),
+        linear-gradient(145deg, #06101a, #020509 62%);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(109, 231, 255, .025) 1px, transparent 1px), linear-gradient(90deg, rgba(109, 231, 255, .025) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, #000, transparent 85%);
+    }
+    main { position: relative; width: min(1400px, 100%); min-height: 100vh; margin: 0 auto; padding: 28px 34px 24px; display: grid; grid-template-rows: auto auto minmax(380px, 1fr) auto; gap: 20px; }
+    header { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
+    .eyebrow { display: block; margin-bottom: 8px; color: var(--cyan); font: 700 11px/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .18em; }
+    h1 { margin: 0; font-size: clamp(25px, 3vw, 45px); font-weight: 300; letter-spacing: -.03em; }
+    .capture { color: var(--muted); font: 11px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-align: right; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--panel); backdrop-filter: blur(18px); }
+    .stat { padding: 15px 18px; border-right: 1px solid var(--line); }
+    .stat:last-child { border-right: 0; }
+    .stat span { display: block; color: var(--muted); font: 9px/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .13em; }
+    .stat strong { display: block; margin-top: 7px; font: 600 clamp(17px, 2vw, 25px)/1 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .chart-panel { min-height: 0; padding: 18px 22px 13px; border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(180deg, rgba(8, 20, 32, .89), rgba(4, 11, 18, .8)); backdrop-filter: blur(18px); }
+    #chart { display: block; width: 100%; height: 100%; min-height: 350px; overflow: visible; }
+    .grid-line { stroke: rgba(130, 194, 215, .13); stroke-width: 1; vector-effect: non-scaling-stroke; }
+    .axis-text { fill: var(--muted); font: 10px ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .bar { fill: url(#bar-gradient); transition: y .16s linear, height .16s linear; }
+    .bar:hover { fill: #a0f1ff; }
+    .median-line { stroke: #ffbd63; stroke-width: 2; stroke-dasharray: 4 5; vector-effect: non-scaling-stroke; transition: x1 .16s linear, x2 .16s linear; }
+    .median-label { fill: #ffbd63; font: 10px ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .transport { display: grid; grid-template-columns: 42px minmax(130px, 1fr) 72px 112px; align-items: center; gap: 14px; }
+    button, select { border: 1px solid var(--line); background: rgba(8, 22, 34, .92); color: var(--text); font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; }
+    button { width: 42px; height: 42px; border-radius: 50%; background: var(--cyan); color: #031018; border: 0; cursor: pointer; font-size: 14px; }
+    select { height: 34px; padding: 0 10px; border-radius: 7px; }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); cursor: pointer; }
+    #clock { color: #b6d1da; font: 12px ui-monospace, SFMono-Regular, Consolas, monospace; text-align: right; }
+    .note { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    @media (max-width: 700px) {
+      main { padding: 20px 14px; grid-template-rows: auto auto minmax(350px, 1fr) auto; }
+      header { align-items: flex-start; flex-direction: column; }
+      .capture { text-align: left; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat:nth-child(2) { border-right: 0; }
+      .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .chart-panel { padding: 12px 8px 8px; }
+      .transport { grid-template-columns: 42px 1fr 64px; }
+      select { display: none; }
+    }
+  </style>
+  <script defer src="histogram-data.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <div><span class="eyebrow">AEROSTAT / GLOBAL STATE SERIES</span><h1>Altitude distribution over time</h1></div>
+      <div class="capture" id="capture-range">60 ONE-MINUTE SNAPSHOTS<br>20 JUN 2026 / UTC</div>
+    </header>
+
+    <section class="stats" aria-label="Current snapshot statistics">
+      <div class="stat"><span>OBSERVED AIRCRAFT</span><strong id="total">--</strong></div>
+      <div class="stat"><span>WITH ALTITUDE</span><strong id="known">--</strong></div>
+      <div class="stat"><span>ALTITUDE UNKNOWN</span><strong id="missing">--</strong></div>
+      <div class="stat"><span>MEDIAN ALTITUDE</span><strong id="median">--</strong></div>
+    </section>
+
+    <section class="chart-panel">
+      <svg id="chart" role="img" aria-label="Histogram of aircraft barometric altitude in feet"></svg>
+    </section>
+
+    <footer>
+      <div class="transport">
+        <button id="play" type="button" aria-label="Pause">II</button>
+        <input id="scrub" type="range" min="0" max="59" value="0" step="1" aria-label="Snapshot timeline">
+        <span id="clock">--:--Z</span>
+        <select id="speed" aria-label="Playback speed"><option value="500">FAST</option><option value="1000" selected>1 SEC / MIN</option><option value="2000">SLOW</option></select>
+      </div>
+      <p class="note">Barometric altitude, fixed 1,000-foot bins from -1,000 to 60,000 ft. Aircraft without reported altitude are counted above but excluded from the bars.</p>
+    </footer>
+  </main>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const data = window.ALTITUDE_HISTOGRAM_DATA;
+      const frames = data.frames;
+      const svg = document.querySelector("#chart");
+      const $ = selector => document.querySelector(selector);
+      const ns = "http://www.w3.org/2000/svg";
+      const margin = { top: 25, right: 18, bottom: 47, left: 57 };
+      let frameIndex = 0;
+      let playing = true;
+      let timer;
+
+      const make = (name, attrs = {}) => {
+        const element = document.createElementNS(ns, name);
+        Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
+        return element;
+      };
+      const timeLabel = seconds => new Date(seconds * 1000).toLocaleTimeString("en-US", { timeZone: "UTC", hour: "2-digit", minute: "2-digit", hour12: false }) + "Z";
+      const maxCount = Math.ceil(Math.max(...frames.flatMap(frame => frame.bins)) / 100) * 100;
+      const barElements = frames[0].bins.map(() => make("rect", { class: "bar", rx: 1 }));
+      const medianLine = make("line", { class: "median-line" });
+      const medianLabel = make("text", { class: "median-label", "text-anchor": "middle" });
+
+      function layout() {
+        const width = svg.clientWidth;
+        const height = svg.clientHeight;
+        const plotWidth = width - margin.left - margin.right;
+        const plotHeight = height - margin.top - margin.bottom;
+        svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+        svg.replaceChildren();
+
+        const defs = make("defs");
+        const gradient = make("linearGradient", { id: "bar-gradient", x1: "0", y1: "0", x2: "0", y2: "1" });
+        gradient.append(make("stop", { offset: "0%", "stop-color": "#8cecff" }), make("stop", { offset: "100%", "stop-color": "#208ba8" }));
+        defs.append(gradient);
+        svg.append(defs);
+
+        for (let i = 0; i <= 4; i++) {
+          const y = margin.top + plotHeight * i / 4;
+          const value = Math.round(maxCount * (1 - i / 4));
+          svg.append(make("line", { class: "grid-line", x1: margin.left, x2: width - margin.right, y1: y, y2: y }));
+          const label = make("text", { class: "axis-text", x: margin.left - 10, y: y + 3, "text-anchor": "end" });
+          label.textContent = value.toLocaleString();
+          svg.append(label);
+        }
+
+        for (let altitude = 0; altitude <= 60000; altitude += 10000) {
+          const x = margin.left + ((altitude - data.minAltitudeFt) / (data.maxAltitudeFt - data.minAltitudeFt)) * plotWidth;
+          const label = make("text", { class: "axis-text", x, y: height - 20, "text-anchor": "middle" });
+          label.textContent = altitude === 0 ? "0" : `${altitude / 1000}k`;
+          svg.append(label);
+        }
+        const unit = make("text", { class: "axis-text", x: width - margin.right, y: height - 3, "text-anchor": "end" });
+        unit.textContent = "BAROMETRIC ALTITUDE (FT)";
+        svg.append(unit);
+        barElements.forEach(bar => svg.append(bar));
+        svg.append(medianLine, medianLabel);
+        draw();
+      }
+
+      function draw() {
+        const frame = frames[frameIndex];
+        const width = svg.clientWidth;
+        const height = svg.clientHeight;
+        const plotWidth = width - margin.left - margin.right;
+        const plotHeight = height - margin.top - margin.bottom;
+        const slot = plotWidth / frame.bins.length;
+        frame.bins.forEach((count, index) => {
+          const barHeight = count / maxCount * plotHeight;
+          const bar = barElements[index];
+          bar.setAttribute("x", margin.left + index * slot + .5);
+          bar.setAttribute("width", Math.max(1, slot - 1));
+          bar.setAttribute("y", margin.top + plotHeight - barHeight);
+          bar.setAttribute("height", barHeight);
+          bar.innerHTML = `<title>${(data.minAltitudeFt + index * data.binWidthFt).toLocaleString()} to ${(data.minAltitudeFt + (index + 1) * data.binWidthFt).toLocaleString()} ft: ${count.toLocaleString()} aircraft</title>`;
+        });
+        const medianX = margin.left + ((frame.medianFt - data.minAltitudeFt) / (data.maxAltitudeFt - data.minAltitudeFt)) * plotWidth;
+        medianLine.setAttribute("x1", medianX); medianLine.setAttribute("x2", medianX);
+        medianLine.setAttribute("y1", margin.top); medianLine.setAttribute("y2", margin.top + plotHeight);
+        medianLabel.setAttribute("x", medianX); medianLabel.setAttribute("y", margin.top - 8);
+        medianLabel.textContent = `MEDIAN ${(frame.medianFt / 1000).toFixed(1)}k`;
+
+        $("#total").textContent = frame.total.toLocaleString();
+        $("#known").textContent = frame.known.toLocaleString();
+        $("#missing").textContent = frame.missing.toLocaleString();
+        $("#median").textContent = `${frame.medianFt.toLocaleString()} FT`;
+        $("#clock").textContent = timeLabel(frame.time);
+        $("#scrub").value = frameIndex;
+      }
+
+      function schedule() {
+        clearInterval(timer);
+        if (playing) timer = setInterval(() => { frameIndex = (frameIndex + 1) % frames.length; draw(); }, Number($("#speed").value));
+      }
+
+      $("#play").addEventListener("click", () => {
+        playing = !playing;
+        $("#play").textContent = playing ? "II" : ">";
+        $("#play").setAttribute("aria-label", playing ? "Pause" : "Play");
+        schedule();
+      });
+      $("#scrub").addEventListener("input", event => { frameIndex = Number(event.target.value); draw(); });
+      $("#speed").addEventListener("change", schedule);
+      addEventListener("resize", layout);
+
+      $("#capture-range").innerHTML = `${frames.length} ONE-MINUTE SNAPSHOTS<br>${timeLabel(frames[0].time)} - ${timeLabel(frames.at(-1).time)} / 20 JUN 2026`;
+      layout();
+      schedule();
+    });
+  </script>
+</body>
+</html>

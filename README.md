@@ -19,7 +19,7 @@ Edit the ignored `credentials.json` with the client ID and client secret from yo
 python app.py
 ```
 
-Open <http://127.0.0.1:8000>. The globe library and Earth texture are vendored under `static/vendor`, so the interface has no runtime CDN dependency.
+Open <http://127.0.0.1:8000>. The globe library and Earth texture are vendored under `static/vendor`, so the dashboard interface has no runtime CDN dependency.
 
 No frontend build is required. The local web server itself uses only the Python standard library; `boto3` is needed by the AWS collector and Lambda tests.
 
@@ -73,6 +73,27 @@ The guard comment above `MIN_REFRESH_SECONDS` in `app.py` and the comment at the
 | `POST` | `/api/aircraft/refresh` | Performs one global OpenSky states request |
 | `GET` | `/healthz` | Local health check |
 
-## Next Layers
+## Analytics Direction
 
-The current cache is intentionally ephemeral. A later analytics layer can add sampled tracks in SQLite, aggregate Parquet partitions, DuckDB queries, spherical density estimation, trajectory filters, flow-field geometry, anomaly detection, and graph analysis without changing the browser-to-server contract.
+The dashboard cache is intentionally ephemeral. Historical collection and the
+first analytical visualizations live under `experiments/`, separate from the
+browser-to-server dashboard contract. Later layers can add sampled tracks in
+SQLite, aggregate Parquet partitions, DuckDB queries, spherical density
+estimation, flow-field geometry, anomaly detection, and graph analysis.
+
+## Experiments
+
+Historical and analytical work lives outside the dashboard under
+`experiments/`. The [global state-series experiment](experiments/global-state-series/README.md)
+contains a captured hour of one-minute OpenSky snapshots and produces raw
+compressed responses plus full and top-500 Parquet datasets. Its browser
+visualizations currently include:
+
+- Three representative flight traversals on an animated globe.
+- The evolving global distribution of reported barometric altitude.
+- Distributions of spherical path deviation from endpoint geodesics, with an
+  accompanying random-scale bridge and lognormal-mixture formalism.
+
+Generated experiment data remains local and ignored by Git. The compact
+JavaScript data files used by the visualizations are generated artifacts that
+can be rebuilt from the local Parquet dataset.

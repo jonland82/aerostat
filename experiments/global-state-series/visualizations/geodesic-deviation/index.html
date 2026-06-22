@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#03070d">
+  <title>Aerostat | Geodesic Path Deviation</title>
+  <style>
+    :root { color-scheme: dark; --bg: #03070d; --panel: rgba(8,18,29,.86); --line: rgba(116,210,237,.18); --cyan: #6de7ff; --orange: #ffbd63; --text: #e8f8fc; --muted: #7895a1; }
+    * { box-sizing: border-box; }
+    html, body { min-width: 320px; min-height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: Inter, "Segoe UI", sans-serif; }
+    body { min-height: 100vh; background: radial-gradient(circle at 72% 10%, rgba(21,103,130,.2), transparent 34rem), linear-gradient(145deg,#06101a,#020509 62%); }
+    body::before { content: ""; position: fixed; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(109,231,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(109,231,255,.025) 1px,transparent 1px); background-size: 42px 42px; mask-image: linear-gradient(to bottom,#000,transparent 85%); }
+    main { position: relative; width: min(1400px,100%); min-height: 100vh; margin: 0 auto; padding: 28px 34px 48px; display: grid; grid-template-rows: auto auto auto minmax(360px,1fr) auto auto; gap: 18px; }
+    header { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
+    .eyebrow { display: block; margin-bottom: 8px; color: var(--cyan); font: 700 11px/1 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .18em; }
+    h1 { margin: 0; font-size: clamp(25px,3vw,45px); font-weight: 300; letter-spacing: -.03em; }
+    .capture { color: var(--muted); font: 11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .08em; text-align: right; }
+    .metric-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .metric-tab { padding: 10px 13px; border: 1px solid var(--line); border-radius: 7px; background: rgba(8,22,34,.8); color: #99b4be; cursor: pointer; font: 10px ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .06em; }
+    .metric-tab.active { border-color: var(--cyan); background: rgba(36,124,148,.22); color: var(--cyan); }
+    .stats { display: grid; grid-template-columns: repeat(4,1fr); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--panel); backdrop-filter: blur(18px); }
+    .stat { padding: 15px 18px; border-right: 1px solid var(--line); }
+    .stat:last-child { border-right: 0; }
+    .stat span { display: block; color: var(--muted); font: 9px/1 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .13em; }
+    .stat strong { display: block; margin-top: 7px; font: 600 clamp(17px,2vw,25px)/1 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .chart-panel { min-height: 0; padding: 18px 22px 13px; border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(180deg,rgba(8,20,32,.9),rgba(4,11,18,.82)); backdrop-filter: blur(18px); }
+    #chart { display: block; width: 100%; height: 100%; min-height: 340px; overflow: visible; }
+    .grid-line { stroke: rgba(130,194,215,.13); stroke-width: 1; vector-effect: non-scaling-stroke; }
+    .axis-text { fill: var(--muted); font: 10px ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .bar { fill: url(#bar-gradient); transition: y .2s,height .2s,x .2s,width .2s; }
+    .bar:hover { fill: #a0f1ff; }
+    .median-line { stroke: var(--orange); stroke-width: 2; stroke-dasharray: 4 5; vector-effect: non-scaling-stroke; }
+    .median-label { fill: var(--orange); font: 10px ui-monospace,SFMono-Regular,Consolas,monospace; }
+    footer { display: grid; grid-template-columns: minmax(0,1fr) minmax(260px,420px); gap: 24px; align-items: start; }
+    .definition { margin: 0; color: #9bb4bd; font-size: 12px; line-height: 1.55; }
+    .method { margin: 0; color: var(--muted); font: 10px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace; text-align: right; }
+    .formalism { margin-top: 18px; padding: clamp(22px,4vw,52px); border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(150deg,rgba(8,20,32,.92),rgba(4,11,18,.88)); }
+    .formalism-header { max-width: 850px; margin-bottom: 34px; }
+    .formalism h2 { margin: 0 0 12px; font-size: clamp(24px,3vw,38px); font-weight: 300; letter-spacing: -.025em; }
+    .formalism h3 { margin: 0 0 10px; color: var(--cyan); font: 700 11px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .13em; }
+    .formalism p { margin: 0 0 15px; color: #a9c0c8; font-size: 14px; line-height: 1.72; }
+    .formalism-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 34px 52px; }
+    .formalism article { min-width: 0; }
+    .formalism .conclusion { margin: 34px 0 0; padding: 18px 20px; border-left: 2px solid var(--orange); background: rgba(255,189,99,.05); color: #c6d9df; }
+    .formalism mjx-container[display="true"] { margin: 1.15em 0 !important; overflow-x: auto; overflow-y: hidden; color: #ddf7ff; }
+    .formalism .symbol { color: var(--orange); }
+    .energy-model { margin-top: 2px; padding: clamp(22px,4vw,52px); border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(150deg,rgba(13,25,35,.94),rgba(5,12,19,.9)); }
+    .energy-model h2 { margin: 0 0 12px; font-size: clamp(24px,3vw,38px); font-weight: 300; letter-spacing: -.025em; }
+    .energy-model h3 { margin: 28px 0 9px; color: var(--cyan); font: 700 11px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .13em; }
+    .energy-model p { max-width: 980px; margin: 0 0 15px; color: #a9c0c8; font-size: 14px; line-height: 1.72; }
+    .energy-model mjx-container[display="true"] { margin: 1.15em 0 !important; overflow-x: auto; overflow-y: hidden; color: #ddf7ff; }
+    .energy-stats { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); margin: 28px 0; border: 1px solid var(--line); border-radius: 11px; overflow: hidden; }
+    .energy-stat { min-width: 0; padding: 15px 17px; border-right: 1px solid var(--line); background: rgba(4,12,20,.55); }
+    .energy-stat:last-child { border-right: 0; }
+    .energy-stat span { display: block; color: var(--muted); font: 9px/1.25 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .11em; }
+    .energy-stat strong { display: block; margin-top: 8px; color: #f0fbff; font: 600 clamp(15px,1.7vw,22px)/1.1 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .assumptions { display: grid; grid-template-columns: repeat(4,minmax(130px,1fr)); gap: 10px; max-width: 850px; }
+    .assumption { display: grid; gap: 6px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px; background: rgba(4,12,20,.5); }
+    .assumption label { color: var(--muted); font: 9px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .09em; }
+    .assumption input { width: 100%; border: 0; border-bottom: 1px solid rgba(109,231,255,.25); outline: 0; background: transparent; color: var(--cyan); font: 600 16px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .sensitivity { margin-top: 22px !important; padding: 16px 18px; border-left: 2px solid var(--orange); background: rgba(255,189,99,.05); color: #c6d9df !important; }
+    .caveat { color: var(--muted) !important; font-size: 12px !important; }
+    .source-links a { color: var(--cyan); }
+    @media (max-width: 700px) {
+      main { padding: 20px 14px; }
+      header, footer { align-items: flex-start; grid-template-columns: 1fr; flex-direction: column; }
+      .capture, .method { text-align: left; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat:nth-child(2) { border-right: 0; }
+      .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .chart-panel { padding: 12px 8px 8px; }
+      .formalism { padding: 22px 17px; }
+      .formalism-grid { grid-template-columns: 1fr; gap: 25px; }
+      .energy-model { padding: 22px 17px; }
+      .energy-stats { grid-template-columns: 1fr 1fr; }
+      .energy-stat { border-bottom: 1px solid var(--line); }
+      .energy-stat:nth-child(even) { border-right: 0; }
+      .energy-stat:last-child { grid-column: 1 / -1; border-bottom: 0; }
+      .assumptions { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]]
+      },
+      svg: { fontCache: "global" }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script defer src="deviation-data.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <div><span class="eyebrow">AEROSTAT / GLOBAL STATE SERIES</span><h1>Observed path vs. endpoint geodesic</h1></div>
+      <div class="capture" id="capture"></div>
+    </header>
+    <nav class="metric-tabs" id="metric-tabs" aria-label="Distribution metric"></nav>
+    <section class="stats" aria-label="Distribution summary">
+      <div class="stat"><span>QUALIFYING AIRCRAFT</span><strong id="count">--</strong></div>
+      <div class="stat"><span>MEDIAN</span><strong id="median">--</strong></div>
+      <div class="stat"><span>90TH PERCENTILE</span><strong id="p90">--</strong></div>
+      <div class="stat"><span>MEAN</span><strong id="mean">--</strong></div>
+    </section>
+    <section class="chart-panel"><svg id="chart" role="img" aria-label="Histogram of aircraft path deviation from endpoint geodesics"></svg></section>
+    <footer>
+      <p class="definition" id="definition"></p>
+      <p class="method" id="method"></p>
+    </footer>
+    <section class="formalism" aria-labelledby="formalism-title">
+      <div class="formalism-header">
+        <span class="eyebrow">MATHEMATICAL FORMALISM</span>
+        <h2 id="formalism-title">A random-scale bridge on the sphere</h2>
+        <p>The histogram looks approximately lognormal, but the geometry suggests a more informative construction. Each observed route is treated as a random transverse departure from the unique minor great-circle arc joining its endpoints.</p>
+      </div>
+      <div class="formalism-grid">
+        <article>
+          <h3>1 / SPHERICAL PATH AND REFERENCE ARC</h3>
+          <p>For aircraft \(i\), let the observed trajectory be \(x_i(t)\in S_R^2\), with normalized time \(0\leq t\leq1\). Its endpoint geodesic is</p>
+          \[
+            g_i(s)=\operatorname{Exp}_{x_i(0)}\!\left(s\,\operatorname{Log}_{x_i(0)}x_i(1)\right),
+            \qquad 0\leq s\leq1.
+          \]
+          <p>Here \(S_R^2\) is the Earth sphere and \(g_i\) is the minor great-circle arc from the first recorded position to the last.</p>
+        </article>
+        <article>
+          <h3>2 / OBSERVED DEVIATION</h3>
+          <p>The cross-track displacement is the shortest spherical distance from an observed position to the reference arc:</p>
+          \[
+            \eta_i(t)=d_{S_R^2}\!\left(x_i(t),g_i([0,1])\right).
+          \]
+          <p>The primary histogram statistic is its discrete root-mean-square magnitude over the \(n=60\) observations:</p>
+          \[
+            D_i=\left[\frac{1}{n}\sum_{j=1}^{n}\eta_i(t_j)^2\right]^{1/2}.
+          \]
+        </article>
+        <article>
+          <h3>3 / LOGNORMAL HYPOTHESIS</h3>
+          <p>The simplest positive, right-skewed population model assumes that many multiplicative route effects combine in logarithmic space:</p>
+          \[
+            \log D_i\sim\mathcal N(\mu,\sigma^2),
+          \]
+          \[
+            f_D(d)=\frac{1}{d\sigma\sqrt{2\pi}}
+            \exp\!\left[-\frac{(\log d-\mu)^2}{2\sigma^2}\right],
+            \qquad d&gt;0.
+          \]
+          <p>This is a useful empirical hypothesis, but by itself it does not explain why a route acquires its particular shape.</p>
+        </article>
+        <article>
+          <h3>4 / RANDOM-SCALE BRIDGE</h3>
+          <p>Separate the magnitude of a route's departure from its standardized shape:</p>
+          \[
+            \eta_i(t)=A_i Z_i(t),\quad
+            D_i=A_iQ_i,\quad
+            Q_i=\left[\int_0^1 Z_i(t)^2\,dt\right]^{1/2}.
+          \]
+          <p>The bridge \(Z_i(0)=Z_i(1)=0\) represents endpoint-pinned route geometry, while \(A_i&gt;0\) represents aircraft-specific scale. If \(\log A_i\) is Gaussian and variation in \(Q_i\) is comparatively modest, then \(\log D_i=\log A_i+\log Q_i\) is approximately Gaussian.</p>
+        </article>
+        <article>
+          <h3>5 / BROWNIAN-BRIDGE BASELINE</h3>
+          <p>A tractable baseline for the standardized route shape is a Brownian bridge with Karhunen-Loeve expansion</p>
+          \[
+            Z(t)=\sum_{k=1}^{\infty}\frac{\sqrt{2}\,\xi_k}{\pi k}
+            \sin(\pi kt),
+            \qquad \xi_k\overset{\mathrm{iid}}{\sim}\mathcal N(0,1).
+          \]
+          <p>Its integrated squared displacement is a weighted chi-square variable:</p>
+          \[
+            Q^2=\int_0^1Z(t)^2\,dt
+            =\sum_{k=1}^{\infty}\frac{\xi_k^2}{\pi^2k^2}.
+          \]
+        </article>
+        <article>
+          <h3>6 / RESULTING POPULATION LAW</h3>
+          <p>If the scale \(A\) is lognormal and the bridge functional \(Q\) follows the generalized chi law above, their product has density</p>
+          \[
+            f_D(d)=\int_0^{\infty}
+            f_A\!\left(\frac{d}{q}\right)f_Q(q)\,\frac{dq}{q}.
+          \]
+          <p>This lognormal scale mixture is the geometry-driven analytical model. A single lognormal is recovered as an approximation when the bridge-shape factor \(Q\) is concentrated relative to the scale factor \(A\).</p>
+        </article>
+      </div>
+      <p class="conclusion"><span class="symbol">Interpretation.</span> The lognormal appearance can arise from multiplicative variation in route scale, while systematic departures from lognormality encode differences in route shape, flight phase, airway structure, weather avoidance, and holding behavior. A heterogeneous population may therefore require a mixture \(f_D(d)=\sum_c\pi_c f_D(d\mid c)\) rather than one universal law.</p>
+    </section>
+    <section class="energy-model" aria-labelledby="energy-title">
+      <span class="eyebrow">ENERGY AND FUEL COUNTERFACTUAL</span>
+      <h2 id="energy-title">What would the excess ground track cost?</h2>
+      <p>For the quality-filtered cohort, sum the observed polyline excess over the endpoint geodesic, \(\Delta s_\Sigma=\sum_i(L_i-G_i)\). In steady, level flight, lift approximately balances weight and aerodynamic work is drag times distance:</p>
+      \[
+        \mathcal D\approx\frac{L}{L/\mathcal D}\approx\frac{Mg}{L/\mathcal D},
+        \qquad
+        \Delta E_{\mathrm{mech}}\approx\frac{Mg}{L/\mathcal D}\,\Delta s_\Sigma.
+      \]
+      <p>With overall fuel-to-propulsive efficiency \(\eta\), jet-fuel net calorific value \(H_f\), density \(\rho_f\), U.S. gallon volume \(V_{\mathrm{gal}}\), and price \(p_f\),</p>
+      \[
+        \Delta m_f=\frac{\Delta E_{\mathrm{mech}}}{\eta H_f},
+        \qquad
+        \Delta C=\frac{\Delta m_f}{\rho_fV_{\mathrm{gal}}}\,p_f.
+      \]
+      <div class="energy-stats" aria-label="Estimated excess energy, fuel, and cost">
+        <div class="energy-stat"><span>EXCESS DISTANCE</span><strong id="energy-distance">--</strong></div>
+        <div class="energy-stat"><span>MECHANICAL WORK</span><strong id="energy-work">--</strong></div>
+        <div class="energy-stat"><span>JET FUEL MASS</span><strong id="fuel-mass">--</strong></div>
+        <div class="energy-stat"><span>JET FUEL VOLUME</span><strong id="fuel-volume">--</strong></div>
+        <div class="energy-stat"><span>SPOT-VALUE COST</span><strong id="fuel-cost">--</strong></div>
+      </div>
+      <h3>ADJUST THE REPRESENTATIVE AIRCRAFT</h3>
+      <div class="assumptions">
+        <div class="assumption"><label for="mass-tonnes">MASS (METRIC TONS)</label><input id="mass-tonnes" type="number" min="10" max="400" step="5" value="70"></div>
+        <div class="assumption"><label for="lift-drag">LIFT / DRAG</label><input id="lift-drag" type="number" min="5" max="30" step="1" value="17"></div>
+        <div class="assumption"><label for="propulsive-efficiency">OVERALL EFFICIENCY</label><input id="propulsive-efficiency" type="number" min="0.1" max="0.7" step="0.01" value="0.35"></div>
+        <div class="assumption"><label for="fuel-price">FUEL PRICE (USD / GAL)</label><input id="fuel-price" type="number" min="0" max="20" step="0.001" value="3.185"></div>
+      </div>
+      <p class="sensitivity">Sensitivity range: a 40 t aircraft at \(L/\mathcal D=19,\eta=0.40\) gives about <strong>$56,000</strong>; a 100 t aircraft at \(L/\mathcal D=15,\eta=0.30\) gives about <strong>$236,000</strong>. The central 70 t narrowbody-like case is an order-of-magnitude estimate, not a fleet inventory.</p>
+      <p class="caveat"><strong>Not all of this is avoidable loss.</strong> Endpoint geodesics are counterfactuals, not necessarily flyable routes. The model ignores winds, altitude changes, aircraft type, payload, airway constraints, weather avoidance, holding, and the fact that this is a one-hour track window. It covers only the 1,780 quality-filtered aircraft and therefore is not a global aviation total.</p>
+      <p class="caveat source-links">Constants: \(g=9.80665\,\mathrm{m\,s^{-2}}\), \(H_f=44.1\,\mathrm{MJ\,kg^{-1}}\) from the <a href="https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_1_Ch1_Introduction.pdf">IPCC jet-kerosene default</a>, assumed \(\rho_f=0.800\,\mathrm{kg\,L^{-1}}\), and \(V_{\mathrm{gal}}=3.785411784\,\mathrm{L}\). Price is the EIA U.S. Gulf Coast kerosene-type jet-fuel spot value for the week ending 12 June 2026, released 17 June 2026: <a href="https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&amp;s=EER_EPJK_PF4_RGC_DPG&amp;f=W">$3.185/gal</a>.</p>
+    </section>
+  </main>
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const data = window.GEODESIC_DEVIATION_DATA;
+      const svg = document.querySelector("#chart");
+      const ns = "http://www.w3.org/2000/svg";
+      const margin = { top: 25, right: 18, bottom: 48, left: 57 };
+      const metrics = {
+        rmsDeviationKm: { short: "RMS DEVIATION", unit: "KM", decimals: 1, definition: "Root-mean-square spherical distance from the 60 observed track points to the minor great-circle arc joining the first and last positions." },
+        maxDeviationKm: { short: "MAX DEVIATION", unit: "KM", decimals: 1, definition: "Largest spherical distance from any observed track point to the endpoint great-circle arc." },
+        excessKm: { short: "EXCESS PATH", unit: "KM", decimals: 1, definition: "Observed polyline length minus the great-circle distance between the first and last positions." },
+        efficiencyPct: { short: "PATH EFFICIENCY", unit: "%", decimals: 1, definition: "Endpoint great-circle distance divided by observed polyline length. Higher values indicate a more direct path." }
+      };
+      let active = "rmsDeviationKm";
+      const make = (name, attrs = {}) => { const el = document.createElementNS(ns,name); Object.entries(attrs).forEach(([key,value]) => el.setAttribute(key,value)); return el; };
+      const quantile = (sorted, q) => { const position = (sorted.length - 1) * q; const base = Math.floor(position); const rest = position - base; return sorted[base + 1] === undefined ? sorted[base] : sorted[base] + rest * (sorted[base + 1] - sorted[base]); };
+      const format = (value, metric) => `${value.toFixed(metric.decimals)} ${metric.unit}`;
+      const timeLabel = seconds => new Date(seconds * 1000).toLocaleTimeString("en-US", { timeZone: "UTC", hour: "2-digit", minute: "2-digit", hour12: false }) + "Z";
+
+      document.querySelector("#metric-tabs").innerHTML = Object.entries(metrics).map(([key,metric]) => `<button class="metric-tab${key === active ? " active" : ""}" data-metric="${key}" type="button">${metric.short}</button>`).join("");
+      document.querySelectorAll(".metric-tab").forEach(tab => tab.addEventListener("click", () => { active = tab.dataset.metric; document.querySelectorAll(".metric-tab").forEach(item => item.classList.toggle("active", item === tab)); draw(); }));
+
+      function draw() {
+        const width = svg.clientWidth;
+        const height = svg.clientHeight;
+        const plotWidth = width - margin.left - margin.right;
+        const plotHeight = height - margin.top - margin.bottom;
+        const metric = metrics[active];
+        const values = data.aircraft.map(row => row[active]).sort((a,b) => a-b);
+        const median = quantile(values,.5);
+        const p90 = quantile(values,.9);
+        const mean = values.reduce((sum,value) => sum + value,0) / values.length;
+        const binsCount = 38;
+        const tailStep = active === "efficiencyPct" ? 2 : 5;
+        let low = active === "efficiencyPct" ? Math.max(0,Math.floor(quantile(values,.01) / tailStep) * tailStep) : 0;
+        let high = active === "efficiencyPct" ? 100 : Math.ceil(quantile(values,.99) / tailStep) * tailStep;
+        const bins = Array(binsCount).fill(0);
+        values.forEach(value => { const scaled = (value-low)/(high-low); const index = Math.max(0,Math.min(binsCount-1,Math.floor(scaled*binsCount))); bins[index]++; });
+        const maxCount = Math.ceil(Math.max(...bins)/25)*25;
+
+        svg.setAttribute("viewBox",`0 0 ${width} ${height}`);
+        svg.replaceChildren();
+        const defs = make("defs");
+        const gradient = make("linearGradient",{id:"bar-gradient",x1:"0",y1:"0",x2:"0",y2:"1"});
+        gradient.append(make("stop",{offset:"0%","stop-color":"#8cecff"}),make("stop",{offset:"100%","stop-color":"#208ba8"})); defs.append(gradient); svg.append(defs);
+        for (let i=0;i<=4;i++) { const y=margin.top+plotHeight*i/4; const value=Math.round(maxCount*(1-i/4)); svg.append(make("line",{class:"grid-line",x1:margin.left,x2:width-margin.right,y1:y,y2:y})); const label=make("text",{class:"axis-text",x:margin.left-10,y:y+3,"text-anchor":"end"}); label.textContent=value.toLocaleString(); svg.append(label); }
+        const slot=plotWidth/binsCount;
+        bins.forEach((count,index) => { const barHeight=count/maxCount*plotHeight; const bar=make("rect",{class:"bar",x:margin.left+index*slot+.5,y:margin.top+plotHeight-barHeight,width:Math.max(1,slot-1),height:barHeight,rx:1}); const from=low+(high-low)*index/binsCount; const to=low+(high-low)*(index+1)/binsCount; bar.append(make("title")); bar.firstChild.textContent=`${from.toFixed(1)} to ${to.toFixed(1)} ${metric.unit}: ${count} aircraft`; svg.append(bar); });
+        for (let i=0;i<=5;i++) { const value=low+(high-low)*i/5; const x=margin.left+plotWidth*i/5; const label=make("text",{class:"axis-text",x,y:height-19,"text-anchor":"middle"}); label.textContent=value.toFixed(active === "efficiencyPct" ? 0 : 1); svg.append(label); }
+        const unit=make("text",{class:"axis-text",x:width-margin.right,y:height-3,"text-anchor":"end"}); unit.textContent=`${metric.short} (${metric.unit})`; svg.append(unit);
+        if (median>=low && median<=high) { const x=margin.left+(median-low)/(high-low)*plotWidth; svg.append(make("line",{class:"median-line",x1:x,x2:x,y1:margin.top,y2:margin.top+plotHeight})); const label=make("text",{class:"median-label",x,y:margin.top-8,"text-anchor":"middle"}); label.textContent=`MEDIAN ${format(median,metric)}`; svg.append(label); }
+
+        document.querySelector("#count").textContent=values.length.toLocaleString();
+        document.querySelector("#median").textContent=format(median,metric);
+        document.querySelector("#p90").textContent=format(p90,metric);
+        document.querySelector("#mean").textContent=format(mean,metric);
+        document.querySelector("#definition").textContent=metric.definition;
+      }
+
+      document.querySelector("#capture").innerHTML=`${data.capture.snapshots} ONE-MINUTE SNAPSHOTS<br>${timeLabel(data.capture.first)} - ${timeLabel(data.capture.last)} / 20 JUN 2026`;
+      document.querySelector("#method").textContent=`Cohort: all 60 valid positions, endpoint displacement >= ${data.filters.minEndpointDistanceKm} km, no one-minute jump > ${data.filters.maxStepDistanceKm} km. Histogram range covers the 1st-99th percentile; end bins include tails.`;
+      const excessDistanceKm = data.aircraft.reduce((sum, row) => sum + row.excessKm, 0);
+      const energyInputs = ["mass-tonnes", "lift-drag", "propulsive-efficiency", "fuel-price"];
+      function updateEnergyModel() {
+        const massKg = Number(document.querySelector("#mass-tonnes").value) * 1000;
+        const liftToDrag = Number(document.querySelector("#lift-drag").value);
+        const efficiency = Number(document.querySelector("#propulsive-efficiency").value);
+        const pricePerGallon = Number(document.querySelector("#fuel-price").value);
+        if (![massKg, liftToDrag, efficiency, pricePerGallon].every(Number.isFinite) || massKg <= 0 || liftToDrag <= 0 || efficiency <= 0 || pricePerGallon < 0) return;
+
+        const gravity = 9.80665;
+        const fuelHeatingValue = 44.1e6;
+        const fuelDensityKgPerLiter = .800;
+        const litersPerGallon = 3.785411784;
+        const mechanicalWorkJ = massKg * gravity / liftToDrag * excessDistanceKm * 1000;
+        const fuelMassKg = mechanicalWorkJ / (efficiency * fuelHeatingValue);
+        const fuelGallons = fuelMassKg / fuelDensityKgPerLiter / litersPerGallon;
+        const costUsd = fuelGallons * pricePerGallon;
+
+        document.querySelector("#energy-distance").textContent = Math.round(excessDistanceKm).toLocaleString() + " KM";
+        document.querySelector("#energy-work").textContent = (mechanicalWorkJ / 1e12).toFixed(2) + " TJ";
+        document.querySelector("#fuel-mass").textContent = (fuelMassKg / 1000).toFixed(1) + " T";
+        document.querySelector("#fuel-volume").textContent = Math.round(fuelGallons).toLocaleString() + " GAL";
+        document.querySelector("#fuel-cost").textContent = costUsd.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+      }
+      energyInputs.forEach(id => document.querySelector("#" + id).addEventListener("input", updateEnergyModel));
+
+      addEventListener("resize",draw);
+      draw();
+      updateEnergyModel();
+    });
+  </script>
+</body>
+</html>

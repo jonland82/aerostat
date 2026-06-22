@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#02060b">
+  <title>Aerostat | Three Flight Traversals</title>
+  <style>
+    :root { color-scheme: dark; --panel: rgba(5, 13, 21, .76); --line: rgba(133, 196, 218, .18); --muted: #78909c; }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: radial-gradient(circle at 50% 42%, #0b1b28 0, #02060b 62%); color: #eaf9ff; font-family: Inter, "Segoe UI", sans-serif; }
+    body::after { content: ""; position: fixed; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(96, 190, 220, .025) 1px, transparent 1px), linear-gradient(90deg, rgba(96, 190, 220, .025) 1px, transparent 1px); background-size: 44px 44px; mask-image: radial-gradient(circle, #000 15%, transparent 78%); }
+    #globe { position: fixed; inset: 0; }
+    .topbar { position: fixed; z-index: 4; top: 22px; left: 26px; right: 26px; display: flex; justify-content: space-between; align-items: flex-start; pointer-events: none; }
+    .brand { letter-spacing: .17em; }
+    .brand strong { display: block; font: 700 16px/1.1 ui-monospace, SFMono-Regular, Consolas, monospace; color: #76eaff; }
+    .brand span, .range { display: block; margin-top: 7px; color: var(--muted); font: 10px/1.2 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .12em; }
+    .range { text-align: right; }
+    .flight-list { position: fixed; z-index: 5; top: 92px; left: 26px; width: 240px; display: grid; gap: 9px; }
+    .flight { position: relative; overflow: hidden; width: 100%; padding: 14px 15px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); backdrop-filter: blur(18px); color: inherit; text-align: left; cursor: pointer; transition: border-color .2s, transform .2s, background .2s; }
+    .flight::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 2px; background: var(--flight-color); box-shadow: 0 0 16px var(--flight-color); }
+    .flight:hover, .flight.active { transform: translateX(3px); border-color: color-mix(in srgb, var(--flight-color) 55%, transparent); background: rgba(8, 22, 33, .88); }
+    .flight .region { color: var(--muted); font: 9px/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .14em; }
+    .flight strong { display: block; margin: 7px 0 4px; font: 700 20px/1 ui-monospace, SFMono-Regular, Consolas, monospace; color: var(--flight-color); }
+    .flight .route-meta { display: flex; justify-content: space-between; color: #9db1ba; font-size: 10px; }
+    .telemetry { position: fixed; z-index: 5; right: 26px; bottom: 72px; width: 220px; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); backdrop-filter: blur(18px); }
+    .telemetry-label { color: var(--muted); font: 9px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .14em; }
+    .telemetry strong { display: block; margin: 7px 0 13px; font: 700 25px ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .telemetry dl { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; margin: 0; }
+    .telemetry dt { color: var(--muted); font-size: 9px; letter-spacing: .08em; }
+    .telemetry dd { margin: 3px 0 0; font: 12px ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .transport { position: fixed; z-index: 6; left: 50%; bottom: 22px; width: min(560px, calc(100vw - 44px)); transform: translateX(-50%); display: flex; align-items: center; gap: 13px; padding: 11px 14px; border: 1px solid var(--line); border-radius: 999px; background: rgba(4, 11, 18, .86); backdrop-filter: blur(18px); }
+    #play { flex: 0 0 33px; width: 33px; height: 33px; border: 0; border-radius: 50%; background: #71e9ff; color: #031019; cursor: pointer; font-size: 13px; }
+    #scrub { flex: 1; accent-color: #71e9ff; cursor: pointer; }
+    #clock { flex: 0 0 66px; color: #a9c0c9; font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; text-align: right; }
+    .hint { position: fixed; z-index: 4; right: 28px; top: 94px; color: rgba(170, 204, 215, .48); font: 9px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .1em; writing-mode: vertical-rl; }
+    @media (max-width: 720px) {
+      .topbar { top: 16px; left: 17px; right: 17px; }
+      .range, .hint { display: none; }
+      .flight-list { top: 68px; left: 12px; right: 12px; width: auto; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+      .flight { padding: 10px 8px; border-radius: 7px; }
+      .flight .region, .flight .route-meta { display: none; }
+      .flight strong { margin: 0; font-size: 12px; text-align: center; }
+      .telemetry { right: 12px; bottom: 75px; width: 175px; padding: 12px; }
+      .telemetry strong { font-size: 18px; }
+    }
+  </style>
+  <script defer src="../../../../static/vendor/globe.gl.min.js"></script>
+  <script defer src="flight-data.js"></script>
+</head>
+<body>
+  <div id="globe" aria-label="Animated globe showing three recorded flight traversals"></div>
+  <header class="topbar">
+    <div class="brand"><strong>AEROSTAT / TRAVERSALS</strong><span>OPEN SKY · 60 MINUTE CAPTURE</span></div>
+    <div class="range" id="range"></div>
+  </header>
+  <section class="flight-list" id="flight-list" aria-label="Tracked flights"></section>
+  <aside class="telemetry">
+    <span class="telemetry-label">ACTIVE TRACK</span>
+    <strong id="active-callsign">—</strong>
+    <dl>
+      <div><dt>ALTITUDE</dt><dd id="altitude">—</dd></div>
+      <div><dt>GROUND SPEED</dt><dd id="speed">—</dd></div>
+      <div><dt>HEADING</dt><dd id="heading">—</dd></div>
+      <div><dt>VERTICAL</dt><dd id="vertical">—</dd></div>
+    </dl>
+  </aside>
+  <span class="hint">DRAG TO ROTATE · SCROLL TO ZOOM · SELECT A FLIGHT</span>
+  <div class="transport">
+    <button id="play" type="button" aria-label="Play">▶</button>
+    <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Timeline">
+    <span id="clock">—</span>
+  </div>
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const flights = window.FLIGHT_DATA;
+      const texture = "../../../../static/vendor/earth-night.jpg";
+      const duration = 42000;
+      let progress = 0;
+      let playing = false;
+      let lastTick = performance.now();
+      let activeIndex = 0;
+      let lastAutoFocus = -1;
+      let manualFocusUntil = 0;
+      const $ = (selector) => document.querySelector(selector);
+
+      const globe = Globe({ animateIn: true, waitForGlobeReady: true })($("#globe"))
+        .globeImageUrl(texture)
+        .backgroundColor("rgba(0,0,0,0)")
+        .showAtmosphere(true)
+        .atmosphereColor("#57dff5")
+        .atmosphereAltitude(.17)
+        .pathPoints("points")
+        .pathPointLat("lat")
+        .pathPointLng("lng")
+        .pathPointAlt(() => .018)
+        .pathColor("color")
+        .pathStroke("stroke")
+        .pathDashLength("dashLength")
+        .pathDashGap("dashGap")
+        .pathDashAnimateTime("dashTime")
+        .pathTransitionDuration(0)
+        .pointLat("lat")
+        .pointLng("lng")
+        .pointAltitude(() => .025)
+        .pointColor("color")
+        .pointRadius(.16)
+        .pointResolution(8)
+        .pointsTransitionDuration(0)
+        .pointLabel(d => `<b style="color:${d.color}">${d.callsign}</b>`)
+        .ringLat("lat")
+        .ringLng("lng")
+        .ringColor(d => [d.color, "transparent"])
+        .ringMaxRadius(2.2)
+        .ringPropagationSpeed(2.2)
+        .ringRepeatPeriod(850);
+
+      globe.controls().enableDamping = true;
+      globe.controls().dampingFactor = .08;
+      globe.controls().autoRotate = false;
+
+      function resize() { globe.width(innerWidth).height(innerHeight); }
+      resize();
+      addEventListener("resize", resize);
+
+      const first = flights[0].points[0].t;
+      const last = flights[0].points.at(-1).t;
+      const timeLabel = value => new Date(value * 1000).toLocaleTimeString("en-US", { timeZone: "UTC", hour: "2-digit", minute: "2-digit", hour12: false }) + "Z";
+      $("#range").textContent = `${timeLabel(first)} — ${timeLabel(last)} · 20 JUN 2026`;
+
+      $("#flight-list").innerHTML = flights.map((flight, index) => `
+        <button class="flight${index === 0 ? " active" : ""}" style="--flight-color:${flight.color}" data-index="${index}" type="button">
+          <span class="region">${flight.label}</span><strong>${flight.callsign}</strong>
+          <span class="route-meta"><span>${flight.distanceKm.toLocaleString()} KM</span><span>${flight.icao24.toUpperCase()}</span></span>
+        </button>`).join("");
+
+      function positionAt(flight, value) {
+        const scaled = value * (flight.points.length - 1);
+        const index = Math.min(Math.floor(scaled), flight.points.length - 2);
+        const mix = scaled - index;
+        const a = flight.points[index];
+        const b = flight.points[index + 1];
+        const blend = key => a[key] + (b[key] - a[key]) * mix;
+        return { ...a, lat: blend("lat"), lng: blend("lng"), altFt: blend("altFt"), speedKt: blend("speedKt"), heading: blend("heading"), verticalFpm: blend("verticalFpm"), t: blend("t") };
+      }
+
+      function focus(index, manual = false) {
+        activeIndex = index;
+        document.querySelectorAll(".flight").forEach((card, i) => card.classList.toggle("active", i === index));
+        const point = positionAt(flights[index], progress);
+        globe.pointOfView({ lat: point.lat, lng: point.lng, altitude: innerWidth < 720 ? 2.15 : 1.85 }, 1300);
+        if (manual) manualFocusUntil = performance.now() + 12000;
+      }
+
+      document.querySelectorAll(".flight").forEach(card => card.addEventListener("click", () => focus(Number(card.dataset.index), true)));
+
+      function draw() {
+        const markers = flights.map((flight, flightIndex) => {
+          const point = positionAt(flight, progress);
+          const end = Math.max(2, Math.ceil(progress * (flight.points.length - 1)) + 1);
+          flight.currentPath = [...flight.points.slice(0, end - 1), point];
+          return { ...point, color: flight.color, callsign: flight.callsign, flightIndex };
+        });
+        const paths = flights.flatMap((flight, index) => [
+          { points: flight.points, color: `${flight.color}45`, stroke: .38, dashLength: .12, dashGap: .06, dashTime: 2600 },
+          { points: flight.currentPath, color: flight.color, stroke: index === activeIndex ? 1.15 : .78, dashLength: 1, dashGap: 0, dashTime: 0 }
+        ]);
+        globe.pathsData(paths).pointsData(markers).ringsData(markers);
+
+        const active = markers[activeIndex];
+        const flight = flights[activeIndex];
+        $("#active-callsign").textContent = flight.callsign;
+        $("#active-callsign").style.color = flight.color;
+        $("#altitude").textContent = `${Math.round(active.altFt).toLocaleString()} FT`;
+        $("#speed").textContent = `${Math.round(active.speedKt)} KT`;
+        $("#heading").textContent = `${String(Math.round(active.heading)).padStart(3, "0")}°`;
+        $("#vertical").textContent = `${active.verticalFpm >= 0 ? "+" : ""}${Math.round(active.verticalFpm)} FPM`;
+        $("#clock").textContent = timeLabel(active.t);
+        $("#scrub").value = Math.round(progress * 1000);
+      }
+
+      $("#play").addEventListener("click", () => {
+        playing = !playing;
+        lastTick = performance.now();
+        $("#play").textContent = playing ? "Ⅱ" : "▶";
+        $("#play").setAttribute("aria-label", playing ? "Pause" : "Play");
+      });
+      $("#scrub").addEventListener("input", event => { progress = Number(event.target.value) / 1000; draw(); });
+
+      function tick() {
+        const now = performance.now();
+        const elapsed = Math.min(now - lastTick, 100);
+        lastTick = now;
+        if (playing) progress = (progress + elapsed / duration) % 1;
+        const autoIndex = Math.min(2, Math.floor(progress * 3));
+        if (autoIndex !== lastAutoFocus && now > manualFocusUntil) {
+          lastAutoFocus = autoIndex;
+          focus(autoIndex);
+        }
+        draw();
+      }
+
+      focus(0);
+      draw();
+      setInterval(tick, 33);
+    });
+  </script>
+</body>
+</html>

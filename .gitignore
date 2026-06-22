@@ -8,6 +8,7 @@ deploy.local.json
 # Generated runtime and deployment artifacts
 .aws-build/
 data/
+experiments/*/data/
 
 # Python
 __pycache__/
