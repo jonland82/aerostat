@@ -202,12 +202,12 @@ Resources:
         Name: !Sub ${AWS::StackName}-security
         SecurityHeadersConfig:
           ContentSecurityPolicy:
-            ContentSecurityPolicy: "default-src 'self'; script-src 'self'; img-src 'self' data:; style-src 'self'; connect-src 'self'; worker-src blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+            ContentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data:; style-src 'self' 'unsafe-inline'; connect-src 'self'; frame-src 'self'; worker-src blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
             Override: true
           ContentTypeOptions:
             Override: true
           FrameOptions:
-            FrameOption: DENY
+            FrameOption: SAMEORIGIN
             Override: true
           ReferrerPolicy:
             ReferrerPolicy: no-referrer

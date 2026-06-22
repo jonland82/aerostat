@@ -36,6 +36,8 @@ button { color: inherit; }
 .brand strong { font-size: 19px; letter-spacing: .24em; }
 .brand small { color: var(--muted); font: 9px var(--font-mono); letter-spacing: .19em; margin-top: 3px; }
 .topbar-meta { display: flex; align-items: center; gap: 24px; color: #94a9b6; font: 11px var(--font-mono); letter-spacing: .11em; }
+.experiments-link { padding: 8px 10px; border: 1px solid var(--panel-line); color: #94a9b6; text-decoration: none; }
+.experiments-link:hover { border-color: var(--cyan); color: var(--cyan); }
 .mobile-filter-button, .mobile-close, .mobile-detail-toggle { display: none; }
 .status-pill { display: flex; align-items: center; gap: 8px; }
 .status-pill i { width: 7px; height: 7px; display: inline-block; border-radius: 50%; background: #60717e; box-shadow: 0 0 8px #60717e; }

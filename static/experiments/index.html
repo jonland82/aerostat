@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#03070d">
+  <title>Aerostat | Experiments</title>
+  <link rel="stylesheet" href="/experiments/styles.css">
+  <script defer src="/experiments/app.js"></script>
+</head>
+<body>
+  <main class="experiment-app">
+    <header class="app-header">
+      <a class="brand" href="/">
+        <span class="brand-mark"><i></i><i></i></span>
+        <span><strong>AEROSTAT</strong><small>EXPERIMENTAL RESULTS</small></span>
+      </a>
+      <nav class="tabs" aria-label="Experiment results">
+        <button class="tab active" type="button" data-view="traversals" aria-selected="true">Flight traversals</button>
+        <button class="tab" type="button" data-view="altitudes" aria-selected="false">Altitude distribution</button>
+        <button class="tab" type="button" data-view="deviation" aria-selected="false">Path deviation</button>
+      </nav>
+      <a class="live-link" href="/">Live flights</a>
+    </header>
+    <section class="view-stack">
+      <iframe class="view active" data-view="traversals" title="Three representative flight traversals"></iframe>
+      <iframe class="view" data-view="altitudes" title="Global altitude distribution"></iframe>
+      <iframe class="view" data-view="deviation" title="Geodesic path deviation"></iframe>
+    </section>
+  </main>
+</body>
+</html>

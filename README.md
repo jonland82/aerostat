@@ -19,7 +19,12 @@ Edit the ignored `credentials.json` with the client ID and client secret from yo
 python app.py
 ```
 
-Open <http://127.0.0.1:8000>. The globe library and Earth texture are vendored under `static/vendor`, so the dashboard interface has no runtime CDN dependency.
+Open <http://127.0.0.1:8000> for the live all-flights globe. The globe library and Earth texture are vendored under `static/vendor`, so the dashboard interface has no runtime CDN dependency.
+
+The captured analytical results are a separate tabbed application at
+<http://127.0.0.1:8000/experiments/index.html>. It combines the representative flight
+traversals, altitude distribution, and path-deviation analysis while keeping
+their generated source assets under `experiments/`.
 
 No frontend build is required. The local web server itself uses only the Python standard library; `boto3` is needed by the AWS collector and Lambda tests.
 
@@ -87,7 +92,7 @@ Historical and analytical work lives outside the dashboard under
 `experiments/`. The [global state-series experiment](experiments/global-state-series/README.md)
 contains a captured hour of one-minute OpenSky snapshots and produces raw
 compressed responses plus full and top-500 Parquet datasets. Its browser
-visualizations currently include:
+visualizations are combined at `/experiments/index.html` and include:
 
 - Three representative flight traversals on an animated globe.
 - The evolving global distribution of reported barometric altitude.

@@ -45,7 +45,7 @@
       .telemetry strong { font-size: 18px; }
     }
   </style>
-  <script defer src="../../../../static/vendor/globe.gl.min.js"></script>
+  <script defer src="/vendor/globe.gl.min.js"></script>
   <script defer src="flight-data.js"></script>
 </head>
 <body>
@@ -74,7 +74,7 @@
   <script>
     window.addEventListener("DOMContentLoaded", () => {
       const flights = window.FLIGHT_DATA;
-      const texture = "../../../../static/vendor/earth-night.jpg";
+      const texture = "/vendor/earth-night.jpg";
       const duration = 42000;
       let progress = 0;
       let playing = false;

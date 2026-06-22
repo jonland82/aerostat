@@ -162,6 +162,22 @@ A single lognormal is the concentrated-shape approximation to this model.
 Flight-phase and route-class heterogeneity may instead produce a mixture of
 such laws.
 
+### Academic Note
+
+The self-contained three-page note
+[When Does a Random-Scale Flight Path Look Lognormal?](notes/random-scale-bridge/random-scale-bridge.pdf)
+develops the scale-shape model into a lognormal-smoothing theorem, exact
+cumulant identities, a Brownian-bridge threshold, and an empirical diagnostic
+for the near-geodesic boundary population. Its LaTeX source and reproducible
+figure builder are in `notes/random-scale-bridge/`.
+
+Rebuild the vector figure and PDF from that directory with:
+
+```powershell
+python build_figure.py
+latexmk -pdf -interaction=nonstopmode -halt-on-error random-scale-bridge.tex
+```
+
 ### Energy and Fuel Counterfactual
 
 The geodesic page also converts the cohort's 45,451 km of aggregate excess

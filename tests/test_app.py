@@ -29,6 +29,14 @@ class StateNormalizationTests(unittest.TestCase):
         self.assertIsNone(app.normalize_state(["abc123", None, "US", 1, 2, None, 40.7]))
 
 
+class StaticRoutingTests(unittest.TestCase):
+    def test_experiment_results_directory_exists(self):
+        self.assertTrue((app.EXPERIMENT_RESULTS_DIR / "three-flight-globe" / "index.html").is_file())
+
+    def test_experiment_note_exists(self):
+        self.assertTrue((app.EXPERIMENT_NOTES_DIR / "random-scale-bridge" / "random-scale-bridge.pdf").is_file())
+
+
 class QuotaLedgerTests(unittest.TestCase):
     def test_persists_credit_spend(self):
         with tempfile.TemporaryDirectory() as directory:

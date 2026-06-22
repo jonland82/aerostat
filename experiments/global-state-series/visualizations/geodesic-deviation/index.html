@@ -37,11 +37,18 @@
     .method { margin: 0; color: var(--muted); font: 10px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace; text-align: right; }
     .formalism { margin-top: 18px; padding: clamp(22px,4vw,52px); border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(150deg,rgba(8,20,32,.92),rgba(4,11,18,.88)); }
     .formalism-header { max-width: 850px; margin-bottom: 34px; }
+    .paper-link { display: inline-flex; align-items: center; margin-top: 2px; padding: 8px 11px; border: 1px solid rgba(109,231,255,.28); border-radius: 5px; background: rgba(109,231,255,.05); color: var(--cyan); text-decoration: none; font: 700 9px ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .1em; }
+    .paper-link:hover { border-color: var(--cyan); background: rgba(109,231,255,.1); }
     .formalism h2 { margin: 0 0 12px; font-size: clamp(24px,3vw,38px); font-weight: 300; letter-spacing: -.025em; }
     .formalism h3 { margin: 0 0 10px; color: var(--cyan); font: 700 11px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .13em; }
     .formalism p { margin: 0 0 15px; color: #a9c0c8; font-size: 14px; line-height: 1.72; }
     .formalism-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 34px 52px; }
     .formalism article { min-width: 0; }
+    .formalism article.wide { grid-column: 1 / -1; }
+    .result-label { display: inline-block; margin-bottom: 11px; padding: 5px 8px; border: 1px solid rgba(109,231,255,.28); border-radius: 4px; color: var(--cyan); font: 700 9px/1 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .13em; }
+    .diagnostic { padding: 20px 22px; border-left: 2px solid var(--orange); background: rgba(255,189,99,.045); }
+    .intuition { margin-top: 17px !important; padding: 11px 13px; border-left: 2px solid var(--cyan); background: rgba(109,231,255,.045); color: #c4d9df !important; font-size: 12px !important; }
+    .intuition strong { color: var(--cyan); font: 700 9px ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .1em; }
     .formalism .conclusion { margin: 34px 0 0; padding: 18px 20px; border-left: 2px solid var(--orange); background: rgba(255,189,99,.05); color: #c6d9df; }
     .formalism mjx-container[display="true"] { margin: 1.15em 0 !important; overflow-x: auto; overflow-y: hidden; color: #ddf7ff; }
     .formalism .symbol { color: var(--orange); }
@@ -115,40 +122,45 @@
         <span class="eyebrow">MATHEMATICAL FORMALISM</span>
         <h2 id="formalism-title">A random-scale bridge on the sphere</h2>
         <p>The histogram looks approximately lognormal, but the geometry suggests a more informative construction. Each observed route is treated as a random transverse departure from the unique minor great-circle arc joining its endpoints.</p>
+        <a class="paper-link" href="/experiment-notes/random-scale-bridge/random-scale-bridge.pdf">READ THE ACADEMIC NOTE · PDF · 3 PAGES</a>
       </div>
       <div class="formalism-grid">
         <article>
           <h3>1 / SPHERICAL PATH AND REFERENCE ARC</h3>
-          <p>For aircraft \(i\), let the observed trajectory be \(x_i(t)\in S_R^2\), with normalized time \(0\leq t\leq1\). Its endpoint geodesic is</p>
+          <p>For aircraft \(i\), let \(x_i(t)\in S_R^2\) be its recorded position at dimensionless normalized time \(0\leq t\leq1\), where \(S_R^2\) is the spherical Earth of radius \(R=6371.0088\) km. Its endpoint geodesic is</p>
           \[
             g_i(s)=\operatorname{Exp}_{x_i(0)}\!\left(s\,\operatorname{Log}_{x_i(0)}x_i(1)\right),
             \qquad 0\leq s\leq1.
           \]
-          <p>Here \(S_R^2\) is the Earth sphere and \(g_i\) is the minor great-circle arc from the first recorded position to the last.</p>
+          <p>Here \(g_i\) is the minor great-circle arc, \(s\in[0,1]\) is dimensionless progress along it, \(\operatorname{Log}_{x_i(0)}x_i(1)\) is the tangent vector at the first position pointing toward the last, and \(\operatorname{Exp}_{x_i(0)}\) maps a scaled tangent vector back to the sphere. Thus \(g_i(s)\) is a position, while distances along or from \(g_i\) are measured in kilometres.</p>
+          <p class="intuition"><strong>USE-CASE READING</strong> This constructs the direct spherical reference route against which we compare the aircraft's recorded ground track.</p>
         </article>
         <article>
           <h3>2 / OBSERVED DEVIATION</h3>
-          <p>The cross-track displacement is the shortest spherical distance from an observed position to the reference arc:</p>
+          <p>Let \(d_{S_R^2}(a,b)\) denote spherical distance in kilometres and let \(g_i([0,1])\) denote the set of every position on the reference arc. The cross-track displacement is</p>
           \[
             \eta_i(t)=d_{S_R^2}\!\left(x_i(t),g_i([0,1])\right).
           \]
-          <p>The primary histogram statistic is its discrete root-mean-square magnitude over the \(n=60\) observations:</p>
+          <p>Here \(\eta_i(t)\) is the shortest distance in kilometres from the recorded position to that arc. For sample times \(t_1,\ldots,t_n\), with \(n=60\), the primary histogram statistic is the root-mean-square deviation</p>
           \[
             D_i=\left[\frac{1}{n}\sum_{j=1}^{n}\eta_i(t_j)^2\right]^{1/2}.
           \]
+          <p>Consequently, \(D_i\) is one nonnegative kilometre-valued summary for aircraft \(i\).</p>
+          <p class="intuition"><strong>USE-CASE READING</strong> This reduces each 60-point flight track to its typical sideways separation from the direct reference route.</p>
         </article>
         <article>
           <h3>3 / LOGNORMAL HYPOTHESIS</h3>
-          <p>The simplest positive, right-skewed population model assumes that many multiplicative route effects combine in logarithmic space:</p>
+          <p>Let \(d_0=1\) km be a fixed reference distance, making \(D_i/d_0\) dimensionless. The simplest positive, right-skewed population model assumes that many multiplicative route effects combine in logarithmic space, so</p>
           \[
-            \log D_i\sim\mathcal N(\mu,\sigma^2),
+            \log(D_i/d_0)\sim\mathcal N(\mu,\sigma^2),
           \]
           \[
             f_D(d)=\frac{1}{d\sigma\sqrt{2\pi}}
-            \exp\!\left[-\frac{(\log d-\mu)^2}{2\sigma^2}\right],
+            \exp\!\left[-\frac{(\log(d/d_0)-\mu)^2}{2\sigma^2}\right],
             \qquad d&gt;0.
           \]
-          <p>This is a useful empirical hypothesis, but by itself it does not explain why a route acquires its particular shape.</p>
+          <p>Here \(\mathcal N(\mu,\sigma^2)\) is a normal law with log-mean \(\mu\) and log-variance \(\sigma^2\); \(f_D(d)\) is the probability density of RMS deviation evaluated at distance \(d&gt;0\) km, and \(\log\) denotes the natural logarithm. Below, \(\log D\) and \(\log A\) abbreviate \(\log(D/d_0)\) and \(\log(A/d_0)\).</p>
+          <p class="intuition"><strong>USE-CASE READING</strong> This is the initial claim that flight-to-flight RMS deviations may follow one familiar positive, right-skewed distribution.</p>
         </article>
         <article>
           <h3>4 / RANDOM-SCALE BRIDGE</h3>
@@ -158,49 +170,116 @@
             D_i=A_iQ_i,\quad
             Q_i=\left[\int_0^1 Z_i(t)^2\,dt\right]^{1/2}.
           \]
-          <p>The bridge \(Z_i(0)=Z_i(1)=0\) represents endpoint-pinned route geometry, while \(A_i&gt;0\) represents aircraft-specific scale. If \(\log A_i\) is Gaussian and variation in \(Q_i\) is comparatively modest, then \(\log D_i=\log A_i+\log Q_i\) is approximately Gaussian.</p>
+          <p>The dimensionless bridge \(Z_i(t)\), pinned by \(Z_i(0)=Z_i(1)=0\), represents standardized route shape; \(A_i&gt;0\) is a latent route-specific scale in kilometres; and the dimensionless functional \(Q_i\) is the continuous-time RMS magnitude of that shape. If \(\log A_i\) is Gaussian and variation in \(Q_i\) is comparatively modest, then \(\log D_i=\log A_i+\log Q_i\) is approximately Gaussian.</p>
+          <p class="intuition"><strong>USE-CASE READING</strong> This asks whether large and small deviations differ mainly by overall scale while sharing broadly comparable route shapes.</p>
         </article>
         <article>
           <h3>5 / BROWNIAN-BRIDGE BASELINE</h3>
-          <p>A tractable baseline for the standardized route shape is a Brownian bridge with Karhunen-Loeve expansion</p>
+          <p>A tractable baseline for the standardized route shape is a standard Brownian bridge with Karhunen-Loeve expansion</p>
           \[
             Z(t)=\sum_{k=1}^{\infty}\frac{\sqrt{2}\,\xi_k}{\pi k}
             \sin(\pi kt),
             \qquad \xi_k\overset{\mathrm{iid}}{\sim}\mathcal N(0,1).
           \]
-          <p>Its integrated squared displacement is a weighted chi-square variable:</p>
+          <p>Here \(k=1,2,\ldots\) indexes sine-wave modes, \(\pi\) is the circle constant, and \(\xi_k\overset{\mathrm{iid}}{\sim}\mathcal N(0,1)\) means that the mode coefficients are independent standard-normal variables. Its integrated squared displacement is</p>
           \[
             Q^2=\int_0^1Z(t)^2\,dt
             =\sum_{k=1}^{\infty}\frac{\xi_k^2}{\pi^2k^2}.
           \]
+          <p>Thus \(Q^2\) is a weighted sum of independent one-degree-of-freedom chi-square variables and \(Q\) is its nonnegative square root.</p>
+          <p class="intuition"><strong>USE-CASE READING</strong> This supplies a mathematically tractable null model for irregular route shapes that begin and end on the reference arc.</p>
         </article>
         <article>
           <h3>6 / RESULTING POPULATION LAW</h3>
-          <p>If the scale \(A\) is lognormal and the bridge functional \(Q\) follows the generalized chi law above, their product has density</p>
+          <p>For a generic route, write \(D=AQ\), and let \(f_A\) and \(f_Q\) be the probability densities of its independent positive scale \(A\) and shape factor \(Q\). Their product has density</p>
           \[
             f_D(d)=\int_0^{\infty}
             f_A\!\left(\frac{d}{q}\right)f_Q(q)\,\frac{dq}{q}.
           \]
-          <p>This lognormal scale mixture is the geometry-driven analytical model. A single lognormal is recovered as an approximation when the bridge-shape factor \(Q\) is concentrated relative to the scale factor \(A\).</p>
+          <p>Here \(q&gt;0\) is the integration variable and \(1/q\) is the product-transformation Jacobian. This integral is the geometry-driven population law for kilometre-valued \(D\); a single lognormal is recovered approximately when \(Q\) is concentrated relative to \(A\).</p>
+          <p class="intuition"><strong>USE-CASE READING</strong> This combines variation in overall route scale with variation in route shape to predict the fleet-wide deviation histogram.</p>
+        </article>
+        <article class="wide">
+          <span class="result-label">THEOREM</span>
+          <h3>7 / LOGNORMAL SMOOTHING</h3>
+          <p>Consider a sequence indexed by \(\ell\) of scale-shape populations \(D_\ell=A_\ell Q_\ell\). Let \(U_\ell=\log A_\ell\sim\mathcal N(\mu_\ell,\sigma_\ell^2)\) be independent of \(V_\ell=\log Q_\ell\), and define its mean \(m_\ell=\mathbb E[V_\ell]\), variance \(\tau_\ell^2=\operatorname{Var}(V_\ell)\), and standardized log-deviation</p>
+          \[
+            W_\ell=\frac{\log D_\ell-(\mu_\ell+m_\ell)}{\sqrt{\sigma_\ell^2+\tau_\ell^2}}.
+          \]
+          <p>If the bridge's share of total log-variance satisfies \(\tau_\ell^2/(\sigma_\ell^2+\tau_\ell^2)\to0\), then \(W_\ell\Rightarrow\mathcal N(0,1)\), where \(\Rightarrow\) denotes convergence in distribution. More quantitatively, if \(G_\ell\sim\mathcal N(m_\ell,\tau_\ell^2)\) is a Gaussian variable matching the first two moments of \(V_\ell\), then</p>
+          \[
+            d_{W_2}\!\left(W_\ell,\mathcal N(0,1)\right)
+            \leq
+            \frac{d_{W_2}(V_\ell,G_\ell)}{\sqrt{\sigma_\ell^2+\tau_\ell^2}}.
+          \]
+          <p>Here \(d_{W_2}\) is the quadratic Wasserstein distance between probability laws. <span class="symbol">Proof sketch.</span> Replace \(V_\ell\) by \(G_\ell\); then \(U_\ell+G_\ell\) is exactly Gaussian. Convolution with the independent Gaussian \(U_\ell\) contracts Wasserstein distance, and the independent coupling bound \(d_{W_2}(V_\ell,G_\ell)\leq\sqrt{2}\,\tau_\ell\) completes the convergence argument.</p>
+          <p class="intuition"><strong>USE-CASE READING</strong> Across route populations, the fleet histogram becomes lognormal when variation in overall deviation scale overwhelms the remaining variation in standardized route shape.</p>
+        </article>
+        <article>
+          <span class="result-label">PROPOSITION</span>
+          <h3>8 / EXACT CUMULANT ATTENUATION</h3>
+          <p>For one fixed population, let \(U=\log A\), \(V=\log Q\), \(\tau_Q^2=\operatorname{Var}(V)\), and \(W=[\log D-(\mathbb E[U]+\mathbb E[V])]/\sqrt{\sigma_A^2+\tau_Q^2}\), where \(\sigma_A^2=\operatorname{Var}(U)\). If \(U\) is Gaussian and independent of \(V\), additivity of cumulants gives, for every integer \(r\geq3\),</p>
+          \[
+            \kappa_r(W)=
+            \frac{\kappa_r(\log Q)}
+            {(\sigma_A^2+\tau_Q^2)^{r/2}}.
+          \]
+          <p>Here \(\kappa_r(X)\) denotes the order-\(r\) cumulant of \(X\). In particular, with bridge variance share \(\rho=\tau_Q^2/(\sigma_A^2+\tau_Q^2)\),</p>
+          \[
+            \operatorname{Skew}(W)=\operatorname{Skew}(\log Q)\rho^{3/2},
+            \qquad
+            \operatorname{ExKurt}(W)=\operatorname{ExKurt}(\log Q)\rho^2.
+          \]
+          <p>Here \(\operatorname{Skew}\) is standardized third cumulant and \(\operatorname{ExKurt}\) is excess kurtosis, the standardized fourth cumulant. The product is exactly lognormal only when \(\log Q\) is Gaussian as well; otherwise these identities quantify the residual asymmetry and tail shape.</p>
+          <p class="intuition"><strong>USE-CASE READING</strong> This tells us exactly how much of the flight histogram's non-lognormal shape can survive after route-scale variation is added.</p>
+        </article>
+        <article>
+          <span class="result-label">BROWNIAN-BRIDGE COROLLARY</span>
+          <h3>9 / AN EXPLICIT THRESHOLD</h3>
+          <p>For the Brownian bridge, the spectral law of \(Q^2\) has Laplace transform, for transform parameter \(\lambda&gt;0\),</p>
+          \[
+            \mathbb E[e^{-\lambda Q^2}]=
+            \left(\frac{\sqrt{2\lambda}}{\sinh\sqrt{2\lambda}}\right)^{1/2}.
+          \]
+          <p>Here \(\mathbb E\) denotes expectation and \(\sinh\) is the hyperbolic sine. A numerical Karhunen-Loeve evaluation of the spectral sum gives</p>
+          \[
+            \begin{aligned}
+              \operatorname{SD}(\log Q)&\approx0.385,\\
+              \operatorname{Skew}(\log Q)&\approx0.178,\\
+              \operatorname{ExKurt}(\log Q)&\approx-0.348.
+            \end{aligned}
+          \]
+          <p>Here \(\operatorname{SD}\) is standard deviation, and \(\sigma_A=\operatorname{SD}(\log A)\) is the log-scale spread defined above. Substitution into the exact formulas shows that \(\sigma_A\gtrsim0.50\) makes both resulting standardized cumulants smaller than approximately \(0.05\) in magnitude.</p>
+          <p class="intuition"><strong>USE-CASE READING</strong> For our bridge baseline, even moderately varied route scales should make the observed fleet distribution look very nearly lognormal.</p>
+        </article>
+        <article class="wide diagnostic">
+          <span class="result-label">EMPIRICAL DIAGNOSTIC</span>
+          <h3>10 / THE SINGLE-POPULATION MODEL FAILS</h3>
+          <p>For the 1,776 aircraft with positive recorded RMS deviation \(D\) in kilometres, \(\operatorname{SD}(\log D)\approx1.465\). Under the independent Brownian decomposition, matching this log-variance would imply \(\sigma_A\approx1.413\) and hence predicted log-skewness and log-excess-kurtosis near \(0.003\) and \(-0.002\). Their sample values are instead approximately \(-2.40\) and \(8.11\).</p>
+          <p>This discrepancy rejects the single independent lognormal-scale Brownian-bridge description of the full cohort. It is concentrated in a near-geodesic boundary population: 53 aircraft have recorded RMS deviation at or below \(0.1\) km. The data therefore point toward a boundary mixture or multiple route regimes rather than one universal product law \(D=AQ\).</p>
+          <p class="intuition"><strong>USE-CASE READING</strong> Real flight tracks contain a distinct nearly direct group that the otherwise strongly smoothing Brownian product model cannot explain.</p>
         </article>
       </div>
-      <p class="conclusion"><span class="symbol">Interpretation.</span> The lognormal appearance can arise from multiplicative variation in route scale, while systematic departures from lognormality encode differences in route shape, flight phase, airway structure, weather avoidance, and holding behavior. A heterogeneous population may therefore require a mixture \(f_D(d)=\sum_c\pi_c f_D(d\mid c)\) rather than one universal law.</p>
+      <p class="conclusion"><span class="symbol">Interpretation.</span> The theorem identifies exactly when multiplicative scale variation suppresses bridge-shape nonnormality. The observed lower-tail boundary decisively violates that single-population approximation, turning route-class heterogeneity from a qualitative possibility into a model requirement. A natural next law is \(f_D(d)=\pi_0f_0(d)+\sum_c\pi_cf_D(d\mid c)\), where \(f_0\) is a near-geodesic boundary density with weight \(\pi_0\), each \(f_D(\cdot\mid c)\) is a continuous route-class density, and the nonnegative mixture weights sum to one.</p>
     </section>
     <section class="energy-model" aria-labelledby="energy-title">
       <span class="eyebrow">ENERGY AND FUEL COUNTERFACTUAL</span>
       <h2 id="energy-title">What would the excess ground track cost?</h2>
-      <p>For the quality-filtered cohort, sum the observed polyline excess over the endpoint geodesic, \(\Delta s_\Sigma=\sum_i(L_i-G_i)\). In steady, level flight, lift approximately balances weight and aerodynamic work is drag times distance:</p>
+      <p>For aircraft \(i\), let \(P_i\) be observed polyline length and \(G_i\) its endpoint great-circle distance, both in kilometres. Their cohort-wide excess is \(\Delta s_\Sigma=\sum_i(P_i-G_i)\). In steady, level flight, let \(M\) be representative aircraft mass, \(g\) gravitational acceleration, \(L\) lift, and \(F_{\mathrm{drag}}\) drag force; then \(L\approx Mg\), and mechanical work is drag times distance:</p>
       \[
-        \mathcal D\approx\frac{L}{L/\mathcal D}\approx\frac{Mg}{L/\mathcal D},
+        F_{\mathrm{drag}}\approx\frac{L}{L/F_{\mathrm{drag}}}
+        \approx\frac{Mg}{L/F_{\mathrm{drag}}},
         \qquad
-        \Delta E_{\mathrm{mech}}\approx\frac{Mg}{L/\mathcal D}\,\Delta s_\Sigma.
+        \Delta E_{\mathrm{mech}}\approx
+        \frac{Mg}{L/F_{\mathrm{drag}}}\,\Delta s_\Sigma.
       \]
-      <p>With overall fuel-to-propulsive efficiency \(\eta\), jet-fuel net calorific value \(H_f\), density \(\rho_f\), U.S. gallon volume \(V_{\mathrm{gal}}\), and price \(p_f\),</p>
+      <p>Here \(\Delta E_{\mathrm{mech}}\) is estimated excess mechanical energy and \(L/F_{\mathrm{drag}}\) is the lift-to-drag ratio. With fuel-to-propulsive efficiency \(\eta_p\), jet-fuel net calorific value \(H_f\), fuel density \(\rho_f\), U.S. gallon volume \(V_{\mathrm{gal}}\), and price \(p_f\) per gallon,</p>
       \[
-        \Delta m_f=\frac{\Delta E_{\mathrm{mech}}}{\eta H_f},
+        \Delta m_f=\frac{\Delta E_{\mathrm{mech}}}{\eta_p H_f},
         \qquad
         \Delta C=\frac{\Delta m_f}{\rho_fV_{\mathrm{gal}}}\,p_f.
       \]
+      <p>Thus \(\Delta m_f\) is estimated excess fuel mass and \(\Delta C\) is its estimated monetary value.</p>
       <div class="energy-stats" aria-label="Estimated excess energy, fuel, and cost">
         <div class="energy-stat"><span>EXCESS DISTANCE</span><strong id="energy-distance">--</strong></div>
         <div class="energy-stat"><span>MECHANICAL WORK</span><strong id="energy-work">--</strong></div>
@@ -215,7 +294,7 @@
         <div class="assumption"><label for="propulsive-efficiency">OVERALL EFFICIENCY</label><input id="propulsive-efficiency" type="number" min="0.1" max="0.7" step="0.01" value="0.35"></div>
         <div class="assumption"><label for="fuel-price">FUEL PRICE (USD / GAL)</label><input id="fuel-price" type="number" min="0" max="20" step="0.001" value="3.185"></div>
       </div>
-      <p class="sensitivity">Sensitivity range: a 40 t aircraft at \(L/\mathcal D=19,\eta=0.40\) gives about <strong>$56,000</strong>; a 100 t aircraft at \(L/\mathcal D=15,\eta=0.30\) gives about <strong>$236,000</strong>. The central 70 t narrowbody-like case is an order-of-magnitude estimate, not a fleet inventory.</p>
+      <p class="sensitivity">Sensitivity range: a 40 t aircraft at \(L/F_{\mathrm{drag}}=19,\eta_p=0.40\) gives about <strong>$56,000</strong>; a 100 t aircraft at \(L/F_{\mathrm{drag}}=15,\eta_p=0.30\) gives about <strong>$236,000</strong>. The central 70 t narrowbody-like case is an order-of-magnitude estimate, not a fleet inventory.</p>
       <p class="caveat"><strong>Not all of this is avoidable loss.</strong> Endpoint geodesics are counterfactuals, not necessarily flyable routes. The model ignores winds, altitude changes, aircraft type, payload, airway constraints, weather avoidance, holding, and the fact that this is a one-hour track window. It covers only the 1,780 quality-filtered aircraft and therefore is not a global aviation total.</p>
       <p class="caveat source-links">Constants: \(g=9.80665\,\mathrm{m\,s^{-2}}\), \(H_f=44.1\,\mathrm{MJ\,kg^{-1}}\) from the <a href="https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_1_Ch1_Introduction.pdf">IPCC jet-kerosene default</a>, assumed \(\rho_f=0.800\,\mathrm{kg\,L^{-1}}\), and \(V_{\mathrm{gal}}=3.785411784\,\mathrm{L}\). Price is the EIA U.S. Gulf Coast kerosene-type jet-fuel spot value for the week ending 12 June 2026, released 17 June 2026: <a href="https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&amp;s=EER_EPJK_PF4_RGC_DPG&amp;f=W">$3.185/gal</a>.</p>
     </section>

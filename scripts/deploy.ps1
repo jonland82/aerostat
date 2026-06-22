@@ -14,6 +14,8 @@ $LocalConfigPath = Join-Path $Root "deploy.local.json"
 $TemplatePath = Join-Path $Root "infrastructure\template.yaml"
 $LambdaPath = Join-Path $Root "aws\lambda_function.py"
 $StaticPath = Join-Path $Root "static"
+$ResultsPath = Join-Path $Root "experiments\global-state-series\visualizations"
+$NotesPath = Join-Path $Root "experiments\global-state-series\notes"
 
 function Invoke-Aws {
     param([Parameter(ValueFromRemainingArguments = $true)][string[]]$Arguments)
@@ -127,7 +129,9 @@ $staticBucket = Get-AwsText cloudformation describe-stacks --profile $Profile --
 $distributionId = Get-AwsText cloudformation describe-stacks --profile $Profile --region $Region --stack-name $StackName --query "Stacks[0].Outputs[?OutputKey=='DistributionId'].OutputValue | [0]" --output text
 $siteUrl = Get-AwsText cloudformation describe-stacks --profile $Profile --region $Region --stack-name $StackName --query "Stacks[0].Outputs[?OutputKey=='SiteUrl'].OutputValue | [0]" --output text
 
-Invoke-Aws s3 sync $StaticPath "s3://$staticBucket" --profile $Profile --region $Region --delete --cache-control "no-cache" --only-show-errors
+Invoke-Aws s3 sync $StaticPath "s3://$staticBucket" --profile $Profile --region $Region --delete --exclude "experiment-results/*" --exclude "experiment-notes/*" --cache-control "no-cache" --only-show-errors
+Invoke-Aws s3 sync $ResultsPath "s3://$staticBucket/experiment-results" --profile $Profile --region $Region --delete --exclude "build_data.py" --cache-control "no-cache" --only-show-errors
+Invoke-Aws s3 sync $NotesPath "s3://$staticBucket/experiment-notes" --profile $Profile --region $Region --delete --exclude "*" --include "*.pdf" --cache-control "no-cache" --only-show-errors
 Invoke-Aws cloudfront create-invalidation --profile $Profile --distribution-id $distributionId --paths "/*" --no-cli-pager | Out-Null
 & (Join-Path $PSScriptRoot "start-collector.ps1") -Profile $Profile -Region $Region -StackName $StackName
 

@@ -19,6 +19,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parent
 STATIC_DIR = ROOT / "static"
+EXPERIMENT_RESULTS_DIR = ROOT / "experiments" / "global-state-series" / "visualizations"
+EXPERIMENT_NOTES_DIR = ROOT / "experiments" / "global-state-series" / "notes"
 DATA_DIR = ROOT / "data"
 CREDENTIALS_PATH = ROOT / "credentials.json"
 QUOTA_PATH = DATA_DIR / "quota.json"
@@ -288,6 +290,25 @@ class DashboardHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args, directory=str(STATIC_DIR), **kwargs)
 
+    def translate_path(self, path: str) -> str:
+        """Serve generated experiment views without duplicating them under static/."""
+        request_path = urllib.parse.urlparse(path).path
+        experiment_roots = {
+            "/experiment-results/": EXPERIMENT_RESULTS_DIR,
+            "/experiment-notes/": EXPERIMENT_NOTES_DIR,
+        }
+        for prefix, directory in experiment_roots.items():
+            if request_path.startswith(prefix):
+                relative_path = urllib.parse.unquote(request_path[len(prefix):])
+                candidate = (directory / relative_path).resolve()
+                root = directory.resolve()
+                if candidate == root or root in candidate.parents:
+                    if candidate.is_dir():
+                        candidate /= "index.html"
+                    return str(candidate)
+                return str(root / "__not_found__")
+        return super().translate_path(path)
+
     def end_headers(self) -> None:
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "no-referrer")
@@ -295,9 +316,9 @@ class DashboardHandler(SimpleHTTPRequestHandler):
             self.send_header("Cache-Control", "no-store")
         self.send_header(
             "Content-Security-Policy",
-            "default-src 'self'; script-src 'self'; "
-            "img-src 'self' data:; style-src 'self'; "
-            "connect-src 'self'; worker-src blob:",
+            "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+            "img-src 'self' data:; style-src 'self' 'unsafe-inline'; "
+            "connect-src 'self'; frame-src 'self'; frame-ancestors 'self'; worker-src blob:",
         )
         super().end_headers()
 
