@@ -39,6 +39,12 @@
     .formalism-header { max-width: 850px; margin-bottom: 34px; }
     .paper-link { display: inline-flex; align-items: center; margin-top: 2px; padding: 8px 11px; border: 1px solid rgba(109,231,255,.28); border-radius: 5px; background: rgba(109,231,255,.05); color: var(--cyan); text-decoration: none; font: 700 9px ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .1em; }
     .paper-link:hover { border-color: var(--cyan); background: rgba(109,231,255,.1); }
+    .narrative-arc { margin: 0 0 38px; padding: 20px; border: 1px solid var(--line); border-radius: 11px; background: rgba(3,12,19,.52); }
+    .narrative-arc > span { display: block; margin-bottom: 14px; color: var(--orange); font: 700 9px ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .14em; }
+    .narrative-arc ol { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 1px; margin: 0; padding: 0; list-style: none; background: var(--line); }
+    .narrative-arc li { min-width: 0; padding: 15px 14px; background: #07131e; color: #95adb6; font-size: 11px; line-height: 1.55; }
+    .narrative-arc li::before { content: "0" counter(list-item); display: block; margin-bottom: 9px; color: var(--cyan); font: 700 9px ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .1em; }
+    .narrative-arc strong { display: block; margin-bottom: 6px; color: #e8f8fc; font-size: 12px; }
     .formalism h2 { margin: 0 0 12px; font-size: clamp(24px,3vw,38px); font-weight: 300; letter-spacing: -.025em; }
     .formalism h3 { margin: 0 0 10px; color: var(--cyan); font: 700 11px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .13em; }
     .formalism p { margin: 0 0 15px; color: #a9c0c8; font-size: 14px; line-height: 1.72; }
@@ -79,6 +85,7 @@
       .chart-panel { padding: 12px 8px 8px; }
       .formalism { padding: 22px 17px; }
       .formalism-grid { grid-template-columns: 1fr; gap: 25px; }
+      .narrative-arc ol { grid-template-columns: 1fr; }
       .energy-model { padding: 22px 17px; }
       .energy-stats { grid-template-columns: 1fr 1fr; }
       .energy-stat { border-bottom: 1px solid var(--line); }
@@ -124,6 +131,16 @@
         <p>The histogram looks approximately lognormal, but the geometry suggests a more informative construction. Each observed route is treated as a random transverse departure from the unique minor great-circle arc joining its endpoints.</p>
         <a class="paper-link" href="/experiment-notes/random-scale-bridge/random-scale-bridge.pdf">READ THE ACADEMIC NOTE · PDF · 3 PAGES</a>
       </div>
+      <section class="narrative-arc" aria-labelledby="narrative-arc-title">
+        <span id="narrative-arc-title">FROM SKY TO DIAGNOSIS</span>
+        <ol>
+          <li><strong>A direct reference</strong>Aircraft rarely follow the shortest spherical path between their observed endpoints, so the endpoint geodesic is a reference rather than a prescribed route.</li>
+          <li><strong>Scale and shape</strong>We write each route's RMS deviation as \(D=AQ\): \(A\) sets its overall magnitude, while \(Q\) captures its standardized endpoint-pinned shape.</li>
+          <li><strong>The smoothing prediction</strong>Broad variation in \(A\) should suppress the skewness and kurtosis contributed by \(Q\), making the Brownian product nearly Gaussian in log space.</li>
+          <li><strong>The boundary population</strong>The observed log-skewness is \(-2.40\), with 53 tracks recording RMS deviation at or below \(0.1\) km and forming a distinct lower-tail boundary.</li>
+          <li><strong>The conclusion</strong>One independent lognormal-scale Brownian bridge does not fit the full cohort; the data motivate a boundary component plus continuous route regimes.</li>
+        </ol>
+      </section>
       <div class="formalism-grid">
         <article>
           <h3>1 / SPHERICAL PATH AND REFERENCE ARC</h3>
