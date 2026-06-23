@@ -76,22 +76,32 @@
     .caveat { color: var(--muted) !important; font-size: 12px !important; }
     .source-links a { color: var(--cyan); }
     @media (max-width: 700px) {
-      main { padding: 20px 14px; }
-      header, footer { align-items: flex-start; grid-template-columns: 1fr; flex-direction: column; }
+      html, body { overflow-x: hidden; }
+      main { width: 100%; max-width: 100vw; padding: 20px 14px; overflow-x: hidden; grid-template-rows: auto auto auto minmax(320px,auto) auto auto; }
+      main > * { min-width: 0; max-width: 100%; }
+      header, footer { width: 100%; align-items: flex-start; grid-template-columns: minmax(0,1fr); flex-direction: column; }
       .capture, .method { text-align: left; }
-      .stats { grid-template-columns: 1fr 1fr; }
+      .metric-tabs { width: 100%; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; }
+      .metric-tab { flex: 0 0 auto; white-space: nowrap; }
+      .stats { width: 100%; grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .stat { min-width: 0; padding: 13px 12px; }
+      .stat span { overflow-wrap: anywhere; line-height: 1.25; }
       .stat:nth-child(2) { border-right: 0; }
       .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
-      .chart-panel { padding: 12px 8px 8px; }
-      .formalism { padding: 22px 17px; }
+      .chart-panel { width: 100%; padding: 12px 8px 8px; overflow: hidden; }
+      #chart { min-height: 320px; }
+      .formalism { width: 100%; padding: 22px 17px; overflow: hidden; }
       .formalism-grid { grid-template-columns: 1fr; gap: 25px; }
+      .formalism mjx-container[display="true"], .energy-model mjx-container[display="true"] { max-width: 100%; padding-bottom: 4px; }
+      .formalism p, .energy-model p { overflow-wrap: anywhere; }
+      .narrative-arc { padding: 16px 14px; }
       .narrative-arc ol { grid-template-columns: 1fr; }
-      .energy-model { padding: 22px 17px; }
-      .energy-stats { grid-template-columns: 1fr 1fr; }
+      .energy-model { width: 100%; padding: 22px 17px; overflow: hidden; }
+      .energy-stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
       .energy-stat { border-bottom: 1px solid var(--line); }
       .energy-stat:nth-child(even) { border-right: 0; }
       .energy-stat:last-child { grid-column: 1 / -1; border-bottom: 0; }
-      .assumptions { grid-template-columns: 1fr 1fr; }
+      .assumptions { grid-template-columns: repeat(2,minmax(0,1fr)); }
     }
   </style>
   <script>
