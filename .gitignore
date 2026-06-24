@@ -23,6 +23,8 @@ htmlcov/
 venv/
 
 # Editors and operating systems
+.agents/
+.codex/
 .idea/
 .vscode/
 .DS_Store

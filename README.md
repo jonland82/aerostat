@@ -2,6 +2,14 @@
 
 A lightweight, manually refreshed aircraft globe backed by the OpenSky Network API.
 
+## Public Links
+
+- Project overview for GitHub Pages: <https://jonland82.github.io/aerostat/>
+- Live CloudFront dashboard: <https://d2188f8gar9chl.cloudfront.net/>
+- Live CloudFront experiment viewer: <https://d2188f8gar9chl.cloudfront.net/experiments/index.html>
+
+The public dashboard can display the deployed snapshot. Manual refresh remains owner-gated by the private refresh key and local collector described in [AWS_SETUP.md](AWS_SETUP.md).
+
 ## Local Setup
 
 Requirements: Python 3.10 or newer and OpenSky OAuth2 client credentials.

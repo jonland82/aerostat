@@ -1,0 +1,859 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#03070d">
+  <title>Aerostat | Open Airspace Intelligence</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #03070d;
+      --panel: rgba(8, 17, 28, .84);
+      --panel-strong: rgba(11, 24, 38, .94);
+      --line: rgba(116, 210, 237, .18);
+      --line-strong: rgba(109, 231, 255, .34);
+      --text: #eef8fb;
+      --muted: #7c93a0;
+      --cyan: #6de7ff;
+      --teal: #48e0bd;
+      --amber: #ffbd63;
+      --red: #ff647c;
+      --mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, "Segoe UI", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      width: 100%;
+      min-width: 320px;
+      scroll-behavior: smooth;
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    body {
+      width: 100%;
+      max-width: 100vw;
+      margin: 0;
+      color: var(--text);
+      font-family: var(--sans);
+      background:
+        linear-gradient(180deg, rgba(3, 7, 13, .58), rgba(3, 7, 13, .98) 74%),
+        url("static/vendor/earth-night.jpg") center top / min(1200px, 140vw) auto no-repeat,
+        radial-gradient(circle at 52% 7%, rgba(22, 93, 119, .52), transparent 36rem),
+        linear-gradient(145deg, #07131f, #020509 68%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(109, 231, 255, .026) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(109, 231, 255, .026) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, #000, transparent 82%);
+    }
+
+    a { color: inherit; }
+
+    .page-shell {
+      width: min(1100px, calc(100% - 72px));
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: linear-gradient(145deg, rgba(12, 25, 39, .9), rgba(4, 11, 19, .78));
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .28), inset 0 1px rgba(255, 255, 255, .025);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+      height: 66px;
+      margin-top: 14px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-width: 0;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      position: relative;
+      display: block;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(86, 232, 255, .38);
+      transform: rotate(45deg);
+    }
+
+    .brand-mark::before,
+    .brand-mark::after,
+    .brand-mark i {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border: 1px solid var(--cyan);
+    }
+
+    .brand-mark::after {
+      inset: 12px;
+      background: var(--cyan);
+      box-shadow: 0 0 16px var(--cyan);
+    }
+
+    .brand-mark i:first-child { inset: -4px 15px; border-width: 0 1px; }
+    .brand-mark i:last-child { inset: 15px -4px; border-width: 1px 0; }
+
+    .brand span:last-child {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .brand strong {
+      font: 700 18px/1 var(--mono);
+      letter-spacing: .24em;
+    }
+
+    .brand small {
+      margin-top: 5px;
+      color: var(--muted);
+      font: 10px/1 var(--mono);
+      letter-spacing: .14em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .nav-links a,
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      color: #a7bdc7;
+      text-decoration: none;
+      font: 11px/1 var(--mono);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .nav-links a:hover,
+    .cta:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(109, 231, 255, .06);
+    }
+
+    .hero {
+      min-height: auto;
+      padding: clamp(32px, 4vw, 56px) 0 48px;
+      display: grid;
+      align-items: start;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr);
+      gap: 28px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .eyebrow {
+      display: block;
+      max-width: 100%;
+      margin: 0 0 13px;
+      color: var(--cyan);
+      font: 700 11px/1.35 var(--mono);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 18px;
+      font-size: clamp(42px, 6vw, 68px);
+      line-height: .94;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .outline-word {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(238, 248, 251, .58);
+    }
+
+    .lede {
+      max-width: 720px;
+      margin-bottom: 26px;
+      color: #b7c9d1;
+      font-size: clamp(16px, 2vw, 20px);
+      line-height: 1.6;
+    }
+
+    .hero-author {
+      display: block;
+      margin: -5px 0 20px;
+      color: #9fb6c0;
+      font: 12px/1.3 var(--mono);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .cta.primary {
+      min-height: 46px;
+      border-color: rgba(109, 231, 255, .5);
+      background: rgba(31, 144, 170, .18);
+      color: var(--cyan);
+    }
+
+    .cta.secondary {
+      min-height: 46px;
+      border-color: rgba(255, 189, 99, .42);
+      color: #ffd79a;
+      background: rgba(255, 189, 99, .06);
+    }
+
+    .snapshot-panel {
+      padding: 20px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .metric-primary {
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(125, 169, 188, .14);
+    }
+
+    .metric-primary strong {
+      display: block;
+      color: var(--cyan);
+      font: 700 36px/1 var(--mono);
+      letter-spacing: 0;
+    }
+
+    .metric-primary span,
+    .metric-grid span {
+      display: block;
+      margin-top: 7px;
+      color: #6f8794;
+      font: 10px/1.45 var(--mono);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .metric-grid > div {
+      min-width: 0;
+    }
+
+    .metric-grid strong {
+      display: block;
+      color: #d8e7ec;
+      font: 700 19px/1 var(--mono);
+    }
+
+    .section {
+      padding: 48px 0;
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: minmax(0, .78fr) minmax(280px, .42fr);
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 24px;
+    }
+
+    .section h2 {
+      margin-bottom: 0;
+      font-size: clamp(28px, 3.4vw, 42px);
+      line-height: 1.05;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .section-header p {
+      margin-bottom: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .repo-grid,
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .info-card,
+    .result-card {
+      min-width: 0;
+      padding: 19px;
+    }
+
+    .info-card h3,
+    .result-card h3 {
+      margin-bottom: 10px;
+      color: #effaff;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    .info-card p,
+    .result-card p {
+      margin-bottom: 0;
+      color: #91a8b3;
+      font-size: 15px;
+      line-height: 1.62;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 15px;
+    }
+
+    .tag {
+      padding: 6px 8px;
+      border: 1px solid rgba(109, 231, 255, .22);
+      color: #a9dbe6;
+      font: 10px/1 var(--mono);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .result-card strong {
+      color: var(--amber);
+      font-weight: 700;
+    }
+
+    .paper-band {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, .48fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .paper-main {
+      padding: clamp(24px, 4vw, 40px);
+    }
+
+    .paper-main h2 {
+      margin-bottom: 14px;
+      max-width: 760px;
+    }
+
+    .paper-main p {
+      max-width: 830px;
+      color: #a9c0c8;
+      line-height: 1.7;
+    }
+
+    .paper-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .paper-stats {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1px;
+      background: var(--line);
+    }
+
+    .paper-stat {
+      min-height: 120px;
+      padding: 17px;
+      background: rgba(5, 13, 21, .92);
+    }
+
+    .paper-stat strong {
+      display: block;
+      color: var(--cyan);
+      font: 700 22px/1 var(--mono);
+    }
+
+    .paper-stat span {
+      display: block;
+      margin-top: 9px;
+      color: #829aa5;
+      font: 10px/1.45 var(--mono);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .graph-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .graph-panel {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .graph-heading {
+      min-height: 70px;
+      padding: 17px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      min-width: 0;
+      border-bottom: 1px solid var(--line);
+      background: rgba(4, 11, 18, .68);
+    }
+
+    .graph-heading h3 {
+      min-width: 0;
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .graph-heading a {
+      flex: 0 0 auto;
+      color: var(--cyan);
+      text-decoration: none;
+      font: 10px/1 var(--mono);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .graph-frame {
+      display: block;
+      width: 100%;
+      height: 520px;
+      border: 0;
+      background: #03070d;
+    }
+
+    .link-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .link-tile {
+      min-width: 0;
+      min-height: 126px;
+      padding: 17px;
+      text-decoration: none;
+      transition: border-color .2s ease, transform .2s ease, background .2s ease;
+    }
+
+    .link-tile:hover {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      background: linear-gradient(145deg, rgba(16, 35, 52, .94), rgba(6, 13, 22, .84));
+    }
+
+    .link-tile span {
+      display: block;
+      color: var(--cyan);
+      font: 10px/1 var(--mono);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .link-tile strong {
+      display: block;
+      margin-top: 12px;
+      color: var(--text);
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .site-footer {
+      padding: 34px 0 52px;
+      color: #6f8794;
+      font: 11px/1.6 var(--mono);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 940px) {
+      .page-shell {
+        width: calc(100% - 36px);
+      }
+
+      .topbar {
+        height: auto;
+        padding: 14px;
+        gap: 14px;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .hero-grid,
+      .section-header,
+      .paper-band,
+      .graph-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .repo-grid,
+      .result-grid,
+      .link-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .graph-frame {
+        height: 480px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-shell {
+        width: calc(100vw - 20px);
+        max-width: 1180px;
+      }
+
+      .topbar {
+        position: relative;
+        top: auto;
+        flex-direction: column;
+        align-items: stretch;
+        overflow: hidden;
+      }
+
+      .brand strong { font-size: 14px; }
+      .brand small { font-size: 8px; }
+      .brand strong,
+      .brand small {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .nav-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+        justify-content: stretch;
+      }
+
+      .nav-links a {
+        min-width: 0;
+        min-height: 32px;
+        padding: 0 8px;
+        font-size: 9px;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      .nav-links a:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 32px 0 34px;
+      }
+
+      h1 {
+        max-width: 100%;
+        font-size: clamp(34px, 10.5vw, 42px);
+        line-height: .98;
+        overflow-wrap: anywhere;
+      }
+
+      .lede,
+      .section-header p,
+      .info-card p,
+      .result-card p,
+      .paper-main p {
+        overflow-wrap: anywhere;
+      }
+
+      .hero-actions .cta,
+      .paper-actions .cta {
+        width: 100%;
+      }
+
+      .snapshot-panel,
+      .paper-stat,
+      .info-card,
+      .result-card,
+      .link-tile {
+        padding: 15px;
+      }
+
+      .metric-grid {
+        gap: 14px 12px;
+      }
+
+      .repo-grid,
+      .result-grid,
+      .paper-stats,
+      .link-row {
+        grid-template-columns: 1fr;
+      }
+
+      .section {
+        padding: 34px 0;
+      }
+
+      .graph-heading {
+        min-height: 0;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .graph-frame {
+        height: 430px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar panel">
+      <a class="brand" href="./" aria-label="Aerostat repository overview">
+        <span class="brand-mark"><i></i><i></i></span>
+        <span><strong>AEROSTAT</strong><small>OPEN AIRSPACE INTELLIGENCE</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Project links">
+        <a href="#repo">Repo</a>
+        <a href="#results">Results</a>
+        <a href="#paper">Paper</a>
+        <a href="#graphs">Graphs</a>
+        <a href="https://d2188f8gar9chl.cloudfront.net/">Live CloudFront</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <span class="eyebrow">Manually refreshed OpenSky dashboard and global state-series analysis</span>
+            <h1>Aerostat<br><span class="outline-word">flight</span><span class="outline-word">geometry</span></h1>
+            <span class="hero-author">Jonathan R. Landers</span>
+            <p class="lede">Aerostat combines a credit-safe live aircraft globe with a captured one-hour OpenSky state series, browser visualizations, and a short mathematical note about when random-scale flight paths look lognormal.</p>
+            <div class="hero-actions">
+              <a class="cta primary" href="https://d2188f8gar9chl.cloudfront.net/">Open live dashboard</a>
+              <a class="cta secondary" href="https://d2188f8gar9chl.cloudfront.net/experiments/index.html">Open live experiments</a>
+              <a class="cta" href="experiments/global-state-series/notes/random-scale-bridge/random-scale-bridge.pdf">Read the note</a>
+            </div>
+          </div>
+
+          <aside class="snapshot-panel panel" aria-label="Current experiment snapshot">
+            <div class="metric-primary">
+              <strong>414,269</strong>
+              <span>state-vector rows in the captured hour</span>
+            </div>
+            <div class="metric-grid">
+              <div><strong>60</strong><span>one-minute snapshots</span></div>
+              <div><strong>12,524</strong><span>distinct aircraft identifiers</span></div>
+              <div><strong>1,780</strong><span>quality-filtered tracks</span></div>
+              <div><strong>53</strong><span>near-geodesic boundary tracks</span></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="repo">
+        <div class="section-header">
+          <div>
+            <span class="eyebrow">Repository map</span>
+            <h2>What this project contains</h2>
+          </div>
+          <p>The live dashboard and the analytical experiment are deliberately separated. Runtime code protects OpenSky credits and secrets; experiment code turns bounded captures into static visualizations and a reproducible paper artifact.</p>
+        </div>
+
+        <div class="repo-grid">
+          <article class="info-card panel">
+            <h3>Live aircraft globe</h3>
+            <p>A Python standard-library local server, vendored globe assets, and a CloudFront-backed deployed site. Aircraft data is refreshed manually, never through browser polling.</p>
+            <div class="tag-row"><span class="tag">static/app.js</span><span class="tag">app.py</span></div>
+          </article>
+
+          <article class="info-card panel">
+            <h3>AWS deployment path</h3>
+            <p>CloudFormation, Lambda, S3, CloudFront, DynamoDB, SQS, and a local collector bridge. Real credentials and deployment state stay in ignored local files.</p>
+            <div class="tag-row"><span class="tag">infrastructure</span><span class="tag">scripts</span></div>
+          </article>
+
+          <article class="info-card panel">
+            <h3>Global state-series experiment</h3>
+            <p>A bounded one-hour historical pull of OpenSky state vectors, compact browser-ready datasets, and visualizations for traversals, altitude, and path deviation.</p>
+            <div class="tag-row"><span class="tag">experiments</span><span class="tag">visualizations</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="results">
+        <div class="section-header">
+          <div>
+            <span class="eyebrow">Main mathematical results</span>
+            <h2>From observed tracks to a route-shape diagnostic</h2>
+          </div>
+          <p>The note starts with spherical cross-track deviation, factors route magnitude from route shape, then tests whether the observed cohort can be explained by one random-scale bridge population.</p>
+        </div>
+
+        <div class="result-grid">
+          <article class="result-card panel">
+            <h3>Random-scale bridge law</h3>
+            <p>Each route's RMS deviation is modeled as <strong>D = A Q</strong>, where <strong>A</strong> is the route-scale variable and <strong>Q</strong> is the RMS functional of an endpoint-pinned standardized bridge.</p>
+          </article>
+
+          <article class="result-card panel">
+            <h3>Lognormal smoothing</h3>
+            <p>If log-scale variation dominates bridge-shape variation, the product law becomes close to lognormal. The theorem makes that smoothing quantitative in Wasserstein distance.</p>
+          </article>
+
+          <article class="result-card panel">
+            <h3>Exact cumulant attenuation</h3>
+            <p>For Gaussian log-scale <strong>log A</strong>, every standardized cumulant of order three or higher is inherited from <strong>log Q</strong> and divided by the total log-variance scale.</p>
+          </article>
+
+          <article class="result-card panel">
+            <h3>Brownian-bridge threshold</h3>
+            <p>The Brownian bridge baseline gives <strong>SD(log Q) about 0.385</strong>. A route-scale spread near <strong>sigma_A = 0.50</strong> already makes residual skew and excess kurtosis small.</p>
+          </article>
+
+          <article class="result-card panel">
+            <h3>Single-population failure</h3>
+            <p>The quality-filtered cohort has sample log-skewness near <strong>-2.40</strong> and log-excess-kurtosis near <strong>8.11</strong>, concentrated in 53 tracks at or below 0.1 km RMS deviation.</p>
+          </article>
+
+          <article class="result-card panel">
+            <h3>Sequential boundary test</h3>
+            <p>Prefix residual energy and a Wasserstein separation check estimate when a single observed aircraft is credibly part of the near-geodesic boundary population: about <strong>41 elapsed minutes</strong> in the current hour.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="paper">
+        <div class="paper-band">
+          <article class="paper-main panel">
+            <span class="eyebrow">Paper</span>
+            <h2>When Does a Random-Scale Flight Path Look Lognormal?</h2>
+            <p>This five-page note develops the scale-shape model, proves the smoothing and cumulant identities, calibrates a Brownian-bridge baseline, and uses the observed lower-tail failure to motivate a boundary-mixture model for nearly geodesic tracks.</p>
+            <p>The paper is intentionally tied to the visual diagnostics: the histogram supplies the empirical anomaly, while the theorem explains why ordinary route-scale variation alone should have made the log-distribution much smoother.</p>
+            <div class="paper-actions">
+              <a class="cta primary" href="experiments/global-state-series/notes/random-scale-bridge/random-scale-bridge.pdf">Open PDF</a>
+              <a class="cta" href="experiments/global-state-series/notes/random-scale-bridge/random-scale-bridge.tex">Read TeX source</a>
+              <a class="cta" href="experiments/global-state-series/README.md">Experiment README</a>
+            </div>
+          </article>
+
+          <aside class="paper-stats panel" aria-label="Paper and cohort statistics">
+            <div class="paper-stat"><strong>16.7 km</strong><span>median RMS geodesic deviation</span></div>
+            <div class="paper-stat"><strong>50.0 km</strong><span>90th percentile RMS deviation</span></div>
+            <div class="paper-stat"><strong>9.7 km</strong><span>median excess path length</span></div>
+            <div class="paper-stat"><strong>98.7%</strong><span>median path efficiency</span></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="graphs">
+        <div class="section-header">
+          <div>
+            <span class="eyebrow">Graphs</span>
+            <h2>Embedded analytical views</h2>
+          </div>
+          <p>These are static browser artifacts generated from compact JavaScript datasets in the repository. The CloudFront experiments app includes the full tabbed view, including representative flight traversals.</p>
+        </div>
+
+        <div class="graph-grid">
+          <article class="graph-panel panel">
+            <div class="graph-heading">
+              <h3>Altitude distribution over time</h3>
+              <a href="experiments/global-state-series/visualizations/altitude-histogram/index.html">Open full view</a>
+            </div>
+            <iframe class="graph-frame" loading="lazy" title="Global altitude distribution histogram" src="experiments/global-state-series/visualizations/altitude-histogram/index.html"></iframe>
+          </article>
+
+          <article class="graph-panel panel">
+            <div class="graph-heading">
+              <h3>Path deviation from endpoint geodesic</h3>
+              <a href="experiments/global-state-series/visualizations/geodesic-deviation/index.html">Open full view</a>
+            </div>
+            <iframe class="graph-frame" loading="lazy" title="Geodesic path deviation histogram" src="experiments/global-state-series/visualizations/geodesic-deviation/index.html"></iframe>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="links">
+        <div class="section-header">
+          <div>
+            <span class="eyebrow">Project links</span>
+            <h2>Run, inspect, or deploy</h2>
+          </div>
+          <p>Public readers can inspect the repository and open static artifacts. Owner-only live refresh still requires the private refresh key and local collector.</p>
+        </div>
+
+        <div class="link-row">
+          <a class="link-tile panel" href="https://d2188f8gar9chl.cloudfront.net/"><span>CloudFront</span><strong>Live aircraft dashboard</strong></a>
+          <a class="link-tile panel" href="https://d2188f8gar9chl.cloudfront.net/experiments/index.html"><span>CloudFront</span><strong>Tabbed experiment app</strong></a>
+          <a class="link-tile panel" href="https://github.com/jonland82/aerostat#readme"><span>Repo</span><strong>Local setup and API notes</strong></a>
+          <a class="link-tile panel" href="https://github.com/jonland82/aerostat/blob/main/AWS_SETUP.md"><span>Runbook</span><strong>AWS deploy and operations</strong></a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      Data source: OpenSky Network. Runtime secrets, quota ledgers, and local deployment state are intentionally excluded from the public repository.
+    </footer>
+  </div>
+</body>
+</html>
