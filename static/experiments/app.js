@@ -7,7 +7,7 @@ const views = {
 };
 
 function selectView(name, updateHistory = true) {
-  const selectedName = views[name] ? name : "traversals";
+  const selectedName = views[name] ? name : "deviation";
 
   document.querySelectorAll(".tab").forEach((tab) => {
     const active = tab.dataset.view === selectedName;

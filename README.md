@@ -46,11 +46,14 @@ site is the operational dashboard and experiment viewer:
 - [Research paper: geodesic-deviation pattern analysis](experiments/global-state-series/notes/random-scale-bridge/random-scale-bridge.pdf)
 - [Global state-series experiment README](experiments/global-state-series/README.md)
 
-The experiment viewer includes three browser artifacts:
+The experiment viewer centers on the geodesic-deviation analysis:
 
-- Representative flight traversals on an animated globe.
-- An animated altitude histogram across 60 one-minute snapshots.
 - A path-deviation page comparing complete tracks with endpoint great-circle arcs.
+
+The other two views are simple baseline checks for the captured state series:
+
+- Three representative flight traversals on an animated globe.
+- The evolving global distribution of reported barometric altitude.
 
 ## Current Dataset
 
@@ -163,9 +166,10 @@ python app.py
 Open <http://127.0.0.1:8000> for the live all-flights globe. The globe library and Earth texture are vendored under `static/vendor`, so the dashboard interface has no runtime CDN dependency.
 
 The captured analytical results are a separate tabbed application at
-<http://127.0.0.1:8000/experiments/index.html>. It combines the representative flight
-traversals, altitude distribution, and path-deviation analysis while keeping
-their generated source assets under `experiments/`.
+<http://127.0.0.1:8000/experiments/index.html>. It centers on path-deviation
+analysis from endpoint geodesics, with representative traversals and altitude
+distribution included as simple baseline checks. Generated source assets remain
+under `experiments/`.
 
 No frontend build is required. The local web server itself uses only the Python standard library; `boto3` is needed by the AWS collector and Lambda tests.
 
@@ -235,11 +239,13 @@ contains a captured hour of one-minute OpenSky snapshots and produces raw
 compressed responses plus full and top-500 Parquet datasets. Its browser
 visualizations are combined at `/experiments/index.html` and include:
 
-- Three representative flight traversals on an animated globe.
-- The evolving global distribution of reported barometric altitude.
-- Distributions of spherical path deviation from endpoint geodesics, with an
-  accompanying random-scale bridge, lognormal-mixture formalism, and sequential
-  boundary-population diagnostic.
+- The main experiment: distributions of spherical path deviation from endpoint
+  geodesics, with an accompanying random-scale bridge, lognormal-mixture
+  formalism, and sequential boundary-population diagnostic.
+- Simple baseline check: three representative flight traversals on an animated
+  globe.
+- Simple baseline check: the evolving global distribution of reported
+  barometric altitude.
 
 Generated experiment data remains local and ignored by Git. The compact
 JavaScript data files used by the visualizations are generated artifacts that

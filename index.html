@@ -734,7 +734,7 @@
 
           <article class="info-card panel">
             <h3>Geodesic-deviation experiment</h3>
-            <p>A bounded one-hour historical pull of OpenSky state vectors, compact browser-ready datasets, and visualizations for traversals, altitude, and path deviation from endpoint great-circle arcs.</p>
+            <p>A bounded one-hour historical pull of OpenSky state vectors, compact browser-ready datasets, and a main path-deviation analysis from endpoint great-circle arcs, with traversals and altitude included as simple baseline checks.</p>
             <div class="tag-row"><span class="tag">experiments</span><span class="tag">visualizations</span></div>
           </article>
         </div>
@@ -808,27 +808,27 @@
       <section class="section" id="graphs">
         <div class="section-header">
           <div>
-            <span class="eyebrow">Graphs</span>
-            <h2>Embedded analytical views</h2>
+            <span class="eyebrow">Main experiment and checks</span>
+            <h2>Geodesic deviation first</h2>
           </div>
-          <p>These are static browser artifacts generated from compact JavaScript datasets in the repository. The CloudFront experiments app includes the full tabbed view, including representative flight traversals.</p>
+          <p>The primary experiment is the geodesic-deviation analysis. The animated traversals and altitude distribution are currently simple baseline checks on the captured OpenSky state series.</p>
         </div>
 
         <div class="graph-grid">
           <article class="graph-panel panel">
             <div class="graph-heading">
-              <h3>Altitude distribution over time</h3>
-              <a href="experiments/global-state-series/visualizations/altitude-histogram/index.html">Open full view</a>
+              <h3>Main experiment: path deviation from endpoint geodesic</h3>
+              <a href="experiments/global-state-series/visualizations/geodesic-deviation/index.html">Open full view</a>
             </div>
-            <iframe class="graph-frame" loading="lazy" title="Global altitude distribution histogram" src="experiments/global-state-series/visualizations/altitude-histogram/index.html"></iframe>
+            <iframe class="graph-frame" loading="lazy" title="Geodesic path deviation histogram" src="experiments/global-state-series/visualizations/geodesic-deviation/index.html"></iframe>
           </article>
 
           <article class="graph-panel panel">
             <div class="graph-heading">
-              <h3>Path deviation from endpoint geodesic</h3>
-              <a href="experiments/global-state-series/visualizations/geodesic-deviation/index.html">Open full view</a>
+              <h3>Baseline check: altitude distribution over time</h3>
+              <a href="experiments/global-state-series/visualizations/altitude-histogram/index.html">Open full view</a>
             </div>
-            <iframe class="graph-frame" loading="lazy" title="Geodesic path deviation histogram" src="experiments/global-state-series/visualizations/geodesic-deviation/index.html"></iframe>
+            <iframe class="graph-frame" loading="lazy" title="Global altitude distribution histogram" src="experiments/global-state-series/visualizations/altitude-histogram/index.html"></iframe>
           </article>
         </div>
       </section>

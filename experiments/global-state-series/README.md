@@ -49,13 +49,15 @@ The generated dataset remains local under this experiment's ignored `data/` dire
 
 ## Visualizations
 
-The experiment includes three static browser visualizations:
+The experiment's main static browser visualization is the geodesic-deviation
+analysis. The globe and altitude pages are simple baseline checks for the same
+captured state series.
 
 | Page | Purpose |
 |---|---|
-| [Three-flight globe](visualizations/three-flight-globe/) | Animates three complete representative tracks |
-| [Altitude histogram](visualizations/altitude-histogram/) | Animates the global altitude distribution across all 60 snapshots |
-| [Geodesic deviation](visualizations/geodesic-deviation/) | Compares complete tracks with their endpoint great-circle arcs |
+| [Geodesic deviation](visualizations/geodesic-deviation/) | Main experiment: compares complete tracks with endpoint great-circle arcs |
+| [Three-flight globe](visualizations/three-flight-globe/) | Baseline check: animates three complete representative tracks |
+| [Altitude histogram](visualizations/altitude-histogram/) | Baseline check: animates the global altitude distribution across all 60 snapshots |
 
 Each page uses a compact generated JavaScript dataset and does not load the
 ignored Parquet file in the browser. Serve the repository root with
@@ -66,7 +68,7 @@ The globe and altitude pages use local assets. The mathematical section on the
 geodesic-deviation page loads MathJax 3 from jsDelivr, so its typeset equations
 require an internet connection.
 
-## Three-Flight Globe
+## Baseline Check: Three-Flight Globe
 
 `visualizations/three-flight-globe/index.html` animates three complete captured segments across an interactive globe: AAL784 over the North Atlantic, DAL158 over the North Pacific, and ARG1815 over South America. The visualization embeds only those 180 observations in `flight-data.js`; it does not read the ignored Parquet files at runtime.
 
@@ -82,7 +84,7 @@ Then visit <http://127.0.0.1:8080/experiments/global-state-series/visualizations
 python experiments/global-state-series/visualizations/three-flight-globe/build_data.py
 ```
 
-## Altitude Histogram
+## Baseline Check: Altitude Histogram
 
 `visualizations/altitude-histogram/index.html` animates the global distribution
 of reported barometric altitudes across all 60 snapshots. It uses fixed
@@ -98,7 +100,7 @@ Rebuild the embedded histogram frames after replacing the source dataset with:
 python experiments/global-state-series/visualizations/altitude-histogram/build_data.py
 ```
 
-## Geodesic Path Deviation
+## Main Experiment: Geodesic Path Deviation
 
 `visualizations/geodesic-deviation/index.html` compares each complete observed
 track with the minor great-circle arc joining its first and last positions. The
