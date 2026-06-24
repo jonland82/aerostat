@@ -684,14 +684,14 @@
       <section class="hero">
         <div class="hero-grid">
           <div>
-            <span class="eyebrow">Manually refreshed OpenSky dashboard and global state-series analysis</span>
+            <span class="eyebrow">Manually refreshed OpenSky dashboard and geodesic-deviation analysis</span>
             <h1>Aerostat<br><span class="outline-word">flight</span><span class="outline-word">geometry</span></h1>
             <span class="hero-author">Jonathan R. Landers</span>
-            <p class="lede">Aerostat combines a credit-safe live aircraft globe with a captured one-hour OpenSky state series, browser visualizations, and a random-scale bridge method for flight-path geometry, including new diagnostics for lognormal-looking deviations and near-geodesic boundary tracks.</p>
+            <p class="lede">Aerostat combines a credit-safe live aircraft globe with mathematical analysis of geodesic-deviation patterns across a captured one-hour OpenSky state series, including theoretical guarantees that distinguish ordinary route-scale variation from the 53 near-geodesic boundary tracks and estimate when that split becomes detectable.</p>
             <div class="hero-actions">
               <a class="cta primary" href="https://d2188f8gar9chl.cloudfront.net/">Open live dashboard</a>
               <a class="cta secondary" href="https://d2188f8gar9chl.cloudfront.net/experiments/index.html">Open live experiments</a>
-              <a class="cta" href="experiments/global-state-series/notes/random-scale-bridge/random-scale-bridge.pdf">Read the note</a>
+              <a class="cta" href="experiments/global-state-series/notes/random-scale-bridge/random-scale-bridge.pdf">Read the paper</a>
             </div>
           </div>
 
@@ -716,7 +716,7 @@
             <span class="eyebrow">Repository map</span>
             <h2>What this project contains</h2>
           </div>
-          <p>The live dashboard and the analytical experiment are deliberately separated. Runtime code protects OpenSky credits and secrets; experiment code turns bounded captures into static visualizations and a reproducible paper artifact.</p>
+          <p>The live dashboard and the analytical experiment are deliberately separated. Runtime code protects OpenSky credits and secrets; experiment code turns bounded captures into static visualizations and a reproducible paper on geodesic-deviation pattern analysis.</p>
         </div>
 
         <div class="repo-grid">
@@ -733,8 +733,8 @@
           </article>
 
           <article class="info-card panel">
-            <h3>Global state-series experiment</h3>
-            <p>A bounded one-hour historical pull of OpenSky state vectors, compact browser-ready datasets, and visualizations for traversals, altitude, and path deviation.</p>
+            <h3>Geodesic-deviation experiment</h3>
+            <p>A bounded one-hour historical pull of OpenSky state vectors, compact browser-ready datasets, and visualizations for traversals, altitude, and path deviation from endpoint great-circle arcs.</p>
             <div class="tag-row"><span class="tag">experiments</span><span class="tag">visualizations</span></div>
           </article>
         </div>
@@ -744,14 +744,14 @@
         <div class="section-header">
           <div>
             <span class="eyebrow">Main mathematical results</span>
-            <h2>From observed tracks to a route-shape diagnostic</h2>
+            <h2>Geodesic-deviation patterns across live flight paths</h2>
           </div>
-          <p>The note starts with spherical cross-track deviation, factors route magnitude from route shape, then tests whether the observed cohort can be explained by one random-scale bridge population.</p>
+          <p>The paper starts with spherical cross-track deviation, proves when route-scale variation makes deviation histograms look lognormal, uses the failed lower tail to separate the 53 near-geodesic aircraft from the rest of the cohort, and derives how long the split takes to detect from partial tracks.</p>
         </div>
 
         <div class="result-grid">
           <article class="result-card panel">
-            <h3>Random-scale bridge law</h3>
+            <h3>Deviation factorization</h3>
             <p>Each route's RMS deviation is modeled as <strong>D = A Q</strong>, where <strong>A</strong> is the route-scale variable and <strong>Q</strong> is the RMS functional of an endpoint-pinned standardized bridge.</p>
           </article>
 
@@ -771,13 +771,13 @@
           </article>
 
           <article class="result-card panel">
-            <h3>Single-population failure</h3>
+            <h3>53-aircraft boundary</h3>
             <p>The quality-filtered cohort has sample log-skewness near <strong>-2.40</strong> and log-excess-kurtosis near <strong>8.11</strong>, concentrated in 53 tracks at or below 0.1 km RMS deviation.</p>
           </article>
 
           <article class="result-card panel">
             <h3>Sequential boundary test</h3>
-            <p>Prefix residual energy and a Wasserstein separation check estimate when a single observed aircraft is credibly part of the near-geodesic boundary population: about <strong>41 elapsed minutes</strong> in the current hour.</p>
+            <p>Prefix residual energy and a Wasserstein separation check estimate when a single observed aircraft is credibly part of the near-geodesic boundary population: the differing physics of the two populations becomes visible after about <strong>41 elapsed minutes</strong> in the current hour.</p>
           </article>
         </div>
       </section>
@@ -786,9 +786,9 @@
         <div class="paper-band">
           <article class="paper-main panel">
             <span class="eyebrow">Paper</span>
-            <h2>When Does a Random-Scale Flight Path Look Lognormal?</h2>
-            <p>This five-page note develops the scale-shape model, proves the smoothing and cumulant identities, calibrates a Brownian-bridge baseline, and uses the observed lower-tail failure to motivate a boundary-mixture model for nearly geodesic tracks.</p>
-            <p>The paper is intentionally tied to the visual diagnostics: the histogram supplies the empirical anomaly, while the theorem explains why ordinary route-scale variation alone should have made the log-distribution much smoother.</p>
+            <h2>Geodesic-Deviation Pattern Analysis</h2>
+            <p>This five-page paper develops the scale-shape model, proves the smoothing and cumulant identities, calibrates a Brownian-bridge baseline, and uses the observed lower-tail failure to motivate a boundary-mixture model for nearly geodesic tracks.</p>
+            <p>The main result is a diagnostic separation: ordinary aircraft tracks can produce a lognormal-looking center through route-scale variation, while the 53 near-geodesic tracks form a boundary population with different underlying constraints or physics. The sequential result then derives how much of a track is needed before that distinction is visible in the data.</p>
             <div class="paper-actions">
               <a class="cta primary" href="experiments/global-state-series/notes/random-scale-bridge/random-scale-bridge.pdf">Open PDF</a>
               <a class="cta" href="experiments/global-state-series/notes/random-scale-bridge/random-scale-bridge.tex">Read TeX source</a>

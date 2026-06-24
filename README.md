@@ -1,10 +1,20 @@
-# Aerostat OpenSky Globe
+# Aerostat Flight Geometry
 
-A lightweight, manually refreshed aircraft globe backed by the OpenSky Network API.
+Aerostat pairs a manually refreshed OpenSky aircraft globe with mathematical
+analysis of geodesic-deviation patterns across live flight paths.
 
 ## Public Links
 
 - Project overview for GitHub Pages: <https://jonland82.github.io/aerostat/>
+- Research paper: [mathematical analysis of geodesic-deviation patterns across live flight paths](experiments/global-state-series/notes/random-scale-bridge/random-scale-bridge.pdf).
+  The paper studies how observed aircraft tracks deviate from endpoint
+  great-circle arcs, proves why broad route-scale variation can make ordinary
+  tracks look lognormal, and uses the sharp lower-tail boundary to separate the
+  53 near-geodesic aircraft from the rest of the cohort. It also derives a
+  sequential detection rule for how long an observed track must be watched
+  before the differing physics of the two populations becomes visible; in the
+  current captured hour, the boundary signal appears after about 41 elapsed
+  minutes.
 - Live CloudFront dashboard: <https://d2188f8gar9chl.cloudfront.net/>
 - Live CloudFront experiment viewer: <https://d2188f8gar9chl.cloudfront.net/experiments/index.html>
 
@@ -15,7 +25,11 @@ The public dashboard can display the deployed snapshot. Manual refresh remains o
 Aerostat is a small OpenSky-based airspace project with two connected layers:
 
 - A live aircraft globe that can be deployed behind CloudFront and refreshed manually without browser polling.
-- A captured one-hour global state-series experiment that turns OpenSky state vectors into static visualizations and the main contribution so far: a random-scale bridge method for flight-path geometry, with new diagnostics for lognormal-looking path deviations and near-geodesic boundary tracks.
+- A captured one-hour global state-series experiment that turns OpenSky state
+  vectors into static visualizations and the main contribution so far:
+  mathematical analysis of geodesic-deviation patterns across live flight paths,
+  with theoretical guarantees that distinguish ordinary route-scale variation
+  from the 53 near-geodesic boundary tracks.
 
 The dashboard is intentionally credit-safe and operationally conservative. Opening
 the site does not call OpenSky. The analytical side is separate: it uses bounded
@@ -29,7 +43,7 @@ site is the operational dashboard and experiment viewer:
 
 - [Live aircraft dashboard](https://d2188f8gar9chl.cloudfront.net/)
 - [Tabbed experiment viewer](https://d2188f8gar9chl.cloudfront.net/experiments/index.html)
-- [Random-scale bridge note](experiments/global-state-series/notes/random-scale-bridge/random-scale-bridge.pdf)
+- [Research paper: geodesic-deviation pattern analysis](experiments/global-state-series/notes/random-scale-bridge/random-scale-bridge.pdf)
 - [Global state-series experiment README](experiments/global-state-series/README.md)
 
 The experiment viewer includes three browser artifacts:
@@ -122,8 +136,9 @@ tracks. That points to a mixture model rather than one universal product law.
 - The observed cohort violates the single-population prediction because of a
   distinct near-geodesic lower-tail group.
 - A sequential diagnostic asks how long one must watch before assigning one
-  aircraft to that boundary population. In the current hour, the small-residual
-  signal crosses high posterior confidence after about 41 elapsed minutes.
+  aircraft to that boundary population. In the current hour, the derivation
+  estimates that the differing physics of the near-geodesic and ordinary
+  populations becomes visible after about 41 elapsed minutes.
 - The geodesic page also includes a fuel/energy counterfactual for aggregate
   excess ground track. This is an order-of-magnitude comparison to endpoint
   geodesics, not a claim that the excess is avoidable operational waste.
