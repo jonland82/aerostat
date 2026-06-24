@@ -173,7 +173,7 @@
 
     .hero {
       min-height: auto;
-      padding: clamp(32px, 4vw, 56px) 0 48px;
+      padding: clamp(32px, 4vw, 56px) 0 30px;
       display: grid;
       align-items: start;
     }
@@ -303,6 +303,10 @@
 
     .section {
       padding: 48px 0;
+    }
+
+    .hero + .section {
+      padding-top: 36px;
     }
 
     .section-header {
@@ -650,6 +654,10 @@
 
       .section {
         padding: 34px 0;
+      }
+
+      .hero + .section {
+        padding-top: 24px;
       }
 
       .graph-heading {
