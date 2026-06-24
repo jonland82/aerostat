@@ -78,31 +78,31 @@ at or below 0.1 km.
 
 ## Basic Mathematical Formalism
 
-Let \(x_i(t)\) be aircraft \(i\)'s observed position on the spherical Earth,
-normalized to \(0 \le t \le 1\). Let \(g_i\) be the minor great-circle arc
+Let $x_i(t)$ be aircraft $i$'s observed position on the spherical Earth,
+normalized to $0 \le t \le 1$. Let $g_i$ be the minor great-circle arc
 joining its first and last observed positions. The pointwise cross-track
 displacement is
 
-\[
+$$
 \eta_i(t)=d_{S_R^2}\left(x_i(t),g_i([0,1])\right),
-\]
+$$
 
 and the sampled RMS deviation is
 
-\[
+$$
 D_i=\left[\frac{1}{60}\sum_{j=1}^{60}\eta_i(t_j)^2\right]^{1/2}.
-\]
+$$
 
 The random-scale bridge model factors each deviation into scale and shape:
 
-\[
+$$
 \eta_i(t)=A_iZ_i(t), \qquad D_i=A_iQ_i.
-\]
+$$
 
-Here \(A_i\) is a positive route-scale variable, \(Z_i(t)\) is an
-endpoint-pinned standardized bridge, and \(Q_i\) is the bridge's RMS shape
-functional. If variation in \(A_i\) dominates variation in \(Q_i\), then
-\(\log D_i=\log A_i+\log Q_i\) is driven toward a Gaussian-looking law. This
+Here $A_i$ is a positive route-scale variable, $Z_i(t)$ is an
+endpoint-pinned standardized bridge, and $Q_i$ is the bridge's RMS shape
+functional. If variation in $A_i$ dominates variation in $Q_i$, then
+$\log D_i=\log A_i+\log Q_i$ is driven toward a Gaussian-looking law. This
 explains why the center can look lognormal.
 
 The same calculation also makes the empirical failure meaningful. Under a
