@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -138,8 +138,8 @@
       <div class="formalism-header">
         <span class="eyebrow">MATHEMATICAL FORMALISM</span>
         <h2 id="formalism-title">A random-scale bridge on the sphere</h2>
-        <p>The histogram looks approximately lognormal, but the geometry suggests a more informative construction. Each observed route is treated as a random transverse departure from the unique minor great-circle arc joining its endpoints.</p>
-        <a class="paper-link" href="/experiment-notes/random-scale-bridge/random-scale-bridge.pdf">READ THE ACADEMIC NOTE · PDF · 3 PAGES</a>
+        <p>The histogram looks approximately lognormal, but the geometry suggests a more informative construction. Each observed route is treated as a random transverse departure from the unique minor great-circle arc joining its endpoints, then tested for whether it belongs to the ordinary bridge population or a near-geodesic boundary population.</p>
+        <a class="paper-link" href="/experiment-notes/random-scale-bridge/random-scale-bridge.pdf">READ THE ACADEMIC NOTE &middot; PDF &middot; 5 PAGES</a>
       </div>
       <section class="narrative-arc" aria-labelledby="narrative-arc-title">
         <span id="narrative-arc-title">FROM SKY TO DIAGNOSIS</span>
@@ -148,7 +148,7 @@
           <li><strong>Scale and shape</strong>We write each route's RMS deviation as \(D=AQ\): \(A\) sets its overall magnitude, while \(Q\) captures its standardized endpoint-pinned shape.</li>
           <li><strong>The smoothing prediction</strong>Broad variation in \(A\) should suppress the skewness and kurtosis contributed by \(Q\), making the Brownian product nearly Gaussian in log space.</li>
           <li><strong>The boundary population</strong>The observed log-skewness is \(-2.40\), with 53 tracks recording RMS deviation at or below \(0.1\) km and forming a distinct lower-tail boundary.</li>
-          <li><strong>The conclusion</strong>One independent lognormal-scale Brownian bridge does not fit the full cohort; the data motivate a boundary component plus continuous route regimes.</li>
+          <li><strong>Sequential diagnosis</strong>Prefix residuals and Wasserstein gaps estimate how long one must watch before assigning a single aircraft to that boundary component.</li>
         </ol>
       </section>
       <div class="formalism-grid">
@@ -286,8 +286,27 @@
           <p>This discrepancy rejects the single independent lognormal-scale Brownian-bridge description of the full cohort. It is concentrated in a near-geodesic boundary population: 53 aircraft have recorded RMS deviation at or below \(0.1\) km. The data therefore point toward a boundary mixture or multiple route regimes rather than one universal product law \(D=AQ\).</p>
           <p class="intuition"><strong>USE-CASE READING</strong> Real flight tracks contain a distinct nearly direct group that the otherwise strongly smoothing Brownian product model cannot explain.</p>
         </article>
+        <article class="wide diagnostic">
+          <span class="result-label">SEQUENTIAL DIAGNOSTIC</span>
+          <h3>11 / HOW LONG UNTIL THE BOUNDARY IS VISIBLE?</h3>
+          <p>Once the boundary component is forced by the cohort, the time-series question is individual: after \(n\) one-minute samples, can we assign one aircraft to that component? Define the prefix residual energy</p>
+          \[
+            R_n^2=\frac{1}{n}\sum_{j=1}^{n}\eta(t_j)^2.
+          \]
+          <p>If \(C=0\) denotes the near-geodesic boundary population and \(C=1\) the ordinary bridge population, then persistent small residuals are decisive only when they are rare under \(C=1\). A small-ball bound of the form</p>
+          \[
+            \mathbb P_1(R_n\leq\tau)\leq e^{-nI(\tau)}
+          \]
+          <p>implies that the posterior probability \(\mathbb P(C=0\mid R_n\leq\tau)\) rises once the ordinary population has too little mass near zero. For the current hour, using \(\tau=0.1\) km and the final endpoint geodesic reference, the diagnostic crosses high posterior confidence after roughly 41 elapsed minutes.</p>
+          <p>The same stopping idea has a transport version. For \(Y_n=\log(R_n/d_0)\), let \(P_{0,n}\) and \(P_{1,n}\) be the boundary and ordinary prefix laws. The Wasserstein gap</p>
+          \[
+            \Delta_n=W_2(P_{0,n},P_{1,n})
+          \]
+          <p>is compared with a bootstrap uncertainty floor. Classification is most credible when individual posterior evidence and population-level Wasserstein separation are both large.</p>
+          <p class="intuition"><strong>USE-CASE READING</strong> The key signal is not whether an aircraft looks straight for a few minutes; it is whether near-perfect geodesic behavior persists long enough to be unlikely under ordinary route physics.</p>
+        </article>
       </div>
-      <p class="conclusion"><span class="symbol">Interpretation.</span> The theorem identifies exactly when multiplicative scale variation suppresses bridge-shape nonnormality. The observed lower-tail boundary decisively violates that single-population approximation, turning route-class heterogeneity from a qualitative possibility into a model requirement. A natural next law is \(f_D(d)=\pi_0f_0(d)+\sum_c\pi_cf_D(d\mid c)\), where \(f_0\) is a near-geodesic boundary density with weight \(\pi_0\), each \(f_D(\cdot\mid c)\) is a continuous route-class density, and the nonnegative mixture weights sum to one.</p>
+      <p class="conclusion"><span class="symbol">Interpretation.</span> The theorem identifies exactly when multiplicative scale variation suppresses bridge-shape nonnormality. The observed lower-tail boundary decisively violates that single-population approximation, turning route-class heterogeneity from a qualitative possibility into a model requirement. A natural next law is \(f_D(d)=\pi_0f_0(d)+\sum_c\pi_cf_D(d\mid c)\), where \(f_0\) is a near-geodesic boundary density and the remaining terms are continuous route-class densities. The sequential extension then turns that mixture into an operational diagnostic: posterior small-ball evidence and the Wasserstein gap estimate when a single observed aircraft is credibly part of the boundary population.</p>
     </section>
     <section class="energy-model" aria-labelledby="energy-title">
       <span class="eyebrow">ENERGY AND FUEL COUNTERFACTUAL</span>

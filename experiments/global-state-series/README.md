@@ -103,8 +103,9 @@ python experiments/global-state-series/visualizations/altitude-histogram/build_d
 `visualizations/geodesic-deviation/index.html` compares each complete observed
 track with the minor great-circle arc joining its first and last positions. The
 interactive histogram shows RMS and maximum spherical deviation, excess path
-length, and path efficiency. The quality-filtered cohort requires a position in
-all 60 snapshots, at least 25 km of endpoint displacement, and no implausible
+length, path efficiency, the random-scale bridge formalism, and the sequential
+boundary-population diagnostic. The quality-filtered cohort requires a position
+in all 60 snapshots, at least 25 km of endpoint displacement, and no implausible
 one-minute jump over 30 km.
 
 The complete-position cohort contains 2,183 aircraft. The displacement filter
@@ -160,18 +161,35 @@ f_D(d)=\int_0^\infty f_A\left(\frac{d}{q}\right)f_Q(q)\frac{dq}{q}.
 
 A single lognormal is the concentrated-shape approximation to this model.
 Flight-phase and route-class heterogeneity may instead produce a mixture of
-such laws.
+such laws. In the current cohort, the lower-tail failure is concentrated in 53
+near-geodesic tracks with RMS deviation at or below 0.1 km.
+
+The page also presents the sequential diagnostic from the note. For the first
+\(n\) samples, the prefix residual
+
+\[
+R_n^2=\frac{1}{n}\sum_{j=1}^{n}\eta_i(t_j)^2
+\]
+
+is used to ask when persistent near-zero residuals are unlikely under the
+ordinary bridge population. With the final endpoint geodesic as reference and
+\(\tau=0.1\) km, the current hour crosses high posterior confidence after about
+41 elapsed minutes. The accompanying Wasserstein diagnostic compares the
+boundary and ordinary prefix laws \(P_{0,n}\) and \(P_{1,n}\) through
+\(W_2(P_{0,n},P_{1,n})\) against a bootstrap uncertainty floor.
 
 ### Academic Note
 
-The self-contained three-page note
+The self-contained five-page note
 [When Does a Random-Scale Flight Path Look Lognormal?](notes/random-scale-bridge/random-scale-bridge.pdf)
 develops the scale-shape model into a lognormal-smoothing theorem, exact
 cumulant identities, a Brownian-bridge threshold, and an empirical diagnostic
-for the near-geodesic boundary population. Its LaTeX source and reproducible
-figure builder are in `notes/random-scale-bridge/`.
+for the near-geodesic boundary population. It now extends that mixture
+diagnosis into a sequential small-ball theorem, posterior stopping rule, and
+Wasserstein separation check. Its LaTeX source and reproducible figure builder
+are in `notes/random-scale-bridge/`.
 
-Rebuild the vector figure and PDF from that directory with:
+Rebuild the vector figures and PDF from that directory with:
 
 ```powershell
 python build_figure.py

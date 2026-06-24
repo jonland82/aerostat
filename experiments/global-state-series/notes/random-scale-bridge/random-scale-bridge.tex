@@ -53,12 +53,12 @@
   {\large A spherical bridge note from OpenSky trajectories}\par
   \vspace{7pt}
   {\normalsize\textbf{Jonathan R. Landers}}\par
-  {\small 22 June 2026}
+  {\small June 2026}
 \end{center}
 \vspace{-4pt}
 
 \begin{abstract}
-An hour of globally sampled aircraft positions produces a tempting picture: RMS departures from endpoint great-circle arcs are positive, strongly right-skewed, and superficially lognormal. We turn that visual hypothesis into a geometric model. Each deviation is factored as $D=AQ$, where $A$ sets route scale and $Q$ is the RMS shape of an endpoint-pinned bridge. We prove that an independent lognormal scale suppresses the non-Gaussian cumulants of $\log Q$ at explicit rates and give a Wasserstein convergence criterion. For a Brownian bridge, the criterion yields a concrete threshold. Yet the observed log-skewness and kurtosis sharply contradict the resulting single-population prediction. The same theorem that explains a lognormal-looking center therefore diagnoses a distinct near-geodesic boundary population. The result is not a universal lognormal law, but a principled route from visual regularity to a falsifiable mixture model.
+An hour of globally sampled aircraft positions produces a tempting picture: RMS departures from endpoint great-circle arcs are positive, strongly right-skewed, and superficially lognormal. We turn that visual hypothesis into a geometric model. Each deviation is factored as $D=AQ$, where $A$ sets route scale and $Q$ is the RMS shape of an endpoint-pinned bridge. We prove that an independent lognormal scale suppresses the non-Gaussian cumulants of $\log Q$ at explicit rates and give a Wasserstein convergence criterion. For a Brownian bridge, the criterion yields a concrete threshold. Yet the observed log-skewness and kurtosis sharply contradict the resulting single-population prediction. The same theorem that explains a lognormal-looking center therefore diagnoses a distinct near-geodesic boundary population, and a sequential small-ball test estimates when that assignment becomes visible in time. The result is not a universal lognormal law, but a route from visual regularity to a falsifiable mixture model and a time-to-diagnosis statistic.
 \end{abstract}
 
 \section{A visual regularity with a geometric question}
@@ -85,7 +85,7 @@ The median $D_i$ is 16.7 km and the mean is 22.7 km. Figure~\ref{fig:deviation} 
   \label{fig:deviation}
 \end{figure}
 
-Classical lognormal modeling begins with $\log(D/d_0)\sim N(\mu,\sigma^2)$ for reference distance $d_0=1$ km \cite{aitchison1957}. That describes a shape but supplies no route geometry. We instead ask: \emph{what mechanism makes a spherical path statistic look lognormal, and what would falsify it?}
+Classical lognormal modeling begins with $\log(D/d_0)\sim N(\mu,\sigma^2)$ for reference distance $d_0=1$ km \cite{aitchison1957}. That describes a shape but supplies no route geometry. We instead ask: \emph{what mechanism makes a spherical path statistic look lognormal, what would falsify it, and how long must one watch before the falsifying boundary component is recognizable?}
 
 \begingroup
 \setlength{\fboxsep}{7pt}
@@ -98,7 +98,7 @@ Classical lognormal modeling begins with $\log(D/d_0)\sim N(\mu,\sigma^2)$ for r
 \item \textbf{Scale and shape.} Each RMS deviation is written as $D=AQ$: $A$ sets overall magnitude, while $Q$ captures standardized endpoint-pinned shape.
 \item \textbf{The smoothing prediction.} Broad variation in $A$ should suppress the skewness and kurtosis contributed by $Q$, making the Brownian product nearly Gaussian in log space.
 \item \textbf{The boundary population.} The observed log-skewness is $-2.40$, with 53 tracks at or below $0.1$ km RMS deviation forming a distinct lower-tail boundary.
-\item \textbf{The conclusion.} One independent lognormal-scale Brownian bridge does not fit the full cohort; the data motivate a boundary component plus continuous route regimes.
+\item \textbf{Sequential diagnosis.} After the mixture is forced, prefix residuals and Wasserstein gaps ask how long one must watch before assigning a single aircraft to that boundary component.
 \end{itemize}
 \par
 \end{minipage}}
@@ -202,7 +202,84 @@ A natural next model is the finite mixture form \cite{mclachlan2000}
 f_D(d)=\pi_0 f_0(d)+\sum_{c=1}^{C}\pi_c f_D(d\mid c),
 \qquad \pi_c\geq0,\qquad \sum_{c=0}^{C}\pi_c=1,
 \end{equation}
-where $f_0$ represents the near-geodesic boundary and the continuous components represent distinct route-shape or flight-phase regimes. The current hour cannot identify those classes, and endpoint geodesics are geometric counterfactuals rather than operationally feasible routes. Those limitations are substantive. Still, the note establishes a clean diagnostic principle: broad lognormal scaling can hide ordinary bridge-shape nonnormality, so a large residual departure is evidence for heterogeneity, dependence, or a boundary mechanism---not merely a slightly misspecified bridge.
+where $f_0$ represents the near-geodesic boundary and the continuous components represent distinct route-shape or flight-phase regimes. The current hour cannot identify all such classes, and endpoint geodesics are geometric counterfactuals rather than operationally feasible routes. Those limitations are substantive. Still, the note establishes a clean diagnostic principle: broad lognormal scaling can hide ordinary bridge-shape nonnormality, so a large residual departure is evidence for heterogeneity, dependence, or a boundary mechanism---not merely a slightly misspecified bridge.
+
+\section{Sequential diagnosis of the boundary population}
+
+Once the boundary component has been detected at the cohort level, the next question is individual and temporal: how long must one watch a trajectory before assigning it to that component? Let $C=0$ denote the near-geodesic boundary population and $C=1$ the ordinary bridge population. For the first $n$ samples define the prefix residual
+\begin{equation}
+R_n^2=\frac1n\sum_{j=1}^n\eta(t_j)^2,
+\qquad
+\mathcal F_n=\sigma\{\eta(t_1),\ldots,\eta(t_n)\}.
+\end{equation}
+For a fixed tolerance $\tau$, persistent small residuals are informative only when they are rare under the ordinary component.
+
+\begin{theorem}[Sequential small-ball diagnosis]
+Let $\pi_0=\mathbb P(C=0)$. Suppose that, for some $\tau>0$,
+\[
+\mathbb P_1(R_n\leq\tau)\leq e^{-nI(\tau)}
+\qquad\hbox{and}\qquad
+\mathbb P_0(R_n\leq\tau)\geq1-\beta_n .
+\]
+Then
+\[
+\mathbb P(C=0\mid R_n\leq\tau)
+\geq
+\frac{\pi_0(1-\beta_n)}
+{\pi_0(1-\beta_n)+(1-\pi_0)e^{-nI(\tau)}}.
+\]
+In particular, posterior confidence $1-\alpha$ is reached once
+\[
+n\gtrsim
+\frac{
+\log((1-\pi_0)/\pi_0)+\log((1-\alpha)/\alpha)}
+{I(\tau)}
+\]
+up to the boundary miss term $\beta_n$.
+\end{theorem}
+
+\begin{proof}
+Bayes' rule gives
+\[
+\mathbb P(C=0\mid R_n\leq\tau)
+=
+\frac{\pi_0\mathbb P_0(R_n\leq\tau)}
+{\pi_0\mathbb P_0(R_n\leq\tau)+(1-\pi_0)\mathbb P_1(R_n\leq\tau)}.
+\]
+The two displayed assumptions give the bound. Solving the same inequality for $n$ gives the stated waiting-time scale.
+\end{proof}
+
+This is the time-series version of the mixture conclusion: not every straight-looking prefix is diagnostic, but persistent near-zero residual energy becomes decisive once ordinary bridges have too little small-ball mass left.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{sequential-boundary-detection.pdf}
+  \caption{Sequential boundary diagnostics using the final endpoint geodesic as the reference. Left: empirical posterior confidence and boundary recall for the event $R_n\leq0.1$ km. The prior boundary mass is $53/1780$, so early small residuals are not enough; confidence becomes high only after persistence. Right: the empirical Wasserstein gap between the log-prefix RMS laws of the boundary and ordinary components, plotted against a bootstrap uncertainty floor.}
+  \label{fig:sequential}
+\end{figure}
+
+The same idea can be expressed in the transport language already used in the smoothing theorem. Let $Y_n=\log(R_n/d_0)$, and let $P_{0,n}$ and $P_{1,n}$ be the laws of $Y_n$ under the boundary and ordinary components. Define
+\[
+\Delta_n=W_2(P_{0,n},P_{1,n}).
+\]
+A conservative critical time is
+\[
+T_W=\inf\{n:\Delta_n>r_{0,n}(\alpha)+r_{1,n}(\alpha)+m\},
+\]
+where $r_{c,n}(\alpha)$ are sampling radii and $m$ is a chosen margin. For one observed aircraft with value $y_n$, the point-to-law score
+\[
+S_n(y_n)
+=
+W_2^2(\delta_{y_n},P_{1,n})
+-W_2^2(\delta_{y_n},P_{0,n})
+\]
+is positive when the observation is closer to the boundary law than to the ordinary law. Thus the practical stopping rule combines individual posterior evidence with population separation:
+\[
+T_*=\max\{T_{\rm post},T_W\},
+\qquad
+T_{\rm post}=\inf\{n:\mathbb P(C=0\mid\mathcal F_n)\geq1-\alpha\}.
+\]
+In the present hour, with $\tau=0.1$ km and $\pi_0=53/1780$, the final-endpoint diagnostic crosses high posterior confidence after roughly forty-one elapsed minutes. The online problem without the final endpoint is harder, because many ordinary trajectories are locally straight; that distinction is exactly what the waiting-time theorem is meant to expose.
 
 \vspace{-3pt}
 \begin{thebibliography}{9}\small

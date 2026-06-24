@@ -97,7 +97,8 @@ visualizations are combined at `/experiments/index.html` and include:
 - Three representative flight traversals on an animated globe.
 - The evolving global distribution of reported barometric altitude.
 - Distributions of spherical path deviation from endpoint geodesics, with an
-  accompanying random-scale bridge and lognormal-mixture formalism.
+  accompanying random-scale bridge, lognormal-mixture formalism, and sequential
+  boundary-population diagnostic.
 
 Generated experiment data remains local and ignored by Git. The compact
 JavaScript data files used by the visualizations are generated artifacts that
