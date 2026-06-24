@@ -15,7 +15,7 @@ The public dashboard can display the deployed snapshot. Manual refresh remains o
 Aerostat is a small OpenSky-based airspace project with two connected layers:
 
 - A live aircraft globe that can be deployed behind CloudFront and refreshed manually without browser polling.
-- A captured one-hour global state-series experiment that turns OpenSky state vectors into static visualizations and a short mathematical note about flight-path geometry.
+- A captured one-hour global state-series experiment that turns OpenSky state vectors into static visualizations and the main contribution so far: a random-scale bridge method for flight-path geometry, with new diagnostics for lognormal-looking path deviations and near-geodesic boundary tracks.
 
 The dashboard is intentionally credit-safe and operationally conservative. Opening
 the site does not call OpenSky. The analytical side is separate: it uses bounded
