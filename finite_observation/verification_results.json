@@ -1,0 +1,31 @@
+{
+  "parameters": {
+    "A": 1.0,
+    "omega": 1.0,
+    "delta": 0.0025,
+    "T": 10.0,
+    "n": 100,
+    "sigma": 0.1,
+    "J": 1.0
+  },
+  "T_star": 628.3185307179587,
+  "initial_energy": 0.500003125,
+  "ODE_max_error": 2.821793243512616e-09,
+  "energy_max_drift": 7.90123144689403e-09,
+  "passive_position_bound": 0.0003125,
+  "passive_TV_bound": 0.015625,
+  "equal_prior_success_upper_bound": 0.5078125,
+  "late_extended_position_numerical": -8.352773246016795e-12,
+  "forced_position_difference": 0.00024648842362418044,
+  "forced_position_bound": 0.0013541666666666667,
+  "forced_TV_bound": 0.06770833333333333,
+  "impulse_response_difference": 0.00021903548788859695,
+  "checks": {
+    "independent_ODE_matches_exact": true,
+    "energy_conservation": true,
+    "late_full_amplitude_difference": true,
+    "forced_discrepancy_bound": true,
+    "impulse_response_bound": true,
+    "sign_records_agree_before_envelope_zero": true
+  }
+}
