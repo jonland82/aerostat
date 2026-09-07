@@ -1,0 +1,209 @@
+\documentclass[10pt]{article}
+
+\usepackage[letterpaper,hmargin=0.82in,vmargin=0.72in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{newtxtext,newtxmath}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage[colorlinks=true,linkcolor=DeepBlue,citecolor=DeepBlue,urlcolor=Cyan]{hyperref}
+\usepackage{titlesec}
+
+\definecolor{DeepBlue}{HTML}{000000}
+\definecolor{Cyan}{HTML}{087F9A}
+\definecolor{SoftBlue}{HTML}{EAF5F7}
+\definecolor{SoftRule}{HTML}{9CC8D3}
+\definecolor{Body}{HTML}{000000}
+
+\color{Body}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3.2pt}
+\setlength{\abovedisplayskip}{5pt}
+\setlength{\belowdisplayskip}{5pt}
+\setlist{nosep,leftmargin=1.25em}
+\titleformat{\section}{\large\bfseries\color{DeepBlue}}{}{0pt}{}[\vspace{-2pt}\color{Cyan}\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries\color{DeepBlue}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{7pt}{3pt}
+\titlespacing*{\subsection}{0pt}{5pt}{2pt}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\TV}{\operatorname{TV}}
+\newcommand{\E}{\mathbb E}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries\color{DeepBlue}Finite-Horizon Indistinguishability\par
+\vspace{1pt}
+and the Limits of Extrapolation\par}
+\vspace{4pt}
+{\normalsize A two-point learning bound from hidden dynamics}\par
+\vspace{6pt}
+{\normalsize\textbf{Jonathan R. Landers}}\par
+{\small September 2026}
+\end{center}
+
+\begin{abstract}
+\noindent A learner may fit every observation in a finite experiment while remaining unable to predict a consequential latent mode outside that experiment. We formalize this as a two-point minimax bound: if two dynamical models induce training-record laws within total variation $\varepsilon$ but their future targets are separated by $\Delta$, every learner has probability at least $(1-\varepsilon)/2$ of making error at least $\Delta/2$ on one of them. A pair of weakly coupled harmonic oscillators then gives an explicit stable, bounded-energy witness. For passive noisy observation, reliable prediction of a full-amplitude consequence at time $T_*$ requires a sample count of order $(T_*/T)^4$, where $T$ is the training horizon. The statistical device is classical; the point is its interpretation as a finite-horizon limit on learning under physically incomplete model classes.
+\end{abstract}
+
+\section{Fit is not closure}
+
+Ordinary generalization asks whether a learned rule performs on new draws governed by the observed regime. Extrapolation in a dynamical system asks a different question: could an unobserved degree of freedom be quiet during training yet control the state later? A small training error cannot answer this unless the model class already excludes such extensions.
+
+Let an observation protocol $\mathcal O$ specify the measured variables, time window, sample budget, noise, and any allowed interventions. A physical model $M$ induces a probability law $P_M^{\mathcal O}$ for the complete record $Z$. At a later horizon $H$, let $\theta_H(M)$ be the prediction target in a metric space $(\mathcal Y,d)$. A learner is any measurable map $\widehat\theta(Z)$ from the record to $\mathcal Y$.
+
+\begin{theorem}[Finite-horizon indistinguishability]
+Suppose two models $M_0,M_1$ satisfy
+\[
+\TV(P_0^{\mathcal O},P_1^{\mathcal O})\leq\varepsilon,
+\qquad
+d(\theta_H(M_0),\theta_H(M_1))=\Delta,
+\]
+where $P_i^{\mathcal O}=P_{M_i}^{\mathcal O}$, $0\leq\varepsilon<1$, and $\Delta>0$. Then
+\begin{align}
+\inf_{\widehat\theta}\max_{i\in\{0,1\}}
+P_i^{\mathcal O}\!\left\{
+d(\widehat\theta,\theta_H(M_i))\geq\frac{\Delta}{2}
+\right\}
+&\geq\frac{1-\varepsilon}{2}, \label{eq:prob-bound}\\
+\inf_{\widehat\theta}\max_{i\in\{0,1\}}
+\E_i d(\widehat\theta,\theta_H(M_i))
+&\geq\frac{\Delta}{4}(1-\varepsilon). \label{eq:risk-bound}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Given $\widehat\theta$, define a test $\phi(Z)$ by choosing the closer of the two targets, breaking ties arbitrarily. If $\phi\neq i$, the triangle inequality implies $d(\widehat\theta,\theta_H(M_i))\geq\Delta/2$. Every test obeys the two-point testing inequality
+\[
+P_0^{\mathcal O}(\phi=1)+P_1^{\mathcal O}(\phi=0)
+\geq1-\TV(P_0^{\mathcal O},P_1^{\mathcal O}).
+\]
+At least one of its two error probabilities is therefore at least $(1-\varepsilon)/2$, which proves \eqref{eq:prob-bound}. Multiplying the corresponding large-error event by $\Delta/2$ proves \eqref{eq:risk-bound}.
+\end{proof}
+
+The theorem is a direct form of Le Cam's two-point method. Its learning-theoretic content is the separation of two quantities: similarity of the available training experiments and disagreement of the future targets. A learner cannot repair the first by architecture, optimization, or regularization when the second remains large.
+
+\newpage
+
+\section{A bounded-energy dynamical witness}
+
+The abstract pair can be realized by stable linear mechanics. The reference model is one visible harmonic oscillator,
+\[
+H_0(q,p)=\tfrac12p^2+\tfrac12\omega^2q^2,
+\]
+with frequency $\omega>0$. The extended model adds an inaccessible coordinate $Q$ and momentum $P$:
+\[
+H_\delta=\tfrac12(p^2+P^2)
++\tfrac12(\omega^2+\delta^2)(q^2+Q^2)+2\omega\delta qQ,
+\qquad 0<\delta\leq\omega/2.
+\]
+For initial state $q(0)=A>0$ and $p(0)=Q(0)=P(0)=0$, the isolated and extended visible trajectories are
+\[
+q_0(t)=A\cos(\omega t),
+\qquad
+q_\delta(t)=A\cos(\omega t)\cos(\delta t).
+\]
+The extension diagonalizes into normal-mode frequencies $\omega\pm\delta$. It is positive definite, conserves energy $E_\delta=\tfrac12A^2(\omega^2+\delta^2)$, and introduces a slow envelope with timescale $1/\delta$ rather than an instability.
+
+Suppose the learner receives at most $n$ adaptively timed readings of $q$ on $[0,T]$, each corrupted by independent Gaussian noise of standard deviation $\sigma>0$. The induced record laws satisfy \cite{landers2026}
+\begin{equation}
+\TV(P_\delta^{\mathcal O},P_0^{\mathcal O})
+\leq\min\!\left\{1,
+\frac{\sqrt n\,A\delta^2T^2}{4\sigma}\right\}.
+\label{eq:osc-tv}
+\end{equation}
+For an integer $m\geq1$, choose
+\[
+\delta=\frac{\omega}{4m},
+\qquad
+T_*=\frac{\pi}{2\delta}=\frac{2\pi m}{\omega}.
+\]
+Then $q_0(T_*)=A$ and $q_\delta(T_*)=0$. Shrinking $\delta$ makes the early record arbitrarily hard to distinguish while preserving a full-amplitude future separation.
+
+\begin{corollary}[Extrapolation lower bound for the oscillator pair]
+If the right-hand side of \eqref{eq:osc-tv} is at most $\varepsilon<1$, every estimator of the later visible position satisfies
+\[
+\max_{i\in\{0,\delta\}}
+P_i^{\mathcal O}\!\left\{
+|\widehat q(T_*)-q_i(T_*)|\geq A/2
+\right\}
+\geq\frac{1-\varepsilon}{2},
+\]
+and its worst-case expected absolute error is at least $A(1-\varepsilon)/4$.
+\end{corollary}
+
+This yields a concrete sample-complexity obstruction. If both models must have probability at most $\alpha<1/2$ of an error of at least $A/2$, then the theorem requires $\TV(P_\delta^{\mathcal O},P_0^{\mathcal O})\geq1-2\alpha$. Combining this necessity with \eqref{eq:osc-tv} gives
+\begin{equation}
+n\geq
+\frac{16\sigma^2(1-2\alpha)^2}{A^2\delta^4T^4}
+=\frac{256\sigma^2(1-2\alpha)^2}{\pi^4A^2}
+\left(\frac{T_*}{T}\right)^4.
+\label{eq:sample-complexity}
+\end{equation}
+Thus this family has a quartic lower bound in the ratio of prediction horizon to observation horizon. Equation \eqref{eq:sample-complexity} is necessary, not sufficient: it prices the information required to separate this particular pair and does not promise that any procedure attaining the bound exists.
+
+Bounded active probing changes constants but not the mechanism. If a force on $q$ has total impulse at most $J$, the paper proves
+\[
+\TV(P_\delta^{\mathcal O},P_0^{\mathcal O})
+\leq \frac{\sqrt n\,\delta^2}{2\sigma}
+\left(\frac{AT^2}{2}+\frac{JT^3}{6}\right).
+\]
+The persistent $\delta^2$ factor means that no fixed finite probing budget gives a uniform certificate of closure over arbitrarily weak nonzero couplings.
+
+\newpage
+
+\section{An operational learning objective}
+
+Absolute physical completeness is not statistically certifiable without assumptions on the allowable extensions. A useful replacement is a \emph{relative closure certificate}. Given an accepted model $M_0$, protocol $\mathcal O$, and resolution $\varepsilon$, define its observational uncertainty set
+\[
+\mathcal U_\varepsilon(M_0,\mathcal O)
+=\{M:\TV(P_M^{\mathcal O},P_{M_0}^{\mathcal O})\leq\varepsilon\}.
+\]
+For future horizon $H$, define closure vulnerability
+\[
+V_\varepsilon(H)
+=\sup_{M\in\mathcal U_\varepsilon(M_0,\mathcal O)}
+d(\theta_H(M),\theta_H(M_0)).
+\]
+A statement of the form $V_\varepsilon(H)\leq\gamma$ says exactly what has been certified: among the specified extensions that the actual experiment resolves only to tolerance $\varepsilon$, none changes the target by more than the consequential tolerance $\gamma$ at horizon $H$. The corresponding safe horizon is
+\[
+H_{\mathrm{safe}}
+=\sup\{H:V_\varepsilon(H)\leq\gamma\}.
+\]
+
+This suggests a practical two-gate evaluation for learned dynamical models:
+\begin{enumerate}
+\item \textbf{Predictive-fit gate.} Test accuracy and calibration on held-out records drawn from the measured regime.
+\item \textbf{Closure-stress gate.} Search a declared extension class for latent models that remain within observational tolerance but cross the future consequence threshold.
+\end{enumerate}
+Failure of the second gate can be answered constructively: shorten the certified horizon, measure another variable, extend the observation window, improve resolution, or design an intervention that increases separation of the record laws.
+
+\subsection{What the bound does and does not say}
+
+The lower bound is uniform over a model class containing both witnesses. It does not say that a fixed nonzero coupling is forever undetectable; longer observation or richer measurement can expose it. Nor does it invalidate ordinary generalization guarantees. Those guarantees concern performance under a specified data-generating distribution, whereas the present target changes across physical models that are nearly identical on the training experiment.
+
+Distributional diagnostics can still reduce the extension class. For example, skewness and kurtosis may reject a single-population trajectory model and force a mixture description. Such rejection establishes missing \emph{statistical structure} in the observed population. The theorem here addresses the complementary limitation: even after every available diagnostic passes, nearly identical finite-record laws may conceal dynamics that separate later. Statistical misspecification can sometimes be detected; physical closure cannot be obtained from fit alone.
+
+The two-point inequality itself is classical \cite{lecam1986,yu1997}. The contribution of this note is therefore not a new minimax technique. It is the explicit dynamical reading of that technique, together with a stable Hamiltonian witness and a horizon-dependent sample lower bound. The formulation turns ``a good finite fit is not physical completeness'' into a testable model-risk question: how far can unresolved extensions move the target, and how much observation is required to rule them out within a declared class?
+
+\section{Conclusion}
+
+A finite experiment can support a genuine predictive certificate without supporting a closure claim. When two models are $\varepsilon$-close on the experiment and $\Delta$-separated at the target horizon, minimax extrapolation error remains of order $\Delta(1-\varepsilon)$. For weakly coupled oscillators, a full-amplitude future difference can coexist with arbitrarily similar early records, and the required sample count grows at least quartically with $T_*/T$. Operationally, learned dynamics should therefore be reported with both an empirical fit range and a closure-stress range relative to explicit latent extensions.
+
+\begin{thebibliography}{9}\small
+\setlength{\itemsep}{1pt}
+\bibitem{landers2026}
+J.~R.~Landers, ``Finite Observation and Broader Physical Processes,'' research note, 2026.
+
+\bibitem{lecam1986}
+L.~Le Cam, \emph{Asymptotic Methods in Statistical Decision Theory}. Springer, 1986.
+
+\bibitem{yu1997}
+B.~Yu, ``Assouad, Fano, and Le Cam,'' in \emph{Festschrift for Lucien Le Cam}, Springer, pp.~423--435, 1997.
+\end{thebibliography}
+
+\end{document}
