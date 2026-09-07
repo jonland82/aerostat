@@ -1,0 +1,116 @@
+\documentclass[10pt]{article}
+
+\usepackage[letterpaper,hmargin=0.68in,vmargin=0.55in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{newtxtext,newtxmath}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\definecolor{DeepBlue}{HTML}{093C4C}
+\definecolor{Cyan}{HTML}{087F9A}
+\definecolor{SoftBlue}{HTML}{EAF5F7}
+\definecolor{SoftRule}{HTML}{9CC8D3}
+\definecolor{Body}{HTML}{1D3037}
+
+\color{Body}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+\setlength{\abovedisplayshortskip}{2pt}
+\setlength{\belowdisplayshortskip}{2pt}
+\setlist[itemize]{leftmargin=1.25em,itemsep=2pt,topsep=2pt}
+\titleformat{\section}{\normalsize\bfseries\color{DeepBlue}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{6pt}{2pt}
+\newcommand{\TV}{\operatorname{TV}}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries\color{DeepBlue} Physical Completeness vs. Statistical Identifiability}\par
+  \vspace{2pt}
+  {\small A reading note on \emph{Finite Observation and Broader Physical Processes} and
+  \emph{When Does a Random-Scale Flight Path Look Lognormal?}}
+\end{center}
+
+\vspace{2pt}
+\noindent\fcolorbox{SoftRule}{SoftBlue}{%
+\begin{minipage}{0.965\textwidth}
+\small
+The two papers ask different questions about what a good-looking fit means. The first asks whether a finite fit establishes that the visible physical process is the whole system; the second asks whether the distribution of observed flight trajectories is compatible with one proposed statistical population.
+\end{minipage}}
+
+\small
+\section*{The distinction}
+
+\begin{itemize}
+\item \textbf{\emph{Finite Observation}: a good finite fit does not establish physical completeness.}
+The example compares one visible harmonic oscillator with the same oscillator weakly coupled to a second one. During any fixed experiment, the coupling can be small enough that the two models produce nearly indistinguishable records, even though energy exchange with the second oscillator creates a large difference later:
+\[
+  \TV\!\left(P_\delta^{\mathcal O},P_0^{\mathcal O}\right)\leq\varepsilon,
+  \qquad |q_\delta(T_*)-q_0(T_*)|=A.
+\]
+Here $P_\delta^{\mathcal O}$ and $P_0^{\mathcal O}$ are the probability laws of all recorded measurements under the coupled and isolated models, using the same observation protocol $\mathcal O$. The coupling-induced frequency split is $\delta>0$, $\TV$ is total-variation distance, and $\varepsilon$ is the chosen distinguishability tolerance. The corresponding visible trajectories are $q_\delta$ and $q_0$; at the later time $T_*$ they differ by the full amplitude $A$. The result does \emph{not} infer that such a larger process exists in any particular observed system. It says that finite predictive success alone cannot rule one out or certify that a physical model is complete.
+
+The paper then states separately what must be assumed to say that further relevant scales actually exist. If $N(R,S)$ counts processes with characteristic scale $L\in(R,S]$, and their Poisson intensity is $d\eta(L)\,dL/L$, then
+\[
+  \Pr\{N(R,S)\geq1\}
+  =1-\exp\!\left[-d\int_R^S\frac{\eta(L)}{L}\,dL\right],
+  \qquad
+  \int_R^\infty\frac{\eta(L)}{L}\,dL=\infty
+\]
+is the condition for unbounded scales almost surely. Here $R<S$ are scale cutoffs, $d$ converts scale to volume, and $\eta(L)$ is the assumed intensity per logarithmic-volume increment. This is a conditional population statement, not something established by the finite record.
+
+\item \textbf{The aerostat paper: skewness and kurtosis reveal when one statistical population is inadequate.}
+The proposed model factors each track's RMS deviation from its endpoint geodesic as
+\[
+  D=AQ,
+  \qquad \log D=\log A+\log Q,
+\]
+where $D>0$ is observed RMS deviation, $A>0$ is overall route scale, and $Q>0$ is the RMS size of the dimensionless endpoint-pinned path shape. If $\log A$ is Gaussian and independent of $\log Q$, variation in $A$ should wash out the shape's non-Gaussian higher moments. With
+\[
+  \rho=\frac{\tau_Q^2}{\sigma_A^2+\tau_Q^2},
+  \qquad \sigma_A^2=\operatorname{Var}(\log A),
+  \qquad \tau_Q^2=\operatorname{Var}(\log Q),
+\]
+the model predicts
+\[
+  \operatorname{Skew}(\log D)=\operatorname{Skew}(\log Q)\rho^{3/2},
+  \qquad
+  \operatorname{ExKurt}(\log D)=\operatorname{ExKurt}(\log Q)\rho^2.
+\]
+Here $\operatorname{Var}$ is variance, $\operatorname{Skew}$ is standardized skewness, and $\operatorname{ExKurt}$ is excess kurtosis; $\rho$ is the fraction of total log-variance contributed by shape. After matching the observed variance, the single-population Brownian-bridge model predicts skewness about $0.003$ and excess kurtosis about $-0.002$. The data instead give $-2.40$ and $8.11$. This sharp mismatch statistically rejects the single-population explanation and motivates a near-geodesic boundary population or mixture. It detects missing statistical heterogeneity; it does not identify its physical cause or fully determine the mixture components.
+
+Only after that population-level rejection does the paper ask when one flight can be assigned to the boundary component. If $C=0$ denotes that component, $\pi_0=\Pr(C=0)$ is its prior proportion, and $R_n^2=n^{-1}\sum_{j=1}^n\eta(t_j)^2$ is prefix RMS deviation after $n$ observations at times $t_j$, with cross-track deviations $\eta(t_j)$, then for a small-deviation threshold $\tau$,
+\[
+ \begin{aligned}
+ \Pr(C=0\mid R_n\leq\tau)
+ &\geq \frac{\pi_0(1-\beta_n)}
+ {\pi_0(1-\beta_n)+(1-\pi_0)e^{-nI(\tau)}},\\[-1pt]
+ n&\gtrsim
+ \frac{\log((1-\pi_0)/\pi_0)+\log((1-\alpha)/\alpha)}{I(\tau)}.
+ \end{aligned}
+\]
+Here $\beta_n$ bounds boundary misses, $I(\tau)>0$ is the ordinary population's exponential small-deviation rate, and $\alpha$ is the tolerated posterior error; $\gtrsim$ gives the waiting-time scale up to the $\beta_n$ correction. This follow-on result gives the time to diagnose an individual boundary track---about 41 minutes in the dataset---rather than the original evidence that a mixture is needed.
+\end{itemize}
+
+\noindent\fcolorbox{SoftRule}{SoftBlue}{%
+\begin{minipage}{0.965\textwidth}
+\small
+\textbf{Finite Observation:} Does a good finite fit prove that no larger coupled physical process matters? No.\par
+\textbf{Aerostat:} Do the observed skewness and kurtosis agree with the proposed single-population trajectory model? No---their mismatch makes additional statistical structure necessary.
+\end{minipage}}
+
+\vspace{4pt}
+The papers are therefore complementary: the first warns that even an excellent finite fit cannot certify physical closure; the second shows how observable higher moments can nevertheless falsify a specific statistical explanation and reveal population heterogeneity.
+
+\vfill
+{\footnotesize\color{DeepBlue}
+Companion papers: \emph{Finite Observation and Broader Physical Processes};
+\emph{When Does a Random-Scale Flight Path Look Lognormal?} (J. R. Landers, 2026).}
+
+\end{document}
