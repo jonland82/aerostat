@@ -12,9 +12,12 @@ analysis of geodesic-deviation patterns across live flight paths.
   tracks look lognormal, and uses the sharp lower-tail boundary to separate the
   53 near-geodesic aircraft from the rest of the cohort. It also derives a
   sequential detection rule for how long an observed track must be watched
-  before the differing physics of the two populations becomes visible; in the
+  before the boundary population becomes statistically distinguishable; in the
   current captured hour, the boundary signal appears after about 41 elapsed
   minutes.
+- Physical-model note: [finite observation and broader physical processes](finite_observation/finite_observation.pdf).
+- Learning-theory note: [finite-horizon indistinguishability and the limits of extrapolation](finite_observation/finite-horizon-extrapolation-lower-bound/finite-horizon-extrapolation-lower-bound.pdf).
+- Reading note: [physical completeness versus statistical identifiability](finite_observation/completeness-vs-identifiability/completeness-vs-identifiability.pdf).
 - Live CloudFront dashboard: <https://d2188f8gar9chl.cloudfront.net/>
 - Live CloudFront experiment viewer: <https://d2188f8gar9chl.cloudfront.net/experiments/index.html>
 
@@ -44,6 +47,8 @@ site is the operational dashboard and experiment viewer:
 - [Live aircraft dashboard](https://d2188f8gar9chl.cloudfront.net/)
 - [Tabbed experiment viewer](https://d2188f8gar9chl.cloudfront.net/experiments/index.html)
 - [Research paper: geodesic-deviation pattern analysis](experiments/global-state-series/notes/random-scale-bridge/random-scale-bridge.pdf)
+- [Physical-model note: finite observation and broader physical processes](finite_observation/finite_observation.pdf)
+- [Learning-theory note: finite-horizon extrapolation lower bound](finite_observation/finite-horizon-extrapolation-lower-bound/finite-horizon-extrapolation-lower-bound.pdf)
 - [Global state-series experiment README](experiments/global-state-series/README.md)
 
 The experiment viewer centers on the geodesic-deviation analysis:
@@ -70,7 +75,9 @@ The current local experiment pull covers 2026-06-20 02:11:45Z through
 
 Generated raw responses and Parquet files remain local and gitignored. The
 tracked visualizations use compact JavaScript datasets rebuilt from that local
-experiment output.
+experiment output. A tracked [dataset manifest](experiments/global-state-series/dataset-manifest.json)
+records the frozen snapshot's collection window, schema, cohort counts, file
+sizes, and SHA-256 checksums.
 
 ## Path-Geometry Question
 

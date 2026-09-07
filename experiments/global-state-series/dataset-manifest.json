@@ -1,0 +1,70 @@
+{
+  "dataset_id": "opensky-global-state-series-2026-06-20",
+  "source": "OpenSky Network REST API /states/all",
+  "collection": {
+    "first_requested_at": "2026-06-20T02:11:45Z",
+    "last_requested_at": "2026-06-20T03:10:45Z",
+    "sample_count": 60,
+    "interval_seconds": 60,
+    "rows": 414269,
+    "distinct_aircraft": 12524,
+    "complete_aircraft": 2204
+  },
+  "analysis_cohort": {
+    "quality_filtered_tracks": 1780,
+    "requirements": [
+      "complete positions in all 60 snapshots",
+      "at least 25 km between observed endpoints",
+      "no one-minute position jump above 30 km"
+    ]
+  },
+  "files": {
+    "global_states.parquet": {
+      "bytes": 17457240,
+      "rows": 414269,
+      "row_groups": 60,
+      "sha256": "90a80926cef0910873b13c52d88b8b13ac1f7589b5ea9b3c8f14dabcd6918e98"
+    },
+    "top_500_states.parquet": {
+      "bytes": 721769,
+      "rows": 30000,
+      "aircraft": 500,
+      "sha256": "30ead371d1bde8510e9d9003f60a2cc392e9bc5464e550d1dc1fb24a33fb2841"
+    },
+    "manifest.json": {
+      "bytes": 641,
+      "sha256": "4d54852d0d1c6951570ccaa86b71f1cff42934a7304c5471d35731707918a168"
+    },
+    "raw_snapshots": {
+      "count": 60,
+      "total_bytes": 14870383,
+      "pattern": "raw/states-<requested-time>.json.gz"
+    }
+  },
+  "parquet_schema": {
+    "requested_time": "int64",
+    "snapshot_time": "int64",
+    "icao24": "string",
+    "callsign": "string",
+    "origin_country": "string",
+    "time_position": "int64",
+    "last_contact": "int64",
+    "longitude": "double",
+    "latitude": "double",
+    "baro_altitude": "double",
+    "on_ground": "bool",
+    "velocity": "double",
+    "true_track": "double",
+    "vertical_rate": "double",
+    "sensors": "null",
+    "geo_altitude": "double",
+    "squawk": "string",
+    "spi": "bool",
+    "position_source": "int64",
+    "category": "null"
+  },
+  "storage": {
+    "repository_policy": "Raw snapshots and Parquet files remain gitignored and are not stored in Git history.",
+    "local_directory": "experiments/global-state-series/data/"
+  }
+}
