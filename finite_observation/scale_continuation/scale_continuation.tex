@@ -1,5 +1,5 @@
 \documentclass[10pt]{article}
-\usepackage[letterpaper,margin=0.52in]{geometry}
+\usepackage[letterpaper,margin=0.60in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{microtype}
@@ -11,7 +11,7 @@
 \hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue,citecolor=black,
   pdftitle={Further Scales and Two-Dimensional Flow},pdfauthor={J. R. Landers}}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.28em}
+\setlength{\parskip}{0.32em}
 \setlist{nosep,leftmargin=1.3em}
 \newcommand{\E}{\mathbb E}
 \newcommand{\Prob}{\mathbb P}
@@ -26,143 +26,176 @@
 \maketitle
 \vspace{-1.5em}
 \small
+\setlength{\abovedisplayskip}{6pt plus 2pt minus 1pt}
+\setlength{\belowdisplayskip}{6pt plus 2pt minus 1pt}
+\setlength{\abovedisplayshortskip}{4pt plus 1pt}
+\setlength{\belowdisplayshortskip}{5pt plus 1pt minus 1pt}
 
-\textbf{Question.} A finite experiment ends at some length or time scale $R$.
-When does a relevant process exist beyond $R$? There are two distinct answers.
-A point-process model can make further scales probable by assumption. A fluid
-equation can provide a mechanism that transfers activity toward larger scales.
-Neither answer lets a finite record prove that nature continues forever.
+\textbf{Question.} Suppose an experiment can observe physical structure only up
+to a length $R$. Should we expect related structure at lengths larger than $R$?
+This note separates two ways to answer. A probability model can assign a chance
+to larger scales. A fluid equation can explain how energy reaches them. Neither
+approach allows a finite observation, by itself, to prove continuation to
+arbitrarily large scales.
 
 \section*{1. A probability law for further scales}
-Index relevant processes by a characteristic scale $L\ge L_{\min}$. Equal
-multiplicative steps in $L$ are equal intervals in $\log L$. Assume that
-relevant scales form a Poisson point process with intensity
+Suppose that every structure we care about, such as an eddy, wave, or
+instability, has a characteristic length $L$. We record only that length. The
+collection of structures is then represented by a random set of points on the
+positive $L$-axis, starting at a chosen minimum length $L_{\min}$.
+
+It is natural to measure this axis logarithmically: going from 1 to 2 metres is
+the same relative change as going from 100 to 200 metres. We now make a specific
+modeling assumption. Counts in nonoverlapping scale intervals are independent,
+and the expected number in a short interval near $L$ is
 \[
   d\mu(L)=\eta(L)\frac{dL}{L},\qquad \eta(L)\ge0.
 \]
-This is a population assumption: ``relevant'' means that a counted process is
-dynamically coupled to the phenomenon, not merely present elsewhere. If
-$V(L)=v_dL^d$, then $dV/V=d\,dL/L$; that dimensional factor is absorbed into
-$\eta$, since finite counts identify only the product.
+These two statements define a Poisson point process. The function $\eta(L)$ is
+the expected density of structures per unit of log scale. A structure is
+``relevant'' only if it interacts with the phenomenon being studied. If one
+instead measures relative $d$-dimensional volume, the extra factor $d$ can be
+absorbed into $\eta$ and does not change the argument.
 
 The number $N(R,S)$ of processes with scales in $(R,S]$ is Poisson with mean
 \[
   \mu(R,S)=\int_R^S\eta(L)\frac{dL}{L}.
 \]
-Hence its zero-count probability gives
+The chance of seeing at least one such structure is therefore
 \[
  \Prob\{N(R,S)\ge1\}
  =1-\exp\!\left[-\int_R^S\eta(L)\frac{dL}{L}\right].                   \tag{1}
 \]
-Letting $S\to\infty$ yields the sharp criterion
+Now let the upper limit $S$ grow without bound. The model gives the exact test
 \[
  \boxed{\text{unbounded process scales almost surely}}
  \quad\Longleftrightarrow\quad
  \boxed{\displaystyle\int_R^\infty\eta(L)\frac{dL}{L}=\infty}.       \tag{2}
 \]
 
-\textbf{Coin-flip intuition.} If $\eta(L)=\eta_0>0$, each doubling band
+Here ``almost surely'' means with probability one under the model.
+
+\textbf{Coin-flip intuition.} First suppose $\eta(L)=\eta_0>0$ at every scale.
+Each doubling interval
 $(2^jR,2^{j+1}R]$ has the same hit probability
 \[
  p=1-\exp(-\eta_0\log2)=1-2^{-\eta_0}.
 \]
-The bands are independent. The probability of missing the first $m$ bands is
-$2^{-m\eta_0}\to0$, just as repeated fair coin flips eventually produce
-heads. In fact, infinitely many bands contain a process almost surely. This is
-the scale-invariant Poisson process studied by Arratia~\cite{arratia}.
+The intervals are independent, so the probability of missing the first $m$ is
+$2^{-m\eta_0}\to0$. This is like repeating a coin toss with a fixed positive
+chance of heads: eventually a head appears, and in fact heads appear infinitely
+often. Likewise, structures occur in infinitely many doubling intervals with
+probability one. Arratia calls this a scale-invariant Poisson process
+\cite{arratia}.
 
-The opposite conclusion is equally possible. If
+The answer changes if large structures become sufficiently rare. For example,
+if
 $\eta(L)=\eta_0(L_{\min}/L)^a$ with $a>0$, then
 \[
  \int_R^\infty\eta(L)\frac{dL}{L}
  =\frac{\eta_0}{a}\left(\frac{L_{\min}}R\right)^a<\infty.
 \]
-There is consequently a positive probability
+then the total expected number beyond $R$ is finite. The probability of seeing
+no structure at all beyond $R$ is the positive number
 \[
  \exp\!\left[-\frac{\eta_0}{a}
  \left(\frac{L_{\min}}R\right)^a\right]
 \]
 that no relevant process exists beyond $R$.
 
-\textbf{Why finite data cannot decide.} Choose two intensity functions that
-agree for every observed $L\le S_{\rm obs}$, but give one a constant tail and
-the other a power-decaying tail. They induce exactly the same observations
-inside the measured range, while (2) gives opposite answers outside it. The
-continuation claim therefore comes from the tail model, not from the finite
-record.
+\textbf{Why finite data cannot decide.} Imagine two choices of $\eta$ that are
+identical throughout the observed range $L\le S_{\rm obs}$. Beyond that range,
+let one remain constant and let the other decay as a power law. Both models fit
+every possible observation inside the experiment, but (2) gives opposite
+answers about unlimited continuation. The answer is determined by the assumed
+tail of $\eta$, which the finite experiment cannot see.
 
 \newpage
 \section*{2. What Navier--Stokes can supply}
-Two-dimensional turbulence supplies a physical route to larger scales. Consider
-the stochastically forced, damped Navier--Stokes equations on a periodic box
-$\mathbb T_\lambda^2$:
+The Poisson model describes how many scales occur, but it does not explain what
+creates them. Two-dimensional fluid flow provides a possible mechanism: an
+inverse cascade can carry energy from the forcing scale toward larger lengths.
+Consider the randomly forced, damped Navier--Stokes equations on a periodic
+square $\mathbb T_\lambda^2$ of size $\lambda$:
 \[
  du+\big[(u\!\cdot\!\nabla)u+\nabla p\big]dt
  =\big[\nu\Delta u-\alpha(-\Delta)^{-2\gamma}u\big]dt+dW^\lambda,
  \qquad \nabla\!\cdot u=0.                                             \tag{3}
 \]
-The forcing acts near a fixed injection scale and supplies mean energy
-$\varepsilon>0$ per unit time and area. Bedrossian, Coti Zelati,
-Punshon-Smith, and Weber proved rigorous inverse-flux laws for stationary
-solutions in the large-box limit~\cite{bcpw}. Their hypotheses include regular
-forcing, $\lambda\to\infty$, and weak anomalous dissipation as
-$\nu,\alpha\to0$:
+Here $u$ is velocity, $p$ is pressure, $\nu$ is viscosity, $\alpha$ is
+large-scale drag, and $W^\lambda$ is the random forcing. The forcing injects
+mean energy $\varepsilon>0$ per unit time and area near one fixed length.
+
+Bedrossian, Coti Zelati, Punshon-Smith, and Weber proved an inverse-flux law for
+stationary solutions as the box grows and viscosity and drag vanish
+\cite{bcpw}. Among their assumptions are
 \[
 \nu\E\|\omega\|_2^2\to0,
  \qquad
- \alpha\E\|(-\Delta)^{-\gamma}\omega\|_2^2\to0,
- \qquad \omega=\operatorname{curl}u.                                  \tag{4}
+ \alpha\E\|(-\Delta)^{-\gamma}\omega\|_2^2\to0.                    \tag{4}
 \]
-Here the exponent $-2\gamma$ in the velocity equation becomes $-\gamma$ in
-the quadratic dissipation norm; this is the convention of Ref.~\cite{bcpw}.
+where $\omega=\operatorname{curl}u$ is vorticity. The powers $-2\gamma$ and
+$-\gamma$ are consistent: a quadratic energy norm splits the operator equally
+between its two factors, as in Ref.~\cite{bcpw}.
 
-For the velocity increment $\delta_{\ell n}u(x)=u(x+\ell n)-u(x)$, define
+To measure transfer across a length $\ell$, compare velocities at two points
+separated by $\ell$ in direction $n$:
+$\delta_{\ell n}u(x)=u(x+\ell n)-u(x)$. Average the resulting cubic quantity
+over all positions $x$ and directions $n$:
 \[
  \mathcal F_\ell(u)=
  \avgint_{S^1}\avgint_{\mathbb T_\lambda^2}
  |\delta_{\ell n}u|^2(\delta_{\ell n}u\cdot n)\,dx\,dn.
 \]
-There is an outer inertial scale $\ell_\alpha\to\infty$ such that
+The theorem gives an upper inertial-range length $\ell_\alpha\to\infty$ for
+which
 \[
  \E\mathcal F_\ell(u)\sim2\varepsilon\ell,
  \qquad 1\ll\ell\ll\ell_\alpha.                                    \tag{5}
 \]
-The positive sign is the inverse cascade: energy crosses toward larger
-lengths. Thus, for every finite $R$, sufficiently large boxes and sufficiently
-weak drag admit an active inverse-flux scale $\ell\ge R$.
+The positive sign says that energy is moving toward larger lengths. Thus, for
+any chosen finite $R$, one can take a large enough box and weak enough drag to
+obtain active inverse transfer at some $\ell\ge R$. Notice the quantifiers: the
+system may change when $R$ changes. This does not yet describe one flow whose
+active scale grows forever.
 
-For each fixed box, viscosity, and positive drag, suppose additionally that the
-chosen invariant measure is ergodic. Birkhoff's theorem then gives
+There is also an almost-sure statement at each fixed set of parameters. If the
+chosen stationary measure is ergodic, Birkhoff's theorem gives
 \[
  \frac1T\int_0^T\mathcal F_\ell(u(t))\,dt
  \longrightarrow \E\mathcal F_\ell(u)>0.                              \tag{6}
 \]
-Thus positive inverse transfer recurs at each admitted scale almost surely.
-This stationary result concerns arbitrarily large scales only across a
-large-box, vanishing-drag family; a fixed box still has a largest scale.
+So the long-time average flux is positive for almost every realization. This
+is a stationary result for an allowed scale in a fixed box. It does not remove
+the box's largest possible length.
 
 \section*{3. The stronger theorem still wanted}
-The desired single-flow statement would construct a homogeneous statistical
-solution on $\mathbb R^2$, with finite energy per unit area (not a finite-total-
-energy $L^2(\mathbb R^2)$ solution). Let $E(k,t)$ be its isotropic energy
-spectrum and, for fixed $\theta\in(0,1)$, define the infrared energy-quantile
-length
+The stronger goal concerns one flow on the whole plane $\mathbb R^2$. A
+spatially homogeneous flow on an infinite plane generally has infinite total
+energy, so the right object is a homogeneous statistical solution with finite
+energy \emph{per unit area}, not a finite-energy $L^2(\mathbb R^2)$ solution.
+
+We must also define what the flow's ``large scale'' means. Let $E(k,t)$ be its
+energy spectrum, where small wave number $k$ means large physical length. Fix a
+fraction $\theta\in(0,1)$ and define
 \[
  k_\theta(t)=\inf\!\left\{K>0:\int_0^K E(k,t)\,dk\ge
  \theta\int_0^\infty E(k,t)\,dk\right\},\qquad L(t)=k_\theta(t)^{-1}.
 \]
-The target is then the well-posed growth statement
+Thus $k_\theta(t)$ is the wave number below which the chosen fraction of energy
+lies, and $L(t)=1/k_\theta(t)$ is its associated length. Energy moving toward
+smaller $k$ makes $L(t)$ larger. The desired theorem is
 \[
  \Prob\{L(t)\to\infty\}=1.                                             \tag{7}
 \]
-The familiar rate follows if one additionally assumes the
-Kraichnan inverse-cascade spectrum~\cite{kraichnan}
+What growth rate might we expect? If we additionally assume Kraichnan's
+inverse-cascade spectrum~\cite{kraichnan}, with forcing length $L_f$,
 \[
  E(k)=C_I\varepsilon^{2/3}k^{-5/3},
  \qquad L(t)^{-1}\le k\le L_f^{-1}.
 \]
-Indeed, equating accumulated energy $\varepsilon t$ with the spectral integral
-gives
+then the energy accumulated by time $t$ is approximately the integral of this
+spectrum. Setting that integral equal to $\varepsilon t$ gives
 \[
  \varepsilon t
  =\frac{3C_I}{2}\varepsilon^{2/3}
@@ -174,16 +207,16 @@ so
  \frac{2}{3C_I}\varepsilon^{1/3}t\right]^{3/2}}
  \sim \left(\frac{2}{3C_I}\right)^{3/2}\varepsilon^{1/2}t^{3/2}.       \tag{8}
 \]
-Equation (8) is still a closure calculation, not a theorem derived from (3).
-Here $L$ is an infrared-front proxy (different fixed $\theta$ change constants,
-not the predicted exponent). This evolving regime is nonstationary, so the
-fixed-parameter Birkhoff argument in (6) does not imply (7) or (8). The missing
-step is to prove an expanding infrared front or the $k^{-5/3}$ spectrum directly
-from Navier--Stokes on an unbounded domain; homogeneous forcing makes this
-harder because total energy is infinite. Large-scale drag, finite forcing
-duration, or a finite container can stop the growth. The research target is to
-establish (7), with explicit hypotheses and cutoffs, without assuming the
-spectrum that already implies it.
+This calculation predicts $L(t)\propto t^{3/2}$, but it is not a theorem derived
+from (3): it assumes the spectrum that produces the answer. The lower spectral
+edge used in the calculation is proportional to the quantile length above, up
+to a constant that does not change the exponent.
+
+Finally, this growing state is not stationary, so the Birkhoff argument in (6)
+cannot prove (7) or (8). Drag, finite forcing time, or a container may stop the
+growth. The open problem is to prove from Navier--Stokes that the infrared scale
+of one unbounded flow grows almost surely, under explicit assumptions, without
+first assuming the $k^{-5/3}$ law.
 
 \begin{thebibliography}{9}\footnotesize
 \setlength{\itemsep}{1pt}
