@@ -15,12 +15,12 @@
 \usepackage{titlesec}
 \usepackage[font=small,labelfont={bf,color=DeepBlue}]{caption}
 
-\definecolor{DeepBlue}{HTML}{093C4C}
-\definecolor{Cyan}{HTML}{087F9A}
+\definecolor{DeepBlue}{HTML}{000000}
+\definecolor{Cyan}{HTML}{000000}
 \definecolor{Orange}{HTML}{B96722}
 \definecolor{SoftBlue}{HTML}{EAF5F7}
 \definecolor{SoftRule}{HTML}{9CC8D3}
-\definecolor{Body}{HTML}{1D3037}
+\definecolor{Body}{HTML}{000000}
 
 \hypersetup{colorlinks=true,linkcolor=DeepBlue,citecolor=DeepBlue,urlcolor=Cyan}
 \color{Body}
@@ -58,12 +58,12 @@
 \vspace{-4pt}
 
 \begin{abstract}
-An hour of globally sampled aircraft positions produces a tempting picture: RMS departures from endpoint great-circle arcs are positive, strongly right-skewed, and superficially lognormal. We turn that visual hypothesis into a geometric model. Each deviation is factored as $D=AQ$, where $A$ sets route scale and $Q$ is the RMS shape of an endpoint-pinned bridge. We prove that an independent lognormal scale suppresses the non-Gaussian cumulants of $\log Q$ at explicit rates and give a Wasserstein convergence criterion. For a Brownian bridge, the criterion yields a concrete threshold. Yet the observed log-skewness and kurtosis sharply contradict the resulting single-population prediction. The same theorem that explains a lognormal-looking center therefore diagnoses a distinct near-geodesic boundary population, and a sequential small-ball test estimates when that assignment becomes visible in time. The result is not a universal lognormal law, but a route from visual regularity to a falsifiable mixture model and a time-to-diagnosis statistic.
+An hour of globally sampled aircraft positions produces a tempting picture: RMS departures from endpoint great-circle arcs are positive, strongly right-skewed, and superficially lognormal. We turn that visual hypothesis into a geometric model. Each deviation is factored as $D=AQ$, where $A$ sets route scale and $Q$ is the RMS shape of an endpoint-pinned bridge. We prove that an independent lognormal scale suppresses the non-Gaussian cumulants of $\log Q$ at explicit rates and give a Wasserstein convergence criterion. For a Brownian bridge, the criterion yields a concrete threshold. Yet the observed log-skewness and kurtosis sharply contradict the resulting single-population prediction. The same theorem that explains a lognormal-looking center therefore diagnoses a distinct near-geodesic boundary population, and a sequential small-ball test gives a retrospective, in-sample estimate of when that assignment becomes visible. The result is not a universal lognormal law, but a route from visual regularity to a falsifiable mixture model and a time-to-diagnosis statistic.
 \end{abstract}
 
 \section{A visual regularity with a geometric question}
 
-The OpenSky Network makes large-scale ADS-B trajectory research possible \cite{schaefer2014}. We sampled 60 one-minute global state snapshots, retained aircraft with all 60 positions, required at least 25 km between endpoints, and removed any track with a one-minute jump above 30 km. The final cohort contains 1,780 tracks. These positions are receiver-dependent observations, not a complete census of global aviation.
+The OpenSky Network makes large-scale ADS-B trajectory research possible \cite{schaefer2014}. We sampled 60 one-minute global state snapshots, retained aircraft with all 60 positions, required at least 25 km between endpoints, and removed any track with a one-minute jump above 30 km. Of 12,524 observed identifiers, 2,183 had valid positions in every snapshot; the final filtered cohort contains 1,780 tracks. Continuous visibility is receiver- and geography-dependent and favors aircraft that remain observable for the full hour. Thus every population fraction below is conditional on this coverage-selected cohort, not an estimate for global aviation.
 
 For aircraft $i$, write $x_i(t)\in S_R^2$ for its position on the spherical Earth at normalized time $t\in[0,1]$. The direct reference is the minor endpoint geodesic, a standard spherical construction in directional statistics \cite{mardiajupp2000},
 \begin{equation}
@@ -98,7 +98,7 @@ Classical lognormal modeling begins with $\log(D/d_0)\sim N(\mu,\sigma^2)$ for r
 \item \textbf{Scale and shape.} Each RMS deviation is written as $D=AQ$: $A$ sets overall magnitude, while $Q$ captures standardized endpoint-pinned shape.
 \item \textbf{The smoothing prediction.} Broad variation in $A$ should suppress the skewness and kurtosis contributed by $Q$, making the Brownian product nearly Gaussian in log space.
 \item \textbf{The boundary population.} The observed log-skewness is $-2.40$, with 53 tracks at or below $0.1$ km RMS deviation forming a distinct lower-tail boundary.
-\item \textbf{Sequential diagnosis.} After the mixture is forced, prefix residuals and Wasserstein gaps ask how long one must watch before assigning a single aircraft to that boundary component.
+\item \textbf{Sequential diagnosis.} After the mixture is forced, prefix residuals and Wasserstein gaps give an in-sample, retrospective estimate of how long one must watch before assigning a single aircraft to that boundary component.
 \end{itemize}
 \par
 \end{minipage}}
@@ -193,6 +193,39 @@ The observed cohort supplies a sharp diagnostic. Among the 1,776 positive $D_i$ 
 \]
 Variance matching under the independent Brownian model implies $\sigma_A\approx1.413$. At that scale spread, the proposition predicts skewness about $0.003$ and excess kurtosis about $-0.002$---essentially Gaussian in log space. The data are nowhere close. The mismatch is driven by a near-geodesic boundary: 53 tracks have recorded RMS deviation at or below $0.1$ km.
 
+\subsection{Route-length and filter diagnostics}
+
+The boundary is not produced by admitting short tracks. Figure~\ref{fig:endpoint}
+plots RMS deviation against endpoint distance: their Pearson correlation is only
+$0.054$, the boundary median is 770 km versus 752 km for ordinary tracks, and
+only one of the 53 boundary tracks has an endpoint distance below 100 km.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{endpoint-distance-diagnostic.pdf}
+  \caption{Endpoint-distance diagnostic for the 1,780-track cohort. Boundary tracks span the same route-length range as the ordinary population, ruling out short endpoint displacement as the source of the lower-tail boundary.}
+  \label{fig:endpoint}
+\end{figure}
+
+Holding complete coverage and the 30 km jump screen fixed, changing the minimum
+endpoint distance leaves the headline statistics nearly unchanged:
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{3.6pt}
+\begin{tabular}{@{}rrrrrrrrr@{}}
+\toprule
+Cut (km) & $n$ & $D\leq0.1$ & Median & Mean & P90 & P99 & Skew & Ex. kurt.\\
+\midrule
+10  & 1801 & 53 & 16.62 & 22.61 & 50.04 & 102.30 & $-2.38$ & 8.05\\
+25  & 1780 & 53 & 16.70 & 22.66 & 50.06 & 102.61 & $-2.40$ & 8.11\\
+100 & 1729 & 52 & 16.99 & 22.95 & 50.84 & 103.37 & $-2.45$ & 8.33\\
+\bottomrule
+\end{tabular}
+\end{center}
+Here $D$ and its percentiles are in kilometres; skewness and excess kurtosis
+refer to positive values of $\log(D/d_0)$. This sensitivity check supports the
+boundary finding, but it does not remove the full-hour coverage conditioning.
+
 \section{From an attractive fit to a useful rejection}
 
 The mathematical arc reverses the usual modeling order. We did not choose a flexible mixture merely because a histogram fit was imperfect. Geometry first proposed $D=AQ$; the smoothing theorem then showed that the Brownian single-regime model should be \emph{more} Gaussian in log space than the data; only then did a mixture become necessary.
@@ -254,7 +287,7 @@ This is the time-series version of the mixture conclusion: not every straight-lo
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{sequential-boundary-detection.pdf}
-  \caption{Sequential boundary diagnostics using the final endpoint geodesic as the reference. Left: empirical posterior confidence and boundary recall for the event $R_n\leq0.1$ km. The prior boundary mass is $53/1780$, so early small residuals are not enough; confidence becomes high only after persistence. Right: the empirical Wasserstein gap between the log-prefix RMS laws of the boundary and ordinary components, plotted against a bootstrap uncertainty floor.}
+  \caption{Retrospective, in-sample boundary diagnostics using the final endpoint and full-hour boundary labels. Left: empirical posterior confidence and boundary recall for $R_n\leq0.1$ km. The prior boundary mass is $53/1780$, so confidence becomes high only after persistence. Right: the empirical Wasserstein gap between the log-prefix RMS laws, plotted against a bootstrap uncertainty floor.}
   \label{fig:sequential}
 \end{figure}
 
@@ -279,7 +312,7 @@ T_*=\max\{T_{\rm post},T_W\},
 \qquad
 T_{\rm post}=\inf\{n:\mathbb P(C=0\mid\mathcal F_n)\geq1-\alpha\}.
 \]
-In the present hour, with $\tau=0.1$ km and $\pi_0=53/1780$, the final-endpoint diagnostic crosses high posterior confidence after roughly forty-one elapsed minutes. The online problem without the final endpoint is harder, because many ordinary trajectories are locally straight; that distinction is exactly what the waiting-time theorem is meant to expose.
+In the present hour, with $\tau=0.1$ km and $\pi_0=53/1780$, the final-endpoint diagnostic crosses 0.95 posterior confidence after roughly forty-one elapsed minutes. This threshold is retrospective and in-sample: both the reference geodesic and the boundary labels use the completed 60-minute track, and no later or held-out horizon validates the assignment. It should therefore be read as a descriptive critical time for this capture, not a prospective performance claim. A genuinely online rule must estimate the destination-side reference without the final endpoint and be tested on an independent, longer window; many ordinary trajectories are locally straight, so that problem is harder.
 
 \vspace{-3pt}
 \begin{thebibliography}{9}\small

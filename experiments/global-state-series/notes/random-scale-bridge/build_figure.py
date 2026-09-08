@@ -15,6 +15,7 @@ DATA_PATH = HERE.parents[1] / "visualizations" / "geodesic-deviation" / "deviati
 STATE_PATH = HERE.parents[1] / "data" / "global_states.parquet"
 OUTPUT_PATH = HERE / "rms-deviation-distribution.pdf"
 SEQUENTIAL_OUTPUT_PATH = HERE / "sequential-boundary-detection.pdf"
+ENDPOINT_OUTPUT_PATH = HERE / "endpoint-distance-diagnostic.pdf"
 EARTH_RADIUS_KM = 6_371.0088
 MIN_ENDPOINT_DISTANCE_KM = 25
 MAX_STEP_DISTANCE_KM = 30
@@ -31,7 +32,7 @@ log_deviations = np.log(positive)
 cyan = "#24a8c7"
 cyan_light = "#9fefff"
 orange = "#d88735"
-ink = "#18313b"
+ink = "#000000"
 grid = "#d8e6ea"
 
 plt.rcParams.update(
@@ -39,9 +40,9 @@ plt.rcParams.update(
         "font.family": "DejaVu Sans",
         "font.size": 8.2,
         "axes.labelcolor": ink,
-        "axes.edgecolor": "#86a3ad",
-        "xtick.color": "#526b74",
-        "ytick.color": "#526b74",
+        "axes.edgecolor": ink,
+        "xtick.color": ink,
+        "ytick.color": ink,
     }
 )
 
@@ -171,7 +172,7 @@ def empirical_w2(left: np.ndarray, right: np.ndarray, grid_size: int = 1_000) ->
     return float(np.sqrt(np.mean((left_quantiles - right_quantiles) ** 2)))
 
 
-def sequential_deviation_matrix() -> np.ndarray:
+def cohort_deviations(min_endpoint_distance_km: float) -> tuple[np.ndarray, np.ndarray]:
     table = pq.read_table(
         STATE_PATH,
         columns=["requested_time", "icao24", "latitude", "longitude"],
@@ -181,6 +182,7 @@ def sequential_deviation_matrix() -> np.ndarray:
     for row in table.to_pylist():
         tracks[row["icao24"]].append(row)
 
+    endpoint_distances_out = []
     rows_out = []
     for rows in tracks.values():
         rows.sort(key=lambda row: row["requested_time"])
@@ -197,11 +199,12 @@ def sequential_deviation_matrix() -> np.ndarray:
         ]
         endpoint_angle = angular_distance(points[0], points[-1])
         endpoint_distance = endpoint_angle * EARTH_RADIUS_KM
-        if endpoint_distance < MIN_ENDPOINT_DISTANCE_KM:
+        if endpoint_distance < min_endpoint_distance_km:
             continue
         if max(step_distances) > MAX_STEP_DISTANCE_KM:
             continue
 
+        endpoint_distances_out.append(endpoint_distance)
         rows_out.append(
             [
                 distance_to_geodesic_arc(point, points[0], points[-1], endpoint_angle)
@@ -209,10 +212,71 @@ def sequential_deviation_matrix() -> np.ndarray:
             ]
         )
 
-    return np.asarray(rows_out, dtype=float)
+    return np.asarray(endpoint_distances_out, dtype=float), np.asarray(rows_out, dtype=float)
 
 
-deviation_matrix = sequential_deviation_matrix()
+all_endpoint_distances, all_deviation_matrix = cohort_deviations(10)
+analysis_mask = all_endpoint_distances >= MIN_ENDPOINT_DISTANCE_KM
+endpoint_distances = all_endpoint_distances[analysis_mask]
+deviation_matrix = all_deviation_matrix[analysis_mask]
+full_rms_unrounded = np.sqrt(np.mean(deviation_matrix**2, axis=1))
+endpoint_boundary_mask = full_rms_unrounded <= BOUNDARY_RMS_KM
+
+fig, axis = plt.subplots(figsize=(7.1, 2.4), constrained_layout=True)
+axis.scatter(
+    endpoint_distances[~endpoint_boundary_mask],
+    full_rms_unrounded[~endpoint_boundary_mask],
+    s=7,
+    color="#9aa3a7",
+    alpha=0.55,
+    linewidths=0,
+    label="ordinary",
+)
+axis.scatter(
+    endpoint_distances[endpoint_boundary_mask],
+    full_rms_unrounded[endpoint_boundary_mask],
+    s=14,
+    color=orange,
+    edgecolors=ink,
+    linewidths=0.25,
+    label=r"boundary ($D\leq0.1$ km)",
+)
+axis.axhline(BOUNDARY_RMS_KM, color=ink, linewidth=0.7, linestyle=":")
+axis.set_yscale("log")
+axis.set(
+    title="Near-geodesic tracks are not a short-displacement artifact",
+    xlabel="Endpoint great-circle distance (km)",
+    ylabel="RMS deviation (km)",
+)
+axis.grid(axis="y", color=grid, linewidth=0.55)
+axis.spines[["top", "right"]].set_visible(False)
+axis.legend(frameon=False, fontsize=7.2, loc="upper right")
+axis.text(
+    0.02,
+    0.04,
+    r"Pearson $r=0.054$; boundary median endpoint distance $=770$ km",
+    transform=axis.transAxes,
+    fontsize=7.4,
+    color=ink,
+)
+fig.savefig(ENDPOINT_OUTPUT_PATH, bbox_inches="tight")
+print(f"Wrote {ENDPOINT_OUTPUT_PATH}")
+
+for cutoff in (10, 25, 100):
+    cutoff_matrix = all_deviation_matrix[all_endpoint_distances >= cutoff]
+    cutoff_rms = np.round(np.sqrt(np.mean(cutoff_matrix**2, axis=1)), 2)
+    cutoff_positive = cutoff_rms[cutoff_rms > 0]
+    cutoff_log = np.log(cutoff_positive)
+    cutoff_sd = float(cutoff_log.std())
+    cutoff_skew = float(np.mean(((cutoff_log - cutoff_log.mean()) / cutoff_sd) ** 3))
+    cutoff_kurt = float(np.mean(((cutoff_log - cutoff_log.mean()) / cutoff_sd) ** 4) - 3)
+    print(
+        f"cutoff={cutoff:3d} n={len(cutoff_rms):4d} boundary={np.sum(cutoff_rms <= BOUNDARY_RMS_KM):2d} "
+        f"median={np.median(cutoff_rms):.2f} mean={np.mean(cutoff_rms):.2f} "
+        f"p90={np.quantile(cutoff_rms, 0.9):.2f} p99={np.quantile(cutoff_rms, 0.99):.2f} "
+        f"skew={cutoff_skew:.2f} kurt={cutoff_kurt:.2f}"
+    )
+
 prefix_counts = np.arange(2, deviation_matrix.shape[1] + 1)
 prefix_rms = np.sqrt(np.cumsum(deviation_matrix**2, axis=1)[:, 1:] / prefix_counts)
 full_rms = prefix_rms[:, -1]
