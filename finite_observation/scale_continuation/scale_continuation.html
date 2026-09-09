@@ -52,12 +52,18 @@
 
     html {
       font-size: 11pt;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: clip;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
     }
 
     body {
+      width: 100%;
+      max-width: 100%;
       margin: 0;
+      overflow-x: hidden;
       background: var(--paper);
       color: var(--ink);
       font-family: "Latin Modern Roman Web", "Latin Modern Roman", "STIX Two Text", "Times New Roman", Times, serif;
@@ -69,9 +75,12 @@
 
     main {
       width: min(100%, 48rem);
+      min-width: 0;
       margin: 0 auto;
       padding: 2.7rem 1.35rem 4rem;
     }
+
+    article { min-width: 0; }
 
     header {
       margin: 0 0 1.65rem;
@@ -129,7 +138,10 @@
     a:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
 
     .math-display {
-      margin: 0.8rem -0.15rem;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin: 0.8rem 0;
       padding: 0.08rem 0.15rem 0.18rem;
       overflow-x: auto;
       overflow-y: hidden;
@@ -143,33 +155,31 @@
     }
 
     figure {
-      width: min(100%, 36rem);
-      margin: 1.65rem auto 1.85rem;
-      padding: 0.62rem;
-      border: 1px solid #d8dde3;
-      border-radius: 5px;
-      background: #fcfcfd;
-      box-shadow: 0 5px 18px rgba(20, 35, 55, 0.08);
+      width: min(100%, 38rem);
+      margin: 1.8rem auto 2rem;
+      padding: 0;
+      border: 0;
+      background: transparent;
     }
 
-    figure.figure-medium { width: min(100%, 40rem); }
-    figure.figure-dense { width: min(100%, 44rem); }
+    figure.figure-medium { width: min(100%, 42rem); }
+    figure.figure-dense { width: min(100%, 48rem); }
 
     figure img {
       display: block;
+      max-width: 100%;
       width: 100%;
       height: auto;
       border: 0;
-      border-radius: 2px;
     }
 
     figcaption {
-      margin: 0.62rem 0.1rem 0;
-      padding-top: 0.58rem;
-      border-top: 1px solid #e1e4e8;
-      color: #333;
-      font-size: 11pt;
-      line-height: 1.4;
+      margin: 0.72rem 0.1rem 0;
+      padding-top: 0.62rem;
+      border-top: 1px solid #cbd3d9;
+      color: #3f4850;
+      font-size: 10.5pt;
+      line-height: 1.42;
     }
 
     .bibliography {
@@ -188,7 +198,7 @@
     }
 
     .bibliography ol { margin: 0; padding-left: 1.65rem; }
-    .bibliography li { margin: 0.48rem 0; padding-left: 0.15rem; }
+    .bibliography li { margin: 0.48rem 0; padding-left: 0.15rem; overflow-wrap: anywhere; }
 
     @media (max-width: 42rem) {
       html { font-size: 11pt; }
@@ -201,20 +211,26 @@
       h2 { margin-top: 1.8rem; font-size: 14pt; }
       h3 { font-size: 13pt; }
       p { margin: 0.62rem 0; }
-      .math-display { margin-right: -0.35rem; margin-left: -0.35rem; }
+      .math-display {
+        width: 100%;
+        max-width: 100%;
+        margin-right: 0;
+        margin-left: 0;
+        overscroll-behavior-inline: contain;
+      }
       figure {
-        width: auto;
+        width: 100%;
+        max-width: 100%;
         margin: 1.35rem 0 1.55rem;
-        padding: 0.42rem;
-        border-radius: 3px;
-        box-shadow: 0 3px 12px rgba(20, 35, 55, 0.07);
+        padding: 0;
       }
       figure.figure-medium,
       figure.figure-dense {
-        width: calc(100% + 0.7rem);
-        margin-right: -0.35rem;
-        margin-left: -0.35rem;
-        padding: 0.3rem;
+        width: 100%;
+        max-width: 100%;
+        margin-right: 0;
+        margin-left: 0;
+        padding: 0;
       }
       figcaption { margin-right: 0.15rem; margin-left: 0.15rem; }
     }
@@ -309,7 +325,7 @@
       <p>Here “almost surely” means with probability one under the model.</p>
 
       <figure class="figure-dense" id="fig-1">
-        <img src="scales-point-process.png" alt="Logarithmic scale axis with irregular points representing structures, an observed range through eight metres, an unobserved tail, and an inset intensity curve eta of L.">
+        <img src="figures_refined/fig-01-scale-point-process.svg" alt="Logarithmic scale axis with irregular points representing structures, an observed range through eight metres, an unobserved tail, and an inset intensity curve eta of L.">
         <figcaption><strong>Figure 1.</strong> A point-process view of characteristic scale. Equal horizontal distances represent equal ratios of length. Each dot is one structure’s scale; dots beyond \(R\) depict a possible model realization, not observed data. The intensity \(\eta(L)\) controls expected point density per unit log scale.</figcaption>
       </figure>
 
@@ -330,7 +346,7 @@
       <p>If the same constant intensity continues through infinitely many doubling intervals, structures occur at arbitrarily large scales with probability one.</p>
 
       <figure id="fig-2">
-        <img src="coin-flip-intuition.png" alt="Four equal logarithmic intervals from eight to 128 metres, each with hit probability one half, and one example sequence of independent hits and misses.">
+        <img src="figures_refined/fig-02-coin-flip.svg" alt="Four equal logarithmic intervals from eight to 128 metres, each with hit probability one half, and one example sequence of independent hits and misses.">
         <figcaption><strong>Figure 2.</strong> Equal log-scale intervals have equal hit probability when \(\eta(L)=1\). The shown hit–miss sequence is only one realization; the four independent intervals give probability \(1-(1/2)^4=0.9375\) of at least one hit by \(128\,\mathrm m\).</figcaption>
       </figure>
 
@@ -353,7 +369,7 @@
       <div class="math-display">\[\int_{8\,\mathrm m}^{\infty}\left(\frac{8\,\mathrm m}{L}\right)^2\frac{dL}{L}=\frac12,\qquad\Prob\{\text{no structure beyond }8\,\mathrm m\}=e^{-1/2}\approx0.607.\]</div>
 
       <figure class="figure-dense" id="fig-3">
-        <img src="decaying-tail.png" alt="Two intensity plots agree through eight metres; model A remains constant afterward while model B decays as the inverse square of length.">
+        <img src="figures_refined/fig-03-decaying-tail.svg" alt="Two intensity plots agree through eight metres; model A remains constant afterward while model B decays as the inverse square of length.">
         <figcaption><strong>Figure 3.</strong> Two intensities that agree throughout the observed range. Model \(A\) remains constant beyond \(R\), whereas model \(B\) decays as \(L^{-2}\). Hollow tail points indicate possible, rather than observed, scales.</figcaption>
       </figure>
 
@@ -362,7 +378,7 @@
       <p>Models \(A\) and \(B\) fit every possible observation made at \(L\le8\,\mathrm m\), yet they give opposite answers about unlimited continuation. The answer is determined by the assumed tail of \(\eta\), which the finite experiment cannot see.</p>
 
       <figure class="figure-medium" id="fig-4">
-        <img src="finite-data-tail.png" alt="The same observations below eight metres branch into model A with unbounded scales almost surely and model B with a positive chance of no structure above eight metres.">
+        <img src="figures_refined/fig-04-finite-data-tail.svg" alt="The same observations below eight metres branch into model A with unbounded scales almost surely and model B with a positive chance of no structure above eight metres.">
         <figcaption><strong>Figure 4.</strong> Observational equivalence below \(R\) does not determine behavior above \(R\). The same finite data support models with opposite conclusions about unbounded continuation.</figcaption>
       </figure>
 
@@ -403,7 +419,7 @@
       <p>The positive sign says that energy is moving toward larger lengths. Thus, for any chosen finite \(R\), one can take a large enough box and weak enough drag to obtain active inverse transfer at some \(\ell\ge R\). Notice the quantifiers: the system may change when \(R\) changes. This does not yet describe one flow whose active scale grows forever.</p>
 
       <figure id="fig-5">
-        <img src="inverse-flux-law.png" alt="Positive expected energy flux rises linearly with physical length across the upper inertial range from the forcing scale to ell alpha.">
+        <img src="figures_refined/fig-05-inverse-flux.svg" alt="Positive expected energy flux rises linearly with physical length across the upper inertial range from the forcing scale to ell alpha.">
         <figcaption><strong>Figure 5.</strong> The inverse-flux law across the upper inertial range. Positive flux, approximately linear in \(\ell\), indicates transfer toward larger physical lengths up to the drag-dependent scale \(\ell_\alpha\).</figcaption>
       </figure>
 
@@ -416,7 +432,7 @@
       <p>This positive number says that energy is crossing the \(8\,\mathrm m\) scale in the direction of still larger structures. It supplies a physical mechanism for continuation beyond the measurement limit. It does not prove that the scale of one particular flow grows without bound.</p>
 
       <figure class="figure-dense" id="fig-6">
-        <img src="inverse-cascade-flow.png" alt="Top-down diagram of a square periodic two-dimensional flow. One-metre forced eddies merge into motions at two, four, and eight metres through an inverse cascade. A dashed box marks the eight-metre observation limit, with possible larger scales indicated beyond it.">
+        <img src="figures_refined/fig-06-inverse-cascade-flow.svg" alt="Top-down diagram of a square periodic two-dimensional flow. One-metre forced eddies merge into motions at two, four, and eight metres through an inverse cascade. A dashed box marks the eight-metre observation limit, with possible larger scales indicated beyond it.">
         <figcaption><strong>Figure 6.</strong> Illustrative top view of the idealized two-dimensional flow. Energy is injected into eddies near \(L_f=1\,\mathrm m\) and transferred toward larger motions. The limit \(R=8\,\mathrm m\) is a measurement cutoff, not a physical boundary. This is a conceptual diagram, not simulation output.</figcaption>
       </figure>
 
@@ -431,7 +447,7 @@
       <p>So the long-time average flux is positive for almost every realization. This is a stationary result for an allowed scale in a fixed box. It does not remove the box’s largest possible length.</p>
 
       <figure id="fig-7">
-        <img src="role-ergodicity.png" alt="A fluctuating instantaneous flux signal and its running time average converging to a positive expected flux.">
+        <img src="figures_refined/fig-07-ergodicity.svg" alt="A fluctuating instantaneous flux signal and its running time average converging to a positive expected flux.">
         <figcaption><strong>Figure 7.</strong> Ergodicity converts an ensemble statement into a long-time statement for almost every realization. Instantaneous flux may fluctuate, while its running time average approaches the positive ensemble mean.</figcaption>
       </figure>
 
@@ -455,8 +471,8 @@
 
       <p>The probability in (7) is taken over realizations of the proposed homogeneous statistical solution on \(\mathbb R^2\).</p>
 
-      <figure id="fig-8">
-        <img src="defining-large-scale.png" alt="An energy spectrum with the low-wave-number fraction theta shaded through k theta, alongside the reciprocal relation between smaller k theta and larger physical length L.">
+      <figure class="figure-medium" id="fig-8">
+        <img src="figures_refined/fig-08-large-scale.svg" alt="An energy spectrum with the low-wave-number fraction theta shaded through k theta, alongside the reciprocal relation between smaller k theta and larger physical length L.">
         <figcaption><strong>Figure 8.</strong> The spectral quantile definition of large scale. The wave number \(k_\theta(t)\) encloses a chosen fraction \(\theta\) of the total energy; because physical length is reciprocal to wave number, smaller \(k_\theta(t)\) means larger \(L(t)\).</figcaption>
       </figure>
 
@@ -489,7 +505,7 @@
       <p>and reaches \(27\,\mathrm m\) after 120 seconds. These numbers illustrate what the \(t^{3/2}\) law says; they are conditional on the assumed spectrum.</p>
 
       <figure id="fig-9">
-        <img src="conditional-growth-law.png" alt="A convex increasing curve of large scale versus time, crossing eight metres at 45 seconds and reaching 27 metres at 120 seconds.">
+        <img src="figures_refined/fig-09-conditional-growth.svg" alt="A convex increasing curve of large scale versus time, crossing eight metres at 45 seconds and reaching 27 metres at 120 seconds.">
         <figcaption><strong>Figure 9.</strong> Conditional growth predicted by the assumed inverse-cascade spectrum for \(C_I=1\). The curve crosses \(R=8\,\mathrm m\) at 45 seconds and reaches \(27\,\mathrm m\) at 120 seconds; it is not measured data.</figcaption>
       </figure>
 
@@ -530,7 +546,7 @@
       <p>A second experiment held \(k_f=16\), \(\varepsilon=0.004\), and duration \(2.5\) fixed while comparing two seeds at \(256^2\) and \(512^2\). It asked whether added small-scale resolution alone reveals the spectral premise of (8). Over \(2\le K\le12\), the mean fitted shell-spectrum slopes were \(+0.92\) and \(+1.14\), respectively, rather than \(-5/3\). The characteristic length increased by only about \(14\%\), and \(\Pi_{\le K}\) was positive but not flat in \(K\). Doubling the ultraviolet resolution therefore did not create a mature inverse range during the short observation window. The maximum relative energy-balance and injection errors were \(6.4\times10^{-11}\) and \(1.2\times10^{-13}\); the <a href="focused_resolution_results/results.json">focused results</a> contain both seeds and every recorded spectrum.</p>
 
       <figure class="figure-dense" id="fig-10">
-        <img src="focused-resolution-check.png" alt="Late-time energy spectra at resolutions 256 squared and 512 squared rise toward the forcing wave number instead of following the descending k to the minus five-thirds reference, while the characteristic length grows modestly in all four runs.">
+        <img src="figures_refined/fig-10-resolution.svg" alt="Late-time energy spectra at resolutions 256 squared and 512 squared rise toward the forcing wave number instead of following the descending k to the minus five-thirds reference, while the characteristic length grows modestly in all four runs.">
         <figcaption><strong>Figure 10.</strong> Finite-resolution check at \(t=2.5\). Left: neither resolution exhibits the assumed \(K^{-5/3}\) inverse range below \(k_f=16\). Right: all four energy-weighted lengths grow, but only by about \(14\%\). Added ultraviolet resolution does not cure a spectrum that has not had time to reorganize.</figcaption>
       </figure>
 
@@ -581,7 +597,7 @@
       <p>By \(t=15\), the two individual spectral slopes are \(-1.732\) and \(-1.706\), bracketing \(-5/3\), and their individual normalized mean fluxes are \(0.991\) and \(1.003\). The mean coefficient of determination for the two log&ndash;log spectral fits is \(R^2=0.847\). Spectrum and flux therefore give mutually consistent evidence that an inverse-cascade-like interior has formed behind a moving infrared front.</p>
 
       <figure class="figure-dense" id="fig-11">
-        <img src="time-maturity-check.png" alt="Three panels show the spectrum changing from a rising transient toward a descending interior range, the fitted interior slope approaching minus five thirds, and the nonlinear flux becoming nearly equal to the injection rate and flatter across wave-number cutoffs.">
+        <img src="figures_refined/fig-11-maturity.svg" alt="Three panels show the spectrum changing from a rising transient toward a descending interior range, the fitted interior slope approaching minus five thirds, and the nonlinear flux becoming nearly equal to the injection rate and flatter across wave-number cutoffs.">
         <figcaption><strong>Figure 11.</strong> Time-maturity test at \(256^2\). Left: the forcing peak is at \(k_f=16\), and the inverse-side spectrum reorganizes over time. Center: the interior \(K=4,\ldots,12\) fit approaches \(-5/3\), whereas the broader \(K=2,\ldots,12\) fit mixes the interior with the still-underfilled infrared front. Right: over \(K=6,\ldots,12\), the normalized mean flux approaches one and its coefficient of variation decreases. Error bars are sample standard deviations across two seeds.</figcaption>
       </figure>
 
@@ -612,7 +628,7 @@
       <p>Finally, this growing state is not stationary, so the Birkhoff argument in (6) cannot prove (7) or (8). Drag, finite forcing time, or a container may stop the growth; in a periodic computation, the front eventually reaches the lowest nonzero mode and can form a condensate. The open problem is to prove from Navier&ndash;Stokes that the infrared scale&mdash;the large-length, small-wave-number end of the spectrum&mdash;of one unbounded flow grows almost surely, under explicit assumptions, without first assuming the \(k^{-5/3}\) law.</p>
 
       <figure class="figure-medium" id="fig-12">
-        <img src="open-problem.png" alt="A dashed logical gap between the proved positive inverse flux in a growing finite-box limit and the desired almost-sure unbounded growth of one flow on the whole plane.">
+        <img src="figures_refined/fig-12-open-problem.svg" alt="A dashed logical gap between the proved positive inverse flux in a growing finite-box limit and the desired almost-sure unbounded growth of one flow on the whole plane.">
         <figcaption><strong>Figure 12.</strong> The remaining logical gap. A positive inverse-flux law and a finite-box \(-5/3\)-like interval do not yet establish almost-sure unbounded growth for one flow on \(\mathbb R^2\).</figcaption>
       </figure>
 
