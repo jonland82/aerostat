@@ -1,9 +1,10 @@
 \documentclass[10pt]{article}
-\usepackage[letterpaper,margin=0.60in]{geometry}
+\usepackage[letterpaper,margin=1in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{amsmath,amssymb}
+\usepackage{graphicx}
 \usepackage{enumitem}
 \usepackage{needspace}
 \usepackage{titlesec}
@@ -14,6 +15,9 @@
   pdftitle={Limits on Understanding That Emerge from Scale},pdfauthor={J. R. Landers}}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.32em}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{9pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
 \setlist{nosep,leftmargin=1.3em}
 \titleformat{\section}{\Large\bfseries}{}{0pt}{}
   [\vspace{0.55em}{\color{black}\titlerule}]
@@ -48,11 +52,13 @@ can detect coherent structures only up to $R=8\,\mathrm m$. We will ask what,
 if anything, can be said about structures larger than $8\,\mathrm m$.
 
 \section*{1. A probability law for further scales}
-\subsection*{Scales as a point process}
+\subsection*{Scales as a point process {\normalfont\small(\hyperref[fig:scale-point-process]{Fig.~\ref*{fig:scale-point-process}})}}
 Suppose that every structure we care about, such as an eddy, wave, or
 instability, has a characteristic length $L$. We record only that length. The
 collection of structures is then represented by a random set of points on the
 positive $L$-axis, starting at a chosen minimum length $L_{\min}$.
+Here $L>0$ is physical length and $L_{\min}>0$ is the lower cutoff of the
+modeled scale range.
 
 It is natural to measure this axis logarithmically: going from 1 to 2 metres is
 the same relative change as going from 100 to 200 metres. We now make a specific
@@ -66,6 +72,9 @@ the expected density of structures per unit of log scale. A structure is
 ``relevant'' only if it interacts with the phenomenon being studied. If one
 instead measures relative $d$-dimensional volume, the extra factor $d$ can be
 absorbed into $\eta$ and does not change the argument.
+Equivalently, $d\mu(L)$ is the infinitesimal expected count, while
+$dL/L=d(\log L)$ is an infinitesimal log-scale interval. This intensity-measure
+description is standard for Poisson processes; see Kingman~\cite{kingman}.
 
 The number $N(R,S)$ of processes with scales in $(R,S]$ is Poisson with mean
 \[
@@ -76,6 +85,7 @@ The chance of seeing at least one such structure is therefore
  \Prob\{N(R,S)\ge1\}
  =1-\exp\!\left[-\int_R^S\eta(L)\frac{dL}{L}\right].                   \tag{1}
 \]
+Here $\Prob$ denotes probability under the specified point-process model.
 Now let the upper limit $S$ grow without bound. The model gives the exact test
 \[
  \boxed{\text{unbounded process scales almost surely}}
@@ -85,13 +95,27 @@ Now let the upper limit $S$ grow without bound. The model gives the exact test
 
 Here ``almost surely'' means with probability one under the model.
 
-\subsection*{Coin-flip intuition}
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.94\textwidth]{scales-point-process.png}
+  \caption{A point-process view of characteristic scale. Equal horizontal
+  distances represent equal ratios of length. Each dot is one structure's
+  scale; dots beyond $R$ depict a possible model realization, not observed
+  data. The intensity $\eta(L)$ controls expected point density per unit log
+  scale.}
+  \label{fig:scale-point-process}
+\end{figure}
+
+\subsection*{Coin-flip intuition {\normalfont\small(\hyperref[fig:coin-flip]{Fig.~\ref*{fig:coin-flip}})}}
 First suppose $\eta(L)=\eta_0>0$ at every scale.
 Each doubling interval
 $(2^jR,2^{j+1}R]$ has the same hit probability
 \[
  p=1-\exp(-\eta_0\log2)=1-2^{-\eta_0}.
 \]
+Here $j=0,1,2,\ldots$ indexes successive doubling intervals, $\log$ is the
+natural logarithm, and $p$ is the probability that one interval contains at
+least one point.
 The intervals are independent, so the probability of missing the first $m$ is
 $2^{-m\eta_0}\to0$. This is like repeating a coin toss with a fixed positive
 chance of heads: eventually a head appears, and in fact heads appear infinitely
@@ -109,10 +133,20 @@ $128\,\mathrm m$ is
 If the same constant intensity continues through infinitely many doubling
 intervals, structures occur at arbitrarily large scales with probability one.
 
-\subsection*{A decaying tail}
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.82\textwidth]{coin-flip-intuition.png}
+  \caption{Equal log-scale intervals have equal hit probability when
+  $\eta(L)=1$. The shown hit--miss sequence is only one realization; the four
+  independent intervals give probability $1-(1/2)^4=0.9375$ of at least one
+  hit by $128\,\mathrm m$.}
+  \label{fig:coin-flip}
+\end{figure}
+
+\subsection*{A decaying tail {\normalfont\small(\hyperref[fig:decaying-tail]{Fig.~\ref*{fig:decaying-tail}})}}
 The answer changes if large structures become sufficiently rare. For example,
 if
-$\eta(L)=\eta_0(L_{\min}/L)^a$ with $a>0$, then
+$\eta(L)=\eta_0(L_{\min}/L)^a$ with $\eta_0>0$ and $a>0$, then
 \[
  \int_R^\infty\eta(L)\frac{dL}{L}
  =\frac{\eta_0}{a}\left(\frac{L_{\min}}R\right)^a<\infty.
@@ -142,16 +176,38 @@ Model $A$ predicts unbounded scales almost surely. For model $B$,
  \Prob\{\text{no structure beyond }8\,\mathrm m\}=e^{-1/2}\approx0.607.
 \]
 
-\subsection*{Why finite data cannot decide}
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.94\textwidth]{decaying-tail.png}
+  \caption{Two intensities that agree throughout the observed range. Model
+  $A$ remains constant beyond $R$, whereas model $B$ decays as $L^{-2}$.
+  Hollow tail points indicate possible, rather than observed, scales.}
+  \label{fig:decaying-tail}
+\end{figure}
+
+\subsection*{Why finite data cannot decide {\normalfont\small(\hyperref[fig:finite-data-tail]{Fig.~\ref*{fig:finite-data-tail}})}}
 Models $A$ and $B$ fit every possible
 observation made at $L\le8\,\mathrm m$, yet they give opposite answers about
 unlimited continuation. The answer is determined by the assumed tail of
 $\eta$, which the finite experiment cannot see.
 
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.88\textwidth]{finite-data-tail.png}
+  \caption{Observational equivalence below $R$ does not determine behavior
+  above $R$. The same finite data support models with opposite conclusions
+  about unbounded continuation.}
+  \label{fig:finite-data-tail}
+\end{figure}
+
 \section*{2. What Navier--Stokes can supply}
 The Poisson model describes how many scales occur, but it does not explain what
 creates them. Two-dimensional fluid flow provides a possible mechanism: an
 inverse cascade can carry energy from the forcing scale toward larger lengths.
+The special role of the two-dimensional energy and enstrophy constraints,
+where enstrophy is the mean-square vorticity, was
+made explicit by Fj{\o}rtoft~\cite{fjortoft}; inverse-cascade behavior was later
+observed directly in thin-layer experiments by Paret and Tabeling~\cite{paret}.
 Consider the randomly forced, damped Navier--Stokes equations on a periodic
 square $\mathbb T_\lambda^2$ of size $\lambda$:
 \[
@@ -162,8 +218,13 @@ square $\mathbb T_\lambda^2$ of size $\lambda$:
 Here $u$ is velocity, $p$ is pressure, $\nu$ is viscosity, $\alpha$ is
 large-scale drag, and $W^\lambda$ is the random forcing. The forcing injects
 mean energy $\varepsilon>0$ per unit time and area near one fixed length.
+More explicitly, $x\in\mathbb T_\lambda^2=(\mathbb R/\lambda\mathbb Z)^2$ is
+position, $t$ is time, $\nabla$ and $\Delta$ are the spatial gradient and
+Laplacian, $\gamma\ge0$ controls the scale dependence of the drag, and
+$dW^\lambda$ is the stochastic forcing increment. The constraint
+$\nabla\!\cdot u=0$ expresses incompressibility.
 
-\subsection*{The inverse-flux law}
+\subsection*{The inverse-flux law {\normalfont\small(\hyperref[fig:inverse-flux-law]{Fig.~\ref*{fig:inverse-flux-law}})}}
 Bedrossian, Coti Zelati, Punshon-Smith, and Weber proved an inverse-flux law for
 stationary solutions as the box grows and viscosity and drag vanish
 \cite{bcpw}. Among their assumptions are
@@ -175,6 +236,11 @@ stationary solutions as the box grows and viscosity and drag vanish
 where $\omega=\operatorname{curl}u$ is vorticity. The powers $-2\gamma$ and
 $-\gamma$ are consistent: a quadratic energy norm splits the operator equally
 between its two factors, as in Ref.~\cite{bcpw}.
+Here $\E$ is expectation with respect to the stationary ensemble,
+$\|\cdot\|_2$ is the spatial $L^2$ norm on the periodic square, and the arrows
+refer to the joint large-box, vanishing-viscosity, and vanishing-drag limit.
+Here stationary means that the probability distribution of the flow does not
+change with time.
 
 To measure transfer across a length $\ell$, compare velocities at two points
 separated by $\ell$ in direction $n$:
@@ -185,20 +251,35 @@ over all positions $x$ and directions $n$:
  \avgint_{S^1}\avgint_{\mathbb T_\lambda^2}
  |\delta_{\ell n}u|^2(\delta_{\ell n}u\cdot n)\,dx\,dn.
 \]
+Here $S^1$ is the unit circle of directions, $n\in S^1$ is a unit vector, and
+each barred integral $\avgint$ denotes a normalized spatial or directional
+average rather than an unnormalized integral.
 The theorem gives an upper inertial-range length $\ell_\alpha\to\infty$ for
 which
 \[
  \E\mathcal F_\ell(u)\sim2\varepsilon\ell,
  \qquad 1\ll\ell\ll\ell_\alpha.                                    \tag{5}
 \]
+The symbol $\sim$ means that the ratio of the two sides tends to one in the
+stated parameter limit, while $\ll$ denotes separation of scales within the
+inertial range.
 The positive sign says that energy is moving toward larger lengths. Thus, for
 any chosen finite $R$, one can take a large enough box and weak enough drag to
 obtain active inverse transfer at some $\ell\ge R$. Notice the quantifiers: the
 system may change when $R$ changes. This does not yet describe one flow whose
 active scale grows forever.
 
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.82\textwidth]{inverse-flux-law.png}
+  \caption{The inverse-flux law across the upper inertial range. Positive
+  flux, approximately linear in $\ell$, indicates transfer toward larger
+  physical lengths up to the drag-dependent scale $\ell_\alpha$.}
+  \label{fig:inverse-flux-law}
+\end{figure}
+
 \Needspace{10\baselineskip}
-\subsection*{Numerical flux at 8 metres}
+\subsection*{Numerical flux at 8 metres {\normalfont\small(\hyperref[fig:inverse-cascade-flow]{Fig.~\ref*{fig:inverse-cascade-flow}})}}
 For the running example, suppose $8\,\mathrm m$ lies inside the inertial range.
 Equation (5) then gives
 \[
@@ -211,16 +292,38 @@ the direction of still larger structures. It supplies a physical mechanism
 for continuation beyond the measurement limit. It does not prove that the
 scale of one particular flow grows without bound.
 
-\subsection*{The role of ergodicity}
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.94\textwidth]{inverse-cascade-flow.png}
+  \caption{Illustrative top view of the idealized two-dimensional flow. Energy
+  is injected into eddies near $L_f=1\,\mathrm m$ and transferred toward
+  larger motions. The limit $R=8\,\mathrm m$ is a measurement cutoff, not a
+  physical boundary. This is a conceptual diagram, not simulation output.}
+  \label{fig:inverse-cascade-flow}
+\end{figure}
+
+\subsection*{The role of ergodicity {\normalfont\small(\hyperref[fig:ergodicity]{Fig.~\ref*{fig:ergodicity}})}}
 There is also an almost-sure statement at each fixed set of parameters. If the
 chosen stationary measure is ergodic, Birkhoff's theorem gives
 \[
  \frac1T\int_0^T\mathcal F_\ell(u(t))\,dt
  \longrightarrow \E\mathcal F_\ell(u)>0.                              \tag{6}
 \]
+This is the pointwise ergodic theorem introduced by Birkhoff~\cite{birkhoff};
+$T$ is the averaging time and the displayed convergence is taken as
+$T\to\infty$.
 So the long-time average flux is positive for almost every realization. This
 is a stationary result for an allowed scale in a fixed box. It does not remove
 the box's largest possible length.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.82\textwidth]{role-ergodicity.png}
+  \caption{Ergodicity converts an ensemble statement into a long-time
+  statement for almost every realization. Instantaneous flux may fluctuate,
+  while its running time average approaches the positive ensemble mean.}
+  \label{fig:ergodicity}
+\end{figure}
 
 \section*{3. The stronger theorem still wanted}
 The stronger goal concerns one flow on the whole plane $\mathbb R^2$. A
@@ -228,7 +331,7 @@ spatially homogeneous flow on an infinite plane generally has infinite total
 energy, so the right object is a homogeneous statistical solution with finite
 energy \emph{per unit area}, not a finite-energy $L^2(\mathbb R^2)$ solution.
 
-\subsection*{Defining the large scale}
+\subsection*{Defining the large scale {\normalfont\small(\hyperref[fig:defining-large-scale]{Fig.~\ref*{fig:defining-large-scale}})}}
 We must also define what the flow's ``large scale'' means. Let $E(k,t)$ be its
 energy spectrum, where small wave number $k$ means large physical length. Fix a
 fraction $\theta\in(0,1)$ and define
@@ -236,19 +339,40 @@ fraction $\theta\in(0,1)$ and define
  k_\theta(t)=\inf\!\left\{K>0:\int_0^K E(k,t)\,dk\ge
  \theta\int_0^\infty E(k,t)\,dk\right\},\qquad L(t)=k_\theta(t)^{-1}.
 \]
+Here $k\ge0$ is scalar wave number, with dimensions of inverse length, and
+$E(k,t)\,dk$ is the energy per unit area in the wave-number band
+$[k,k+dk]$. Thus $\int_0^\infty E(k,t)\,dk$ is the total energy per unit area.
+The infimum in the definition selects the smallest threshold $K$ containing at
+least the fraction $\theta$ of that energy.
 Thus $k_\theta(t)$ is the wave number below which the chosen fraction of energy
 lies, and $L(t)=1/k_\theta(t)$ is its associated length. Energy moving toward
 smaller $k$ makes $L(t)$ larger. The desired theorem is
 \[
  \Prob\{L(t)\to\infty\}=1.                                             \tag{7}
 \]
-\subsection*{A conditional growth law}
+The probability in (7) is taken over realizations of the proposed homogeneous
+statistical solution on $\mathbb R^2$.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.82\textwidth]{defining-large-scale.png}
+  \caption{The spectral quantile definition of large scale. The wave number
+  $k_\theta(t)$ encloses a chosen fraction $\theta$ of the total energy;
+  because physical length is reciprocal to wave number, smaller
+  $k_\theta(t)$ means larger $L(t)$.}
+  \label{fig:defining-large-scale}
+\end{figure}
+
+\subsection*{A conditional growth law {\normalfont\small(\hyperref[fig:conditional-growth]{Fig.~\ref*{fig:conditional-growth}})}}
 What growth rate might we expect? If we additionally assume Kraichnan's
 inverse-cascade spectrum~\cite{kraichnan}, with forcing length $L_f$,
 \[
  E(k)=C_I\varepsilon^{2/3}k^{-5/3},
  \qquad L(t)^{-1}\le k\le L_f^{-1}.
 \]
+$C_I>0$ is the dimensionless inverse-cascade spectral constant; the bounds on
+$k$ specify the range from the evolving large scale to the fixed forcing
+scale.
 then the energy accumulated by time $t$ is approximately the integral of this
 spectrum. Setting that integral equal to $\varepsilon t$ gives
 \[
@@ -262,6 +386,7 @@ so
  \frac{2}{3C_I}\varepsilon^{1/3}t\right]^{3/2}}
  \sim \left(\frac{2}{3C_I}\right)^{3/2}\varepsilon^{1/2}t^{3/2}.       \tag{8}
 \]
+In the last relation, $\sim$ describes the large-$t$ asymptotic law.
 For a simple numerical illustration, set $C_I=1$. This choice makes the
 arithmetic transparent; it is not an empirical calibration. Using the values
 from the running example, (8) becomes
@@ -275,9 +400,19 @@ The predicted scale reaches the observation limit after $45$ seconds,
 and reaches $27\,\mathrm m$ after $120$ seconds. These numbers illustrate what
 the $t^{3/2}$ law says; they are conditional on the assumed spectrum.
 
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.82\textwidth]{conditional-growth-law.png}
+  \caption{Conditional growth predicted by the assumed inverse-cascade
+  spectrum for $C_I=1$. The curve crosses $R=8\,\mathrm m$ at $45$ seconds
+  and reaches $27\,\mathrm m$ at $120$ seconds; it is not measured data.}
+  \label{fig:conditional-growth}
+\end{figure}
+
 \Needspace{9\baselineskip}
-\subsection*{What remains open}
-This calculation predicts $L(t)\propto t^{3/2}$, but it is not a theorem derived
+\subsection*{What remains open {\normalfont\small(\hyperref[fig:open-problem]{Fig.~\ref*{fig:open-problem}})}}
+This calculation predicts $L(t)\propto t^{3/2}$, where $\propto$ means
+proportional up to a time-independent constant, but it is not a theorem derived
 from (3): it assumes the spectrum that produces the answer. The lower spectral
 edge used in the calculation is proportional to the quantile length above, up
 to a constant that does not change the exponent.
@@ -285,8 +420,18 @@ to a constant that does not change the exponent.
 Finally, this growing state is not stationary, so the Birkhoff argument in (6)
 cannot prove (7) or (8). Drag, finite forcing time, or a container may stop the
 growth. The open problem is to prove from Navier--Stokes that the infrared scale
+(the large-length, small-wave-number end of the spectrum)
 of one unbounded flow grows almost surely, under explicit assumptions, without
 first assuming the $k^{-5/3}$ law.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.88\textwidth]{open-problem.png}
+  \caption{The remaining logical gap. A positive inverse-flux law in a
+  growing finite-box limit does not yet establish almost-sure unbounded growth
+  for one flow on $\mathbb R^2$.}
+  \label{fig:open-problem}
+\end{figure}
 
 \begin{thebibliography}{9}\footnotesize
 \setlength{\itemsep}{1pt}
@@ -300,6 +445,19 @@ Navier--Stokes Equations,'' \emph{Arch. Ration. Mech. Anal.} \textbf{237}
 \bibitem{kraichnan} R.~H.~Kraichnan, ``Inertial Ranges in Two-Dimensional
 Turbulence,'' \emph{Phys. Fluids} \textbf{10} (1967),
 \href{https://doi.org/10.1063/1.1762301}{1417--1423}.
+\bibitem{kingman} J.~F.~C.~Kingman, \emph{Poisson Processes}, Oxford Studies
+in Probability \textbf{3}, Oxford University Press (1993),
+\href{https://doi.org/10.1093/oso/9780198536932.001.0001}{doi:10.1093/oso/9780198536932.001.0001}.
+\bibitem{fjortoft} R.~Fj{\o}rtoft, ``On the Changes in the Spectral Distribution
+of Kinetic Energy for Twodimensional, Nondivergent Flow,'' \emph{Tellus}
+\textbf{5} (1953),
+\href{https://doi.org/10.1111/j.2153-3490.1953.tb01051.x}{225--230}.
+\bibitem{paret} J.~Paret and P.~Tabeling, ``Experimental Observation of the
+Two-Dimensional Inverse Energy Cascade,'' \emph{Phys. Rev. Lett.} \textbf{79}
+(1997), \href{https://doi.org/10.1103/PhysRevLett.79.4162}{4162--4165}.
+\bibitem{birkhoff} G.~D.~Birkhoff, ``Proof of the Ergodic Theorem,''
+\emph{Proc. Natl. Acad. Sci. USA} \textbf{17} (1931),
+\href{https://doi.org/10.1073/pnas.17.2.656}{656--660}.
 \end{thebibliography}
 
 \end{document}
