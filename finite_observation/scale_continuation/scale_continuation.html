@@ -266,7 +266,7 @@
     <header>
       <h1>Limits on Understanding That Emerge from Scale</h1>
       <p class="author">J. R. Landers</p>
-      <p class="date"><time datetime="2026-09-08">September 8, 2026</time></p>
+      <p class="date"><time datetime="2026-09-09">September 9, 2026</time></p>
     </header>
 
     <article>
@@ -491,15 +491,30 @@
         <figcaption><strong>Figure 9.</strong> Conditional growth predicted by the assumed inverse-cascade spectrum for \(C_I=1\). The curve crosses \(R=8\,\mathrm m\) at 45 seconds and reaches \(27\,\mathrm m\) at 120 seconds; it is not measured data.</figcaption>
       </figure>
 
-      <h3>What remains open <span class="fig-ref">(<a href="#fig-10">Fig. 10</a>)</span></h3>
+      <h3>An exploratory computational check <span class="fig-ref">(<a href="#fig-10">Fig. 10</a>)</span></h3>
+
+      <p>We also tested the mechanism and the conditional law in a finite periodic pseudospectral model. The solver used two-thirds dealiasing, a skew-symmetric nonlinear term, integrating-factor Runge&ndash;Kutta time stepping, and random forcing increments that inject exactly \(\varepsilon\,dt\) of energy. Across sixteen \(256^2\) runs at four forcing strengths and four random seeds, the energy-weighted length grew by factors between \(3.4\) and \(4.2\), and the late transfer into wave numbers below half the forcing wave number was positive. Thus the computation exhibited the qualitative mechanism: energy moved toward larger lengths.</p>
+
+      <p>The same data did not validate (8). On forcing levels omitted from fitting, the constrained rate law \(dL/dt=C\varepsilon^{1/3}L^{1/3}\) had log-error \(0.389\), equivalent to a typical multiplicative error of \(1.48\). A descriptive law using the measured instantaneous flux and current length reduced that error to \(0.183\), or a factor of \(1.20\). This comparison is exploratory: the samples along each trajectory are correlated, and the fitted alternative is not asserted to be universal. The <a href="ml_results_energy_aws_256/results.json">machine-readable ensemble results</a> include the run-level holdouts and conservation checks.</p>
+
+      <p>A focused resolution check then held \(k_f=16\), \(\varepsilon=0.004\), and the duration fixed while comparing two seeds at \(256^2\) and \(512^2\). Over the late-time fitting band \(2\le k\le12\), the mean fitted spectral slopes were \(+0.92\) and \(+1.14\), respectively, rather than \(-5/3\). The characteristic length increased by only about \(14\%\), and the cumulative inverse-transfer signal was positive but not flat across wave number. Doubling the resolution therefore did not produce the spectral premise of (8) during this short transient. The maximum relative energy-balance and injection errors were \(6.4\times10^{-11}\) and \(1.2\times10^{-13}\); the <a href="focused_resolution_results/results.json">focused results</a> contain both seeds and all recorded spectra.</p>
+
+      <figure class="figure-dense" id="fig-10">
+        <img src="focused-resolution-check.png" alt="Late-time energy spectra at resolutions 256 squared and 512 squared rise toward the forcing wave number instead of following the descending k to the minus five-thirds reference, while the characteristic length grows modestly in all four runs.">
+        <figcaption><strong>Figure 10.</strong> Focused finite-resolution check. Left: the two-seed late-time spectra at each resolution do not exhibit the assumed \(k^{-5/3}\) inverse range before the forcing peak at \(k_f=16\). Right: all four characteristic lengths grow, but only by about \(14\%\) during the short observation window. The test supports inverse transfer while leaving the conditional asymptotic growth law untested.</figcaption>
+      </figure>
+
+      <p>The numerical conclusion is therefore deliberately limited. Positive inverse transfer can begin before a mature inverse-cascade spectrum appears. These computations support the transport mechanism used in Section 2, but they neither confirm nor refute the \(t^{3/2}\) asymptotic law because its spectral premise was absent in the measured window.</p>
+
+      <h3>What remains open <span class="fig-ref">(<a href="#fig-11">Fig. 11</a>)</span></h3>
 
       <p>This calculation predicts \(L(t)\propto t^{3/2}\), where \(\propto\) means proportional up to a time-independent constant, but it is not a theorem derived from (3): it assumes the spectrum that produces the answer. The lower spectral edge used in the calculation is proportional to the quantile length above, up to a constant that does not change the exponent.</p>
 
       <p>Finally, this growing state is not stationary, so the Birkhoff argument in (6) cannot prove (7) or (8). Drag, finite forcing time, or a container may stop the growth. The open problem is to prove from Navier–Stokes that the infrared scale—the large-length, small-wave-number end of the spectrum—of one unbounded flow grows almost surely, under explicit assumptions, without first assuming the \(k^{-5/3}\) law.</p>
 
-      <figure class="figure-medium" id="fig-10">
+      <figure class="figure-medium" id="fig-11">
         <img src="open-problem.png" alt="A dashed logical gap between the proved positive inverse flux in a growing finite-box limit and the desired almost-sure unbounded growth of one flow on the whole plane.">
-        <figcaption><strong>Figure 10.</strong> The remaining logical gap. A positive inverse-flux law in a growing finite-box limit does not yet establish almost-sure unbounded growth for one flow on \(\mathbb R^2\).</figcaption>
+        <figcaption><strong>Figure 11.</strong> The remaining logical gap. A positive inverse-flux law in a growing finite-box limit does not yet establish almost-sure unbounded growth for one flow on \(\mathbb R^2\).</figcaption>
       </figure>
 
       <section class="bibliography" aria-labelledby="references-heading">
