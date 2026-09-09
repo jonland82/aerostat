@@ -493,18 +493,52 @@
 
       <h3>An exploratory computational check <span class="fig-ref">(<a href="#fig-10">Fig. 10</a>)</span></h3>
 
-      <p>We also tested the mechanism and the conditional law in a finite periodic pseudospectral model. The solver used two-thirds dealiasing, a skew-symmetric nonlinear term, integrating-factor Runge&ndash;Kutta time stepping, and random forcing increments that inject exactly \(\varepsilon\,dt\) of energy. Across sixteen \(256^2\) runs at four forcing strengths and four random seeds, the energy-weighted length grew by factors between \(3.4\) and \(4.2\), and the late transfer into wave numbers below half the forcing wave number was positive. Thus the computation exhibited the qualitative mechanism: energy moved toward larger lengths.</p>
+      <p>We tested the mechanism and the conditional law in a finite periodic pseudospectral model of the vorticity equation. A run begins with a random vorticity field concentrated in a narrow shell around the forcing wave number \(k_f\). At every time step the Navier&ndash;Stokes nonlinearity redistributes energy among Fourier modes, small-scale hyperviscosity removes energy near the numerical cutoff, and an independent random shell increment injects exactly \(\varepsilon\,dt\) of energy. The solver uses two-thirds dealiasing, a skew-symmetric nonlinear term, and integrating-factor Runge&ndash;Kutta time stepping.</p>
 
-      <p>The same data did not validate (8). On forcing levels omitted from fitting, the constrained rate law \(dL/dt=C\varepsilon^{1/3}L^{1/3}\) had log-error \(0.389\), equivalent to a typical multiplicative error of \(1.48\). A descriptive law using the measured instantaneous flux and current length reduced that error to \(0.183\), or a factor of \(1.20\). This comparison is exploratory: the samples along each trajectory are correlated, and the fitted alternative is not asserted to be universal. The <a href="ml_results_energy_aws_256/results.json">machine-readable ensemble results</a> include the run-level holdouts and conservation checks.</p>
+      <p>For a Fourier vorticity coefficient \(\widehat\omega_{\mathbf k}\) on an \(N\times N\) grid, the modal kinetic energy and the measured energy-weighted length are</p>
 
-      <p>A focused resolution check then held \(k_f=16\), \(\varepsilon=0.004\), and the duration fixed while comparing two seeds at \(256^2\) and \(512^2\). Over the late-time fitting band \(2\le k\le12\), the mean fitted spectral slopes were \(+0.92\) and \(+1.14\), respectively, rather than \(-5/3\). The characteristic length increased by only about \(14\%\), and the cumulative inverse-transfer signal was positive but not flat across wave number. Doubling the resolution therefore did not produce the spectral premise of (8) during this short transient. The maximum relative energy-balance and injection errors were \(6.4\times10^{-11}\) and \(1.2\times10^{-13}\); the <a href="focused_resolution_results/results.json">focused results</a> contain both seeds and all recorded spectra.</p>
+      <div class="math-display">\[e_{\mathbf k}(t)=\frac{|\widehat\omega_{\mathbf k}(t)|^2}{2N^4|\mathbf k|^2},\qquad L_E(t)=\frac{\displaystyle\sum_{\mathbf k\ne0}e_{\mathbf k}(t)|\mathbf k|^{-1}}{\displaystyle\sum_{\mathbf k\ne0}e_{\mathbf k}(t)}.\]</div>
+
+      <p>Thus \(L_E\) grows when the spectral energy distribution moves toward smaller wave numbers. To distinguish genuine nonlinear transport from direct forcing, we also compute the cumulative nonlinear transfer</p>
+
+      <div class="math-display">\[\Pi_{\le K}(t)=\sum_{0&lt;|\mathbf k|\le K}\frac{\Re\!\left(\overline{\widehat\omega_{\mathbf k}}\,\widehat{\mathcal N}_{\mathbf k}\right)}{N^4|\mathbf k|^2},\]</div>
+
+      <p>where \(\widehat{\mathcal N}\) is the nonlinear vorticity tendency with forcing and dissipation excluded. Positive \(\Pi_{\le K}\) means that nonlinear interactions are giving energy to modes at or below \(K\), hence to structures at or above the corresponding physical length. One trajectory is therefore a time series of the full simulated field, reduced for analysis to quantities such as \(L_E(t)\), \(\Pi_{\le K}(t)\), energy, enstrophy, and the radial spectrum.</p>
+
+      <p>The first experiment used sixteen \(256^2\) trajectories: four injection rates, with four random seeds at each rate, forced near \(k_f=24\) for fifteen nondimensional time units. Every trajectory showed positive late transfer into modes below \(k_f/2\), while \(L_E\) grew by factors between \(3.4\) and \(4.2\). This establishes the qualitative behavior within the simulation: the nonlinearity moved injected energy toward larger structures.</p>
+
+      <p>We then treated the smoothed growth rate \(dL_E/dt\) as a regression target. The inputs were the injection rate, current length, measured flux, infrared energy fraction, spectral width, and enstrophy. Models were trained after excluding startup and endpoint samples, then evaluated by leaving out either one complete trajectory or one complete injection rate. Leaving out complete groups is important: a random train&ndash;test split would leak strongly correlated time samples from the same trajectory into both sets. On injection rates omitted from fitting, the constrained law \(dL_E/dt=C\varepsilon^{1/3}L_E^{1/3}\) had root-mean-square log-error \(0.389\), equivalent to a typical multiplicative error of \(1.48\). A descriptive two-variable law based on measured flux and current length reduced the error to \(0.183\), or a factor of \(1.20\); adding all available features produced essentially no further improvement. This is model comparison, not evidence that the fitted alternative is universal. The <a href="ml_results_energy_aws_256/results.json">machine-readable ensemble results</a> include all holdouts and conservation checks.</p>
+
+      <p>The second experiment asked why the conditional law failed. It held \(k_f=16\), \(\varepsilon=0.004\), and the duration at \(2.5\) while comparing two seeds at \(256^2\) and \(512^2\). This isolates whether added small-scale resolution alone reveals the spectrum assumed in (8). Over the late-time band \(2\le k\le12\), the mean fitted spectral slopes were \(+0.92\) and \(+1.14\), respectively, rather than \(-5/3\). The characteristic length increased by only about \(14\%\), and \(\Pi_{\le K}\) was positive on average but not flat in \(K\). Doubling the resolution therefore did not produce a mature constant-flux inverse range during this short transient. The maximum relative energy-balance and injection errors were \(6.4\times10^{-11}\) and \(1.2\times10^{-13}\); the <a href="focused_resolution_results/results.json">focused results</a> contain both seeds and every recorded spectrum.</p>
 
       <figure class="figure-dense" id="fig-10">
         <img src="focused-resolution-check.png" alt="Late-time energy spectra at resolutions 256 squared and 512 squared rise toward the forcing wave number instead of following the descending k to the minus five-thirds reference, while the characteristic length grows modestly in all four runs.">
         <figcaption><strong>Figure 10.</strong> Focused finite-resolution check. Left: the two-seed late-time spectra at each resolution do not exhibit the assumed \(k^{-5/3}\) inverse range before the forcing peak at \(k_f=16\). Right: all four characteristic lengths grow, but only by about \(14\%\) during the short observation window. The test supports inverse transfer while leaving the conditional asymptotic growth law untested.</figcaption>
       </figure>
 
-      <p>The numerical conclusion is therefore deliberately limited. Positive inverse transfer can begin before a mature inverse-cascade spectrum appears. These computations support the transport mechanism used in Section 2, but they neither confirm nor refute the \(t^{3/2}\) asymptotic law because its spectral premise was absent in the measured window.</p>
+      <p>The positive slopes have a simple geometric interpretation. Let \(E_N(K)\) be the plotted energy summed over the unit-width lattice shell centered at \(K\), let \(n_N(K)\) be the number of Fourier modes in that shell, and let \(q_N(K)=E_N(K)/n_N(K)\) be its average energy per mode. In two dimensions,</p>
+
+      <div class="math-display">\[n_N(K)\approx\pi\!\left[\left(K+\tfrac12\right)^2-\left(K-\tfrac12\right)^2\right]=2\pi K,\qquad E_N(K)=n_N(K)q_N(K).\]</div>
+
+      <p>If the low-wave-number modes have approximately equal energy, \(q_N(K)\approx q_0\), then \(E_N(K)\approx2\pi q_0K\): the shell spectrum has slope \(+1\). More generally,</p>
+
+      <div class="math-display">\[E_N(K)\propto K^p\quad\Longrightarrow\quad q_N(K)=\frac{E_N(K)}{n_N(K)}\propto K^{p-1}.\]</div>
+
+      <p>Dividing by the actual lattice-mode counts gives the measured comparison</p>
+
+      <div class="math-display">\[\begin{array}{c|cc}
+      & E_N(K) & q_N(K)\\ \hline
+      N=256 & K^{0.92} & K^{-0.09}\\
+      N=512 & K^{1.13} & K^{0.12}
+      \end{array}\]</div>
+
+      <p>The small difference between \(p-1\) and the displayed per-mode exponent comes from using the exact discrete shell counts rather than the continuum approximation \(2\pi K\). Both per-mode exponents are close to zero, as predicted by approximately equal energy per mode. In contrast, the inverse-cascade law \(E(K)\propto K^{-5/3}\) would require</p>
+
+      <div class="math-display">\[q_N(K)=\frac{E_N(K)}{n_N(K)}\propto K^{-8/3},\]</div>
+
+      <p>which concentrates far more energy in the lowest modes. The observed state is therefore consistent with an equipartition-like, random-phase transient, not with the mature inverse-cascade spectrum required by (8). This diagnostic analogy does not assert equilibrium.</p>
+
+      <p>The numerical conclusion is deliberately limited but more specific than a failed curve fit. Positive inverse transfer can begin before a mature inverse-cascade spectrum appears, and increasing ultraviolet resolution does not by itself accelerate that spectral reorganization. These computations support the transport mechanism used in Section 2, but they neither confirm nor refute the \(t^{3/2}\) asymptotic law because its spectral premise was absent in the measured window.</p>
 
       <h3>What remains open <span class="fig-ref">(<a href="#fig-11">Fig. 11</a>)</span></h3>
 
