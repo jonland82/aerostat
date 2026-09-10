@@ -286,27 +286,23 @@
     </header>
 
     <article>
-      <p><span class="lead-label">Question.</span> Suppose an experiment can observe physical structure only up to a length \(R\). Should we expect related structure at lengths larger than \(R\)? This note separates two ways to answer. A probability model can assign a chance to larger scales. A fluid equation can explain how energy reaches them. Neither approach allows a finite observation, by itself, to prove continuation to arbitrarily large scales.</p>
+      <p><span class="lead-label">Question.</span> Suppose an experiment resolves physical structure only up to a length \(R\). What justifies expecting related structure beyond \(R\), and can finite observations ever establish continuation to arbitrarily large scales?</p>
 
-      <p><span class="lead-label">Main conclusions.</span> First, continuation in a probability model is controlled by its unobserved tail, so finite data cannot decide it without assumptions. Second, rigorous Navier&ndash;Stokes results provide a mechanism&mdash;positive inverse energy flux&mdash;but not yet unbounded growth for one evolving flow. Third, our exploratory computations resolve one finite-time issue: inverse transfer begins before its classical spectrum is visible, while a longer run develops both an approximately constant inverse flux and a short \(k^{-5/3}\)-like interior range. This supports the premises behind a conditional \(L(t)\propto t^{3/2}\) law without directly testing that growth law.</p>
+      <p><span class="lead-label">Main conclusions.</span> Finite observations alone cannot establish unbounded continuation. In a probability model, the answer depends on the unobserved tail of the scale intensity \(\eta(L)\). In two-dimensional turbulence, positive inverse energy flux provides a mechanism for growth toward larger scales, but existing theorems do not follow one evolving flow to infinity. Our computations show inverse transfer before the classical spectrum appears, followed later by a short constant-flux, \(k^{-5/3}\)-like range. They support the assumptions behind \(L(t)\propto t^{3/2}\); they do not test that law.</p>
 
-      <p><span class="lead-label">Running example.</span> To keep the discussion concrete, consider a two-dimensional flow forced at length \(L_f=1\,\mathrm m\). The forcing supplies energy at rate \(\varepsilon=10^{-3}\,\mathrm{m^2\,s^{-3}}\), and our experiment can detect coherent structures only up to \(R=8\,\mathrm m\). We will ask what, if anything, can be said about structures larger than \(8\,\mathrm m\).</p>
+      <p><span class="lead-label">Running example.</span> Consider a two-dimensional flow forced at \(L_f=1\,\mathrm m\), with energy injection rate \(\varepsilon=10^{-3}\,\mathrm{m^2\,s^{-3}}\). An experiment detects coherent structures only up to \(R=8\,\mathrm m\). The probabilistic question is whether structures exist beyond \(8\,\mathrm m\); the dynamical question is whether the flow carries energy across that scale.</p>
 
       <h2>1. Finite observations and probabilistic continuation</h2>
 
       <h3>Scales as a point process <span class="fig-ref">(<a href="#fig-1">Fig. 1</a>)</span></h3>
 
-      <p>Suppose that every structure we care about, such as an eddy, wave, or instability, has a characteristic length \(L\). We record only that length. The collection of structures is then represented by a random set of points on the positive \(L\)-axis, starting at a chosen minimum length \(L_{\min}\).</p>
+      <p>Suppose that every structure we care about, such as an eddy, wave, or instability, has a characteristic length \(L&gt;0\). We record only that length, representing the collection by a random set of points on the scale axis above a chosen cutoff \(L_{\min}&gt;0\).</p>
 
-      <p>Here \(L&gt;0\) is physical length and \(L_{\min}&gt;0\) is the lower cutoff of the modeled scale range.</p>
-
-      <p>It is natural to measure this axis logarithmically: going from 1 to 2 metres is the same relative change as going from 100 to 200 metres. We now make a specific modeling assumption. Counts in nonoverlapping scale intervals are independent, and the expected number in a short interval near \(L\) is</p>
+      <p>Measure the axis logarithmically: 1 to 2 metres is the same relative change as 100 to 200 metres. Assume that counts in disjoint scale intervals are independent and that the expected count near \(L\) is</p>
 
       <div class="math-display">\[d\mu(L)=\eta(L)\frac{dL}{L},\qquad \eta(L)\ge0.\]</div>
 
-      <p>These two statements define a Poisson point process. The function \(\eta(L)\) is the expected density of structures per unit of log scale. A structure is “relevant” only if it interacts with the phenomenon being studied. If one instead measures relative \(d\)-dimensional volume, the extra factor \(d\) can be absorbed into \(\eta\) and does not change the argument.</p>
-
-      <p>Equivalently, \(d\mu(L)\) is the infinitesimal expected count, while \(dL/L=d(\log L)\) is an infinitesimal log-scale interval. This intensity-measure description is standard for Poisson processes; see Kingman <a href="#ref-4">[4]</a>.</p>
+      <p>This defines a Poisson point process with density \(\eta(L)\) per unit log scale. Only structures that interact with the phenomenon under study count as relevant. Measuring relative \(d\)-dimensional volume merely adds a factor \(d\), which can be absorbed into \(\eta\). See Kingman <a href="#ref-4">[4]</a>.</p>
 
       <p>The number \(N(R,S)\) of structures with scales in \((R,S]\) is Poisson with mean</p>
 
@@ -316,13 +312,9 @@
 
       <div class="math-display">\[\Prob\{N(R,S)\ge1\}=1-\exp\!\left[-\int_R^S\eta(L)\frac{dL}{L}\right].\tag{1}\]</div>
 
-      <p>Here \(\Prob\) denotes probability under the specified point-process model.</p>
-
       <p>Now let the upper limit \(S\) grow without bound. The model gives the exact test</p>
 
       <div class="math-display">\[\boxed{\text{unbounded process scales almost surely}}\quad\Longleftrightarrow\quad\boxed{\displaystyle\int_R^\infty\eta(L)\frac{dL}{L}=\infty}.\tag{2}\]</div>
-
-      <p>Here “almost surely” means with probability one under the model.</p>
 
       <figure class="figure-dense" id="fig-1">
         <img src="figures_refined/fig-01-scale-point-process.svg" alt="Logarithmic scale axis with irregular points representing structures, an observed range through eight metres, an unobserved tail, and an inset intensity curve eta of L.">
@@ -335,9 +327,7 @@
 
       <div class="math-display">\[p=1-\exp(-\eta_0\log2)=1-2^{-\eta_0}.\]</div>
 
-      <p>Here \(j=0,1,2,\ldots\) indexes successive doubling intervals, \(\log\) is the natural logarithm, and \(p\) is the probability that one interval contains at least one point.</p>
-
-      <p>The intervals are independent, so the probability of missing the first \(m\) is \(2^{-m\eta_0}\to0\). This is like repeating a coin toss with a fixed positive chance of heads: eventually a head appears, and in fact heads appear infinitely often. Likewise, structures occur in infinitely many doubling intervals with probability one. Arratia calls this a scale-invariant Poisson process <a href="#ref-1">[1]</a>.</p>
+      <p>Independence makes the probability of missing the first \(m\) intervals \(2^{-m\eta_0}\to0\). As with repeated coin tosses having a fixed chance of heads, hits occur infinitely often with probability one. Arratia calls this a scale-invariant Poisson process <a href="#ref-1">[1]</a>.</p>
 
       <p>In the running example, take \(\eta_0=1\). Each interval \((8,16],(16,32],(32,64]\), and \((64,128]\) metres then has probability \(1/2\) of containing a relevant structure. The probability of finding at least one by \(128\,\mathrm m\) is</p>
 
@@ -347,7 +337,7 @@
 
       <figure id="fig-2">
         <img src="figures_refined/fig-02-coin-flip.svg" alt="Four equal logarithmic intervals from eight to 128 metres, each with hit probability one half, and one example sequence of independent hits and misses.">
-        <figcaption><strong>Figure 2.</strong> Equal log-scale intervals have equal hit probability when \(\eta(L)=1\). The shown hit–miss sequence is only one realization; the four independent intervals give probability \(1-(1/2)^4=0.9375\) of at least one hit by \(128\,\mathrm m\).</figcaption>
+        <figcaption><strong>Figure 2.</strong> Equal log-scale intervals have equal hit probability when \(\eta(L)=1\). The marks show one possible realization.</figcaption>
       </figure>
 
       <h3>A decaying tail <span class="fig-ref">(<a href="#fig-3">Fig. 3</a>)</span></h3>
@@ -375,48 +365,38 @@
 
       <h3>Why finite data cannot decide <span class="fig-ref">(<a href="#fig-4">Fig. 4</a>)</span></h3>
 
-      <p>Models \(A\) and \(B\) fit every possible observation made at \(L\le8\,\mathrm m\), yet they give opposite answers about unlimited continuation. The answer is determined by the assumed tail of \(\eta\), which the finite experiment cannot see.</p>
+      <p>Models \(A\) and \(B\) agree on every possible observation at \(L\le8\,\mathrm m\), yet give opposite answers about unlimited continuation. The difference lies in the unobserved tail of \(\eta\).</p>
 
       <figure class="figure-medium" id="fig-4">
         <img src="figures_refined/fig-04-finite-data-tail.svg" alt="The same observations below eight metres branch into model A with unbounded scales almost surely and model B with a positive chance of no structure above eight metres.">
-        <figcaption><strong>Figure 4.</strong> Observational equivalence below \(R\) does not determine behavior above \(R\). The same finite data support models with opposite conclusions about unbounded continuation.</figcaption>
+        <figcaption><strong>Figure 4.</strong> Observationally equivalent models below \(R\) can predict opposite behavior above it.</figcaption>
       </figure>
 
       <h2>2. What Navier–Stokes can supply</h2>
 
-      <p>The Poisson model describes how many scales occur, but it does not explain what creates them. Two-dimensional fluid flow provides a possible mechanism: an inverse cascade can carry energy from the forcing scale toward larger lengths. The special role of the two-dimensional energy and enstrophy constraints, where enstrophy is the mean-square vorticity, was made explicit by Fjørtoft <a href="#ref-5">[5]</a>; inverse-cascade behavior was later observed directly in thin-layer experiments by Paret and Tabeling <a href="#ref-6">[6]</a>. Consider the randomly forced, damped Navier–Stokes equations on a periodic square \(\mathbb T_\lambda^2\) of size \(\lambda\):</p>
+      <p>The Poisson model counts scales but does not create them. Two-dimensional flow supplies a mechanism: an inverse cascade can carry energy from the forcing scale toward larger lengths. Fjørtoft identified the role of the energy and enstrophy constraints <a href="#ref-5">[5]</a>; Paret and Tabeling later observed the cascade in a thin-layer experiment <a href="#ref-6">[6]</a>. Consider the randomly forced, damped Navier–Stokes equations on a periodic square \(\mathbb T_\lambda^2\) of size \(\lambda\):</p>
 
       <div class="math-display">\[du+\big[(u\!\cdot\!\nabla)u+\nabla p\big]dt=\big[\nu\Delta u-\alpha(-\Delta)^{-2\gamma}u\big]dt+dW^\lambda,\qquad \nabla\!\cdot u=0.\tag{3}\]</div>
 
-      <p>Here \(u\) is velocity, \(p\) is pressure, \(\nu\) is viscosity, \(\alpha\) is large-scale drag, and \(W^\lambda\) is the random forcing. The forcing injects mean energy \(\varepsilon&gt;0\) per unit time and area near one fixed length.</p>
-
-      <p>More explicitly, \(x\in\mathbb T_\lambda^2=(\mathbb R/\lambda\mathbb Z)^2\) is position, \(t\) is time, \(\nabla\) and \(\Delta\) are the spatial gradient and Laplacian, \(\gamma\ge0\) controls the scale dependence of the drag, and \(dW^\lambda\) is the stochastic forcing increment. The constraint \(\nabla\!\cdot u=0\) expresses incompressibility.</p>
+      <p>Viscosity acts through \(\nu\), while \(\alpha\) sets the large-scale drag and \(\gamma\ge0\) its scale dependence. The stochastic forcing \(W^\lambda\) injects mean energy \(\varepsilon&gt;0\) per unit time and area near one fixed length.</p>
 
       <h3>The inverse-flux law <span class="fig-ref">(<a href="#fig-5">Fig. 5</a>)</span></h3>
 
-      <p>Bedrossian, Coti Zelati, Punshon-Smith, and Weber proved an inverse-flux law for stationary solutions as the box grows and viscosity and drag vanish <a href="#ref-2">[2]</a>. Among their assumptions are</p>
+      <p>Bedrossian, Coti Zelati, Punshon-Smith, and Weber proved an inverse-flux law for stationary solutions in the large-box, vanishing-viscosity, vanishing-drag limit <a href="#ref-2">[2]</a>. Their assumptions include</p>
 
       <div class="math-display">\[\nu\E\|\omega\|_2^2\to0,\qquad\alpha\E\|(-\Delta)^{-\gamma}\omega\|_2^2\to0.\tag{4}\]</div>
 
-      <p>where \(\omega=\operatorname{curl}u\) is vorticity. The powers \(-2\gamma\) and \(-\gamma\) are consistent: a quadratic energy norm splits the operator equally between its two factors, as in Ref. <a href="#ref-2">[2]</a>.</p>
+      <p>where \(\omega=\operatorname{curl}u\) and expectation is over the stationary ensemble. The powers \(-2\gamma\) and \(-\gamma\) agree because the quadratic norm splits the drag operator between its two factors, as in Ref. <a href="#ref-2">[2]</a>.</p>
 
-      <p>Here \(\E\) is expectation with respect to the stationary ensemble, \(\|\cdot\|_2\) is the spatial \(L^2\) norm on the periodic square, and the arrows refer to the joint large-box, vanishing-viscosity, and vanishing-drag limit.</p>
-
-      <p>Here stationary means that the probability distribution of the flow does not change with time.</p>
-
-      <p>To measure transfer across a length \(\ell\), compare velocities at two points separated by \(\ell\) in direction \(n\): \(\delta_{\ell n}u(x)=u(x+\ell n)-u(x)\). Average the resulting cubic quantity over all positions \(x\) and directions \(n\):</p>
+      <p>To measure transfer across a length \(\ell\), compare velocities at two points separated by \(\ell\) in direction \(n\): \(\delta_{\ell n}u(x)=u(x+\ell n)-u(x)\). The normalized spatial and directional average of the resulting cubic quantity is</p>
 
       <div class="math-display">\[\mathcal F_\ell(u)=\avgint_{S^1}\avgint_{\mathbb T_\lambda^2}|\delta_{\ell n}u|^2(\delta_{\ell n}u\cdot n)\,dx\,dn.\]</div>
-
-      <p>Here \(S^1\) is the unit circle of directions, \(n\in S^1\) is a unit vector, and each barred integral \(\avgint\) denotes a normalized spatial or directional average rather than an unnormalized integral.</p>
 
       <p>The theorem gives an upper inertial-range length \(\ell_\alpha\to\infty\) for which</p>
 
       <div class="math-display">\[\E\mathcal F_\ell(u)\sim2\varepsilon\ell,\qquad 1\ll\ell\ll\ell_\alpha.\tag{5}\]</div>
 
-      <p>The symbol \(\sim\) means that the ratio of the two sides tends to one in the stated parameter limit, while \(\ll\) denotes separation of scales within the inertial range.</p>
-
-      <p>The positive sign says that energy is moving toward larger lengths. Thus, for any chosen finite \(R\), one can take a large enough box and weak enough drag to obtain active inverse transfer at some \(\ell\ge R\). Notice the quantifiers: the system may change when \(R\) changes. This does not yet describe one flow whose active scale grows forever.</p>
+      <p>The positive sign marks transfer toward larger lengths. For any finite \(R\), a sufficiently large box and weak drag permit active transfer at some \(\ell\ge R\). But the system may change with \(R\); the theorem does not follow one flow to ever larger scales.</p>
 
       <figure id="fig-5">
         <img src="figures_refined/fig-05-inverse-flux.svg" alt="Positive expected energy flux rises linearly with physical length across the upper inertial range from the forcing scale to ell alpha.">
@@ -429,11 +409,11 @@
 
       <div class="math-display">\[\E\mathcal F_{8\,\mathrm m}\approx2(10^{-3}\,\mathrm{m^2\,s^{-3}})(8\,\mathrm m)=0.016\,\mathrm{m^3\,s^{-3}}.\]</div>
 
-      <p>This positive number says that energy is crossing the \(8\,\mathrm m\) scale in the direction of still larger structures. It supplies a physical mechanism for continuation beyond the measurement limit. It does not prove that the scale of one particular flow grows without bound.</p>
+      <p>The positive flux carries energy across \(8\,\mathrm m\) toward larger structures, providing a mechanism for continuation beyond the measurement limit, not proof that one flow grows without bound.</p>
 
       <figure class="figure-dense" id="fig-6">
         <img src="figures_refined/fig-06-inverse-cascade-flow.svg" alt="Top-down diagram of a square periodic two-dimensional flow. One-metre forced eddies merge into motions at two, four, and eight metres through an inverse cascade. A dashed box marks the eight-metre observation limit, with possible larger scales indicated beyond it.">
-        <figcaption><strong>Figure 6.</strong> Illustrative top view of the idealized two-dimensional flow. Energy is injected into eddies near \(L_f=1\,\mathrm m\) and transferred toward larger motions. The limit \(R=8\,\mathrm m\) is a measurement cutoff, not a physical boundary. This is a conceptual diagram, not simulation output.</figcaption>
+        <figcaption><strong>Figure 6.</strong> Conceptual view of energy injected near \(L_f=1\,\mathrm m\) and transferred beyond the measurement cutoff \(R=8\,\mathrm m\).</figcaption>
       </figure>
 
       <h3>The role of ergodicity <span class="fig-ref">(<a href="#fig-7">Fig. 7</a>)</span></h3>
@@ -442,9 +422,7 @@
 
       <div class="math-display">\[\frac1T\int_0^T\mathcal F_\ell(u(t))\,dt\longrightarrow\E\mathcal F_\ell(u)&gt;0.\tag{6}\]</div>
 
-      <p>This is the pointwise ergodic theorem introduced by Birkhoff <a href="#ref-7">[7]</a>; \(T\) is the averaging time and the displayed convergence is taken as \(T\to\infty\).</p>
-
-      <p>So the long-time average flux is positive for almost every realization. This is a stationary result for an allowed scale in a fixed box. It does not remove the box’s largest possible length.</p>
+      <p>The long-time average flux is therefore positive for almost every realization. The result applies to an allowed scale in a fixed box and does not remove that box’s maximum length. See Birkhoff <a href="#ref-7">[7]</a>.</p>
 
       <figure id="fig-7">
         <img src="figures_refined/fig-07-ergodicity.svg" alt="A fluctuating instantaneous flux signal and its running time average converging to a positive expected flux.">
@@ -453,7 +431,7 @@
 
       <h2>3. Conditional scale-growth theory</h2>
 
-      <p>To turn inverse transfer into a statement about scales growing forever, one must follow a single evolving statistical flow rather than change the box and drag when the target scale changes. The natural setting is the whole plane \(\mathbb R^2\). A spatially homogeneous flow there generally has infinite total energy, so the right object is a homogeneous statistical solution with finite energy <em>per unit area</em>, not a finite-energy \(L^2(\mathbb R^2)\) solution.</p>
+      <p>Unbounded growth requires following one statistical flow rather than changing the box and drag with the target scale. On the natural domain \(\mathbb R^2\), a spatially homogeneous flow generally has infinite total energy. The appropriate object is therefore a homogeneous statistical solution with finite energy <em>per unit area</em>, not a finite-energy \(L^2(\mathbb R^2)\) solution.</p>
 
       <h3>Defining the large scale <span class="fig-ref">(<a href="#fig-8">Fig. 8</a>)</span></h3>
 
@@ -461,11 +439,7 @@
 
       <div class="math-display">\[k_\theta(t)=\inf\!\left\{K&gt;0:\int_0^K E(k,t)\,dk\ge\theta\int_0^\infty E(k,t)\,dk\right\},\qquad L(t)=k_\theta(t)^{-1}.\]</div>
 
-      <p>Here \(k\ge0\) is scalar wave number, with dimensions of inverse length, and \(E(k,t)\,dk\) is the energy per unit area in the wave-number band \([k,k+dk]\). Thus \(\int_0^\infty E(k,t)\,dk\) is the total energy per unit area.</p>
-
-      <p>The infimum in the definition selects the smallest threshold \(K\) containing at least the fraction \(\theta\) of that energy.</p>
-
-      <p>Thus \(k_\theta(t)\) is the wave number below which the chosen fraction of energy lies, and \(L(t)=1/k_\theta(t)\) is its associated length. Energy moving toward smaller \(k\) makes \(L(t)\) larger. The desired theorem is</p>
+      <p>The spectral density \(E(k,t)\) gives energy per unit area and wave number. The cutoff \(k_\theta(t)\) contains the fraction \(\theta\) of total energy, and \(L(t)=1/k_\theta(t)\) is the corresponding length. Transfer toward smaller \(k\) increases \(L(t)\). The desired theorem is</p>
 
       <div class="math-display">\[\Prob\{L(t)\to\infty\}=1.\tag{7}\]</div>
 
@@ -473,26 +447,26 @@
 
       <figure class="figure-medium" id="fig-8">
         <img src="figures_refined/fig-08-large-scale.svg" alt="An energy spectrum with the low-wave-number fraction theta shaded through k theta, alongside the reciprocal relation between smaller k theta and larger physical length L.">
-        <figcaption><strong>Figure 8.</strong> The spectral quantile definition of large scale. The wave number \(k_\theta(t)\) encloses a chosen fraction \(\theta\) of the total energy; because physical length is reciprocal to wave number, smaller \(k_\theta(t)\) means larger \(L(t)\).</figcaption>
+        <figcaption><strong>Figure 8.</strong> Spectral quantile definition of \(L(t)\): smaller \(k_\theta(t)\) corresponds to a larger physical scale.</figcaption>
       </figure>
 
       <h3>A conditional growth law <span class="fig-ref">(<a href="#fig-9">Fig. 9</a>)</span></h3>
 
-      <p>What growth rate might we expect? Write \(k_L(t)=L(t)^{-1}\) for the moving infrared edge and \(k_f=L_f^{-1}\) for the forcing wave number. If a constant-flux interval has formed between these two scales, Kraichnan’s inverse-cascade hypothesis <a href="#ref-3">[3]</a> is</p>
+      <p>What growth rate should we expect? Write \(k_L(t)=L(t)^{-1}\) for the moving infrared edge and \(k_f=L_f^{-1}\) for the forcing wave number. If a constant-flux interval has formed between them, Kraichnan’s inverse-cascade hypothesis <a href="#ref-3">[3]</a> gives</p>
 
       <div class="math-display">\[\Pi_{\le k}(t)\approx\varepsilon,\qquad E(k,t)\approx C_I\varepsilon^{2/3}k^{-5/3},\qquad k_L(t)\ll k\ll k_f.\]</div>
 
-      <p>Here \(\Pi_{\le k}\) is the nonlinear energy delivered to modes with wave number at most \(k\), and \(C_I&gt;0\) is the dimensionless inverse-cascade spectral constant. The first relation is the dynamical statement: approximately the same energy per unit time crosses every cutoff in the range. The second is the corresponding spectral similarity law. The notation \(\ll\) is important: neither the moving infrared front nor the forcing shell itself is expected to obey the power law.</p>
+      <p>The flux \(\Pi_{\le k}\) is the nonlinear energy delivered below \(k\), and \(C_I&gt;0\) is the inverse-cascade spectral constant. The first relation gives constant energy transfer across the range; the second gives its similarity spectrum. Neither the moving front nor the forcing shell is expected to obey that power law.</p>
 
-      <p>For the scaling calculation, extend this interior form to the two moving endpoints and suppose dissipation and leakage from the inverse range are negligible. Choose \(t=0\) when its lower edge is at the forcing scale, so \(L(0)=L_f\). Conservation then identifies the energy accumulated below \(k_f\) with the injected energy \(\varepsilon t\):</p>
+      <p>For the scaling calculation, extend the interior form to both endpoints and neglect dissipation and leakage from the inverse range. Set \(t=0\) when its lower edge is at the forcing scale, so \(L(0)=L_f\). The energy accumulated below \(k_f\) then equals \(\varepsilon t\):</p>
 
       <div class="math-display">\[\varepsilon t=\frac{3C_I}{2}\varepsilon^{2/3}\big(L(t)^{2/3}-L_f^{2/3}\big),\]</div>
 
-      <p>The exponent follows directly from integrating \(k^{-5/3}\): since \(\int k^{-5/3}dk=-(3/2)k^{-2/3}\) and \(k_L^{-2/3}=L^{2/3}\), solving for \(L\) gives</p>
+      <p>Since \(\int k^{-5/3}dk=-(3/2)k^{-2/3}\) and \(k_L^{-2/3}=L^{2/3}\), solving for \(L\) gives</p>
 
       <div class="math-display">\[\boxed{L(t)=\left[L_f^{2/3}+\frac{2}{3C_I}\varepsilon^{1/3}t\right]^{3/2}}\sim\left(\frac{2}{3C_I}\right)^{3/2}\varepsilon^{1/2}t^{3/2}.\tag{8}\]</div>
 
-      <p>Equivalently, differentiation gives \(dL/dt=C_I^{-1}\varepsilon^{1/3}L^{1/3}\). In the last relation of (8), \(\sim\) describes the large-\(t\) asymptotic law. Both forms are conditional: constant inverse flux and the \(-5/3\) spectrum are premises, not consequences established here from equation (3).</p>
+      <p>Differentiation gives the equivalent form \(dL/dt=C_I^{-1}\varepsilon^{1/3}L^{1/3}\). Both forms assume constant inverse flux and the \(-5/3\) spectrum; neither follows here from (3).</p>
 
       <p>For a simple numerical illustration, set \(C_I=1\). This choice makes the arithmetic transparent; it is not an empirical calibration. Using the values from the running example, (8) becomes</p>
 
@@ -502,34 +476,34 @@
 
       <div class="math-display">\[L(45\,\mathrm s)=1\,\mathrm m\,(1+3)^{3/2}=8\,\mathrm m,\]</div>
 
-      <p>and reaches \(27\,\mathrm m\) after 120 seconds. These numbers illustrate what the \(t^{3/2}\) law says; they are conditional on the assumed spectrum.</p>
+      <p>and \(27\,\mathrm m\) after 120 seconds. Both values are conditional on the assumed spectrum.</p>
 
       <figure id="fig-9">
         <img src="figures_refined/fig-09-conditional-growth.svg" alt="A convex increasing curve of large scale versus time, crossing eight metres at 45 seconds and reaching 27 metres at 120 seconds.">
-        <figcaption><strong>Figure 9.</strong> Conditional growth predicted by the assumed inverse-cascade spectrum for \(C_I=1\). The curve crosses \(R=8\,\mathrm m\) at 45 seconds and reaches \(27\,\mathrm m\) at 120 seconds; it is not measured data.</figcaption>
+        <figcaption><strong>Figure 9.</strong> Conditional growth for \(C_I=1\), reaching \(R=8\,\mathrm m\) at 45 seconds and \(27\,\mathrm m\) at 120 seconds.</figcaption>
       </figure>
 
       <h2>4. Computational evidence</h2>
 
       <h3>Numerical model and diagnostics</h3>
 
-      <p>We tested the mechanism and the conditional law in a finite periodic pseudospectral model. In nondimensional variables the simulated vorticity equation is</p>
+      <p>We tested the mechanism and its spectral premises in a finite periodic pseudospectral model. In nondimensional variables,</p>
 
       <div class="math-display">\[\partial_t\omega+u\cdot\nabla\omega=-\nu_4(-\Delta)^4\omega-\alpha\omega+f,\qquad u=\nabla^\perp\psi,\qquad-\Delta\psi=\omega.\tag{9}\]</div>
 
-      <p>This is the two-dimensional incompressible Navier&ndash;Stokes nonlinearity written in vorticity form on the \(2\pi\)-periodic square, with \(\nabla^\perp\psi=(\partial_y\psi,-\partial_x\psi)\) and eighth-order hyperviscosity in place of ordinary viscosity. Hyperviscosity removes enstrophy near the numerical cutoff while disturbing the lower wave numbers as little as possible; it is a numerical modeling choice, not the viscous operator in (3). We set \(\nu_4=3\times10^{-13}(N/128)^{-8}\), which keeps its strength comparable at the resolution-dependent cutoff. The reported runs use \(\alpha=0\), so they are growing transients rather than stationary states. A run begins with energy \(0.02\) in a random vorticity field in a shell of width \(2\) about \(k_f\). Independent random increments in that shell inject exactly \(\varepsilon\,dt\) of energy per step. The deterministic solver uses two-thirds dealiasing, a skew-symmetric nonlinear term, and integrating-factor Runge&ndash;Kutta time stepping. These simulations are nondimensional mechanism tests and are separate from the dimensional running example above.</p>
+      <p>Equation (9) is the two-dimensional incompressible Navier&ndash;Stokes nonlinearity in vorticity form on the \(2\pi\)-periodic square, with \(\nabla^\perp\psi=(\partial_y\psi,-\partial_x\psi)\). Eighth-order hyperviscosity removes enstrophy near the numerical cutoff while minimizing disturbance at lower wave numbers; it replaces the ordinary viscosity in (3). We set \(\nu_4=3\times10^{-13}(N/128)^{-8}\) to keep its cutoff strength comparable across resolutions. With \(\alpha=0\), the runs are growing transients. Each begins with energy \(0.02\) in a random vorticity field within a shell of width \(2\) about \(k_f\). Independent increments there inject exactly \(\varepsilon\,dt\) per step. The solver uses two-thirds dealiasing, a skew-symmetric nonlinear term, and integrating-factor Runge&ndash;Kutta time stepping. These nondimensional mechanism tests are separate from the dimensional example above.</p>
 
       <p>For a Fourier vorticity coefficient \(\widehat\omega_{\mathbf k}\) on an \(N\times N\) grid, define the modal energy, radial shell spectrum, and energy-weighted length by</p>
 
       <div class="math-display">\[e_{\mathbf k}(t)=\frac{|\widehat\omega_{\mathbf k}(t)|^2}{2N^4|\mathbf k|^2},\qquad E_N(K,t)=\sum_{K-1/2&lt;|\mathbf k|\le K+1/2}e_{\mathbf k}(t),\qquad L_E(t)=\frac{\displaystyle\sum_{\mathbf k\ne0}e_{\mathbf k}(t)|\mathbf k|^{-1}}{\displaystyle\sum_{\mathbf k\ne0}e_{\mathbf k}(t)}.\tag{10}\]</div>
 
-      <p>The shell sum \(E_N(K,t)\) is the discrete analogue of \(E(k,t)\,dk\), with unit shell width. The statistic \(L_E\) grows when the energy distribution shifts toward smaller wave numbers, but it averages over the entire spectrum and need not equal the sharper front scale \(L(t)=k_L(t)^{-1}\) used in (8).</p>
+      <p>The shell sum \(E_N(K,t)\) is the unit-width discrete analogue of \(E(k,t)\,dk\). The statistic \(L_E\) grows as energy shifts toward smaller wave numbers, but averages the whole spectrum and need not equal the front scale \(L(t)=k_L(t)^{-1}\) in (8).</p>
 
       <p>To distinguish nonlinear transport from direct forcing, let \(\widehat{\mathcal N}_{\mathbf k}\) denote the nonlinear vorticity tendency, with forcing and dissipation excluded, and compute</p>
 
       <div class="math-display">\[\Pi_{\le K}(t)=\sum_{0&lt;|\mathbf k|\le K}\frac{\Re\!\left(\overline{\widehat\omega_{\mathbf k}}\,\widehat{\mathcal N}_{\mathbf k}\right)}{N^4|\mathbf k|^2}.\tag{11}\]</div>
 
-      <p>Positive \(\Pi_{\le K}\) means that nonlinear interactions are giving energy to modes at or below \(K\), hence to structures at or above the corresponding length. A mature inverse range requires more than positivity at one cutoff: throughout an interior interval it should satisfy both \(\Pi_{\le K}\approx\varepsilon\), approximately independent of \(K\), and \(E_N(K)\propto K^{-5/3}\). We therefore use the spectrum and flux together. As a numerical audit, every run also satisfies</p>
+      <p>Positive \(\Pi_{\le K}\) means that nonlinear interactions give energy to modes at or below \(K\). A mature inverse range requires both \(\Pi_{\le K}\approx\varepsilon\), nearly independent of \(K\), and \(E_N(K)\propto K^{-5/3}\) across an interior interval. We therefore test spectrum and flux together. Every run also satisfies the energy audit</p>
 
       <div class="math-display">\[E(t)-E(0)=\varepsilon t-\int_0^tD(s)\,ds+r_E(t),\qquad D(t)=2\sum_{\mathbf k\ne0}\big(\nu_4|\mathbf k|^8+\alpha\big)e_{\mathbf k}(t),\]</div>
 
@@ -537,17 +511,17 @@
 
       <h3>Ensemble and regression check</h3>
 
-      <p>The first experiment used sixteen \(256^2\) trajectories: four injection rates, with four random seeds at each rate, forced near \(k_f=24\) for fifteen nondimensional time units. Every trajectory showed positive late transfer into modes below \(k_f/2\), while \(L_E\) grew by factors between \(3.4\) and \(4.2\). Thus the nonlinearity, rather than direct low-mode forcing, moved injected energy toward larger structures.</p>
+      <p>The first experiment used sixteen \(256^2\) trajectories: four injection rates and four seeds per rate, forced near \(k_f=24\) for fifteen nondimensional time units. Every trajectory showed positive late transfer below \(k_f/2\), while \(L_E\) grew by factors of \(3.4\) to \(4.2\). The nonlinearity moved injected energy toward larger structures without direct low-mode forcing.</p>
 
-      <p>We then treated the smoothed growth rate \(dL_E/dt\) as a regression target. The inputs were injection rate, current length, measured flux, infrared energy fraction, spectral width, and enstrophy. Models were trained after excluding startup and endpoint samples, then evaluated by leaving out either one complete trajectory or one complete injection rate. Holding out groups is essential because a random split would place strongly correlated time samples from one trajectory in both training and test sets. On injection rates omitted from fitting, the asymptotic law \(dL_E/dt=C\varepsilon^{1/3}L_E^{1/3}\) had root-mean-square log-error \(0.389\), a typical multiplicative error of \(e^{0.389}=1.48\). A descriptive two-variable power law based on measured flux and current length reduced this to \(0.183\), or a factor of \(1.20\); all available features gave essentially no further improvement. In light of the maturity test below, a natural interpretation is that the instantaneous cascade throughput contains information that the nominal injection rate alone misses during a transient. This is model comparison, not a universal closure law. The <a href="ml_results_energy_aws_256/results.json">machine-readable ensemble results</a> include all holdouts and conservation checks.</p>
+      <p>We regressed the smoothed growth rate \(dL_E/dt\) on injection rate, current length, measured flux, infrared energy fraction, spectral width, and enstrophy. Grouped evaluation omitted a complete trajectory or injection rate, preventing correlated samples from one trajectory from entering both training and test sets. On omitted injection rates, the asymptotic law \(dL_E/dt=C\varepsilon^{1/3}L_E^{1/3}\) had root-mean-square log-error \(0.389\), a typical factor of \(1.48\). A descriptive power law using measured flux and current length reduced the error to \(0.183\), or a factor of \(1.20\); other features added no improvement. The maturity test below suggests that measured throughput captures transient information absent from the nominal injection rate. This comparison does not propose a universal closure law. The <a href="ml_results_energy_aws_256/results.json">ensemble results</a> contain all holdouts and conservation checks.</p>
 
       <h3>Resolution versus elapsed time <span class="fig-ref">(<a href="#fig-10">Fig. 10</a>)</span></h3>
 
-      <p>A second experiment held \(k_f=16\), \(\varepsilon=0.004\), and duration \(2.5\) fixed while comparing two seeds at \(256^2\) and \(512^2\). It asked whether added small-scale resolution alone reveals the spectral premise of (8). Over \(2\le K\le12\), the mean fitted shell-spectrum slopes were \(+0.92\) and \(+1.14\), respectively, rather than \(-5/3\). The characteristic length increased by only about \(14\%\), and \(\Pi_{\le K}\) was positive but not flat in \(K\). Doubling the ultraviolet resolution therefore did not create a mature inverse range during the short observation window. The maximum relative energy-balance and injection errors were \(6.4\times10^{-11}\) and \(1.2\times10^{-13}\); the <a href="focused_resolution_results/results.json">focused results</a> contain both seeds and every recorded spectrum.</p>
+      <p>A second experiment held \(k_f=16\), \(\varepsilon=0.004\), and duration \(2.5\) fixed while comparing two seeds at \(256^2\) and \(512^2\). Over \(2\le K\le12\), the mean fitted shell-spectrum slopes were \(+0.92\) and \(+1.14\), not \(-5/3\). The characteristic length grew only about \(14\%\), and \(\Pi_{\le K}\) was positive but not flat. Doubling the ultraviolet resolution did not produce a mature inverse range in the short window. Maximum relative energy-balance and injection errors were \(6.4\times10^{-11}\) and \(1.2\times10^{-13}\); the <a href="focused_resolution_results/results.json">focused results</a> contain both seeds and all recorded spectra.</p>
 
       <figure class="figure-dense" id="fig-10">
         <img src="figures_refined/fig-10-resolution.svg" alt="Late-time energy spectra at resolutions 256 squared and 512 squared rise toward the forcing wave number instead of following the descending k to the minus five-thirds reference, while the characteristic length grows modestly in all four runs.">
-        <figcaption><strong>Figure 10.</strong> Finite-resolution check at \(t=2.5\). Left: neither resolution exhibits the assumed \(K^{-5/3}\) inverse range below \(k_f=16\). Right: all four energy-weighted lengths grow, but only by about \(14\%\). Added ultraviolet resolution does not cure a spectrum that has not had time to reorganize.</figcaption>
+        <figcaption><strong>Figure 10.</strong> At \(t=2.5\), neither resolution exhibits a \(K^{-5/3}\) inverse range. All four energy-weighted lengths grow by only about \(14\%\).</figcaption>
       </figure>
 
       <h3>Why the short-run spectrum rises</h3>
@@ -568,11 +542,11 @@
       N=512 & K^{1.14} & K^{0.12}
       \end{array}\qquad(2\le K\le12,\ t\le2.5).\]</div>
 
-      <p>The per-mode exponents are close to zero, as expected for an approximately equal-energy, random-phase transient. This is a diagnostic analogy, not a claim of statistical equilibrium. A mature inverse cascade instead requires \(q_N(K)\propto K^{-8/3}\), because division of \(E_N(K)\propto K^{-5/3}\) by \(n_N(K)\propto K\) subtracts one from the exponent.</p>
+      <p>The near-zero per-mode exponents match an approximately equal-energy, random-phase transient, not necessarily statistical equilibrium. A mature inverse cascade instead requires \(q_N(K)\propto K^{-8/3}\), since dividing \(E_N(K)\propto K^{-5/3}\) by \(n_N(K)\propto K\) subtracts one from the exponent.</p>
 
       <h3>Time-maturity test <span class="fig-ref">(<a href="#fig-11">Fig. 11</a>)</span></h3>
 
-      <p>We then retained \(N=256\), \(k_f=16\), \(\varepsilon=0.004\), and the same two seeds, but extended the duration from \(2.5\) to \(15\). Spectra and transfers were recorded every \(0.1\) time unit. At each checkpoint we averaged over the preceding interval \(\Delta t=1\). In continuous notation, the quantities used below are</p>
+      <p>We retained \(N=256\), \(k_f=16\), \(\varepsilon=0.004\), and the same two seeds, but extended the duration from \(2.5\) to \(15\). Spectra and transfers were recorded every \(0.1\) time unit and averaged over the preceding \(\Delta t=1\):</p>
 
       <div class="math-display">\[\widetilde E_N(K;t)=\frac1{\Delta t}\int_{t-\Delta t}^tE_N(K,s)\,ds,\qquad \widetilde\Pi_{\le K}(t)=\frac1{\Delta t}\int_{t-\Delta t}^t\Pi_{\le K}(s)\,ds,\qquad\Delta t=1,\]</div>
 
@@ -584,7 +558,7 @@
 
       <div class="math-display">\[\overline\pi(t)=\frac1{7}\sum_{K=6}^{12}\frac{\widetilde\Pi_{\le K}(t)}{\varepsilon},\qquad \operatorname{CV}_\pi(t)=\frac{\left[\frac1{7}\sum_{K=6}^{12}\left(\frac{\widetilde\Pi_{\le K}(t)}{\varepsilon}-\overline\pi(t)\right)^2\right]^{1/2}}{|\overline\pi(t)|}.\tag{14}\]</div>
 
-      <p>Thus \(\overline\pi\approx1\) tests whether the cascade carries the injected energy, while a small \(\operatorname{CV}_\pi\) tests whether that transfer is nearly constant across cutoffs. Means over the two seeds, with sample standard deviations where shown, were</p>
+      <p>The condition \(\overline\pi\approx1\) tests whether the cascade carries the injected energy; a small \(\operatorname{CV}_\pi\) tests whether the transfer is nearly constant across cutoffs. Two-seed means, with sample standard deviations where shown, were</p>
 
       <div class="math-display">\[\begin{array}{c|ccc}
       t & p_{4:12} & \overline\pi & \operatorname{CV}_\pi\\ \hline
@@ -594,24 +568,20 @@
       15.0 & -1.719\pm0.018 & 0.997\pm0.008 & 0.115
       \end{array}\tag{15}\]</div>
 
-      <p>By \(t=15\), the two individual spectral slopes are \(-1.732\) and \(-1.706\), bracketing \(-5/3\), and their individual normalized mean fluxes are \(0.991\) and \(1.003\). The mean coefficient of determination for the two log&ndash;log spectral fits is \(R^2=0.847\). Spectrum and flux therefore give mutually consistent evidence that an inverse-cascade-like interior has formed behind a moving infrared front.</p>
+      <p>At \(t=15\), the individual spectral slopes are \(-1.732\) and \(-1.706\), while the normalized mean fluxes are \(0.991\) and \(1.003\). The two log&ndash;log fits have mean \(R^2=0.847\). Together, spectrum and flux indicate an inverse-cascade-like interior behind a moving infrared front.</p>
 
       <figure class="figure-dense" id="fig-11">
         <img src="figures_refined/fig-11-maturity.svg" alt="Three panels show the spectrum changing from a rising transient toward a descending interior range, the fitted interior slope approaching minus five thirds, and the nonlinear flux becoming nearly equal to the injection rate and flatter across wave-number cutoffs.">
-        <figcaption><strong>Figure 11.</strong> Time-maturity test at \(256^2\). Left: the forcing peak is at \(k_f=16\), and the inverse-side spectrum reorganizes over time. Center: the interior \(K=4,\ldots,12\) fit approaches \(-5/3\), whereas the broader \(K=2,\ldots,12\) fit mixes the interior with the still-underfilled infrared front. Right: over \(K=6,\ldots,12\), the normalized mean flux approaches one and its coefficient of variation decreases. Error bars are sample standard deviations across two seeds.</figcaption>
+        <figcaption><strong>Figure 11.</strong> Time-maturity test at \(256^2\). The spectrum reorganizes behind an underfilled infrared front while the interior flux approaches a plateau. Error bars are sample standard deviations across two seeds.</figcaption>
       </figure>
 
-      <p>The band distinction matters. At \(t=15\), fitting all shells \(2\le K\le12\) gives only \(-0.247\), because \(K=2,3\) have not filled to the extrapolated interior spectrum. In physical terms, the cascade has built a short interior behind its advancing low-wave-number edge; it has not established a power law down to the box scale. The \(K=4,\ldots,12\) band was selected after inspecting this front, spans only nine shells and less than half a decade, and uses only two seeds. Equation (15) is therefore strong evidence for time maturation in this numerical model, but it is not a precision measurement of a universal exponent.</p>
+      <p>The band distinction matters. Fitting all shells \(2\le K\le12\) at \(t=15\) gives only \(-0.247\) because \(K=2,3\) remain below the extrapolated interior spectrum. The cascade has built a short interior behind its advancing front, not a power law down to the box scale. The inspected band \(K=4,\ldots,12\) spans nine shells, less than half a decade, and only two seeds. Equation (15) therefore supports maturation in this model, not a precision estimate of a universal exponent.</p>
 
-      <p>Taken together, the resolution and duration tests support a finite-time crossover: positive inverse transfer appears first, an approximately equal-energy-per-mode transient follows, and only later do a constant-flux plateau and a \(-5/3\)-like interior appear. This explains why measured flux improved the earlier regression and why added resolution at \(t=2.5\) did not. It also supplies the previously missing local premises of the derivation of (8). It does not yet test \(L(t)\propto t^{3/2}\) itself: that would require tracking a well-defined infrared front across a substantially larger range of scales before it encounters the finite box. The long-run maximum relative energy-balance and injection errors were \(5.2\times10^{-11}\) and \(3.1\times10^{-13}\); the <a href="time-maturity-analysis.json">checkpoint analysis</a> records aggregate and per-seed values.</p>
+      <p>The simulations show a finite-time crossover. Positive inverse transfer appears first, followed by an approximately equal-energy-per-mode transient. A constant-flux plateau and short \(-5/3\)-like interior emerge later. This sequence explains both the regression’s use of measured flux and the failure of added resolution at \(t=2.5\) to reveal the spectrum. It supplies the local premises of (8), but testing \(L(t)\propto t^{3/2}\) requires tracking the infrared front across a much larger scale range before it reaches the box. Maximum long-run energy-balance and injection errors were \(5.2\times10^{-11}\) and \(3.1\times10^{-13}\); the <a href="time-maturity-analysis.json">checkpoint analysis</a> gives aggregate and per-seed values.</p>
 
       <h2>5. What is established and what remains open</h2>
 
-      <p><span class="lead-label">Established mathematically.</span> Within the specified point-process model, equation (2) exactly characterizes almost-sure continuation. Under the stationary large-box and vanishing-dissipation hypotheses of Ref. <a href="#ref-2">[2]</a>, equation (5) establishes positive inverse flux over an expanding inertial range.</p>
-
-      <p><span class="lead-label">Supported computationally.</span> In the finite pseudospectral model, nonlinear transfer moves energy below the forcing scale. The longer runs further show a joint constant-flux plateau and \(-5/3\)-like interior after the short-run equal-energy-per-mode transient. These statements concern the simulated finite box and the reported parameter range.</p>
-
-      <p><span class="lead-label">Conditional or open.</span> The law \(L(t)\propto t^{3/2}\) follows if the constant-flux spectrum remains valid while its infrared edge moves. Almost-sure unbounded growth, equation (7), additionally requires that this process persist for one flow on \(\mathbb R^2\). Neither claim follows from the present computation or the stationary theorem.</p>
+      <p>The results separate into four levels:</p>
 
       <div class="math-display">\[\begin{array}{c|c}
       \text{statement} &amp; \text{status}\\ \hline
@@ -623,13 +593,11 @@
 
       <h3>The remaining gap <span class="fig-ref">(<a href="#fig-12">Fig. 12</a>)</span></h3>
 
-      <p>The calculation predicts \(L(t)\propto t^{3/2}\), where \(\propto\) means proportional up to a time-independent constant, but it is not a theorem derived from (3): it assumes the constant-flux spectrum that produces the answer. The computation now shows that this premise can emerge locally after a finite maturation time. It does not show that the premise persists while the infrared edge moves without bound, nor that the spectral-front length and the quantile length remain uniformly comparable. Such a comparison would affect the prefactor but, if bounded above and below by time-independent constants, not the exponent.</p>
-
-      <p>Finally, this growing state is not stationary, so the Birkhoff argument in (6) cannot prove (7) or (8). Drag, finite forcing time, or a container may stop the growth; in a periodic computation, the front eventually reaches the lowest nonzero mode and can form a condensate. The open problem is to prove from Navier&ndash;Stokes that the infrared scale&mdash;the large-length, small-wave-number end of the spectrum&mdash;of one unbounded flow grows almost surely, under explicit assumptions, without first assuming the \(k^{-5/3}\) law.</p>
+      <p>The computation shows that a constant-flux spectrum can emerge locally, not that it persists as the infrared edge moves without bound. It also leaves open whether the front length and spectral-quantile length remain uniformly comparable; fixed upper and lower bounds would preserve the exponent but alter its prefactor. Birkhoff’s stationary argument cannot settle either question. Drag, finite forcing time, or a container may stop growth, while a periodic simulation eventually reaches the lowest mode and may form a condensate. The open problem is to derive almost-sure growth of the infrared scale for one flow on \(\mathbb R^2\), under explicit assumptions and without presupposing the \(k^{-5/3}\) law.</p>
 
       <figure class="figure-medium" id="fig-12">
         <img src="figures_refined/fig-12-open-problem.svg" alt="A dashed logical gap between the proved positive inverse flux in a growing finite-box limit and the desired almost-sure unbounded growth of one flow on the whole plane.">
-        <figcaption><strong>Figure 12.</strong> The remaining logical gap. A positive inverse-flux law and a finite-box \(-5/3\)-like interval do not yet establish almost-sure unbounded growth for one flow on \(\mathbb R^2\).</figcaption>
+        <figcaption><strong>Figure 12.</strong> The gap between finite-box inverse transfer and almost-sure unbounded growth on \(\mathbb R^2\).</figcaption>
       </figure>
 
       <section class="bibliography" aria-labelledby="references-heading">
